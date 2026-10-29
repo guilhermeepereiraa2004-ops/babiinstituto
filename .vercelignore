@@ -1,0 +1,14 @@
+data/
+.env*
+.git/
+.agents/
+.claude/
+.codex/
+output/
+docs/qa/
+log/
+*.sqlite*
+*.db*
+*.log
+*.tar.gz
+node_modules/

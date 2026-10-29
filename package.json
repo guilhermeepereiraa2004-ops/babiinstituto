@@ -1,1 +1,22 @@
-{"name":"babi-instituto-beleza","private":true,"type":"module","scripts":{"dev":"node server/local.mjs","start":"node server/local.mjs","test":"node --test tests/*.test.mjs","check":"node scripts/gate.mjs"},"engines":{"node":">=24.0.0"}}
+{
+  "name": "babi-instituto-beleza",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/local.mjs",
+    "start": "node server/local.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/gate.mjs",
+    "build": "node scripts/build-cloud.mjs",
+    "test:postgres": "node --env-file=.env.local scripts/test-postgres.mjs",
+    "db:migrate": "node --env-file=.env.local scripts/migrate-postgres.mjs"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "@vercel/functions": "^3.10.2",
+    "better-auth": "^1.7.12",
+    "pg": "^8.23.1"
+  }
+}

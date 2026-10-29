@@ -5,3 +5,90 @@
 @media(max-width:700px){.sidebar{position:static;width:100%;padding:20px 21px 0;border-right:0;border-bottom:1px solid var(--line);background:#fbfaf7;display:block}.sidebar-brand{display:inline-flex;margin:0 0 19px}.sidebar-brand .booking-brand strong{font-size:39px}.sidebar-brand .booking-brand small{font-size:5px}.sidebar-label,.sidebar-client,.sidebar-bottom{display:none}.sidebar-nav{flex-direction:row;gap:8px;padding-bottom:11px}.sidebar-nav button{justify-content:center;padding:11px 10px;font-size:8px;gap:7px;white-space:nowrap;width:auto;flex:1}.sidebar-nav button svg{width:15px;height:15px}.admin-main{margin-left:0;padding:24px 21px 35px}.admin-topbar{margin-bottom:22px}.admin-topbar>.label{font-size:6px;letter-spacing:1.4px}.topbar-actions>span{font-size:7px}.topbar-actions{gap:7px}.page-title{display:block;margin-bottom:24px}.page-title h1{font-size:27px}.page-title p{font-size:9px;margin-top:8px}.date-pill{display:inline-flex;margin-top:17px;font-size:8px}.welcome-banner{grid-template-columns:1fr 80px;min-height:145px;margin-bottom:20px}.welcome-copy{padding:23px 22px}.welcome-copy>.label{font-size:6px}.welcome-copy h2{font-size:19px;line-height:1.45;margin-top:10px}.welcome-copy p{font-size:8px;line-height:1.9}.welcome-photo svg{width:26px;height:26px}.metrics{gap:12px;margin-bottom:23px}.metric{padding:17px}.metric-head{font-size:8px}.metric strong{font-size:28px}.metric>span{font-size:6px}.panel-header{padding:19px 18px}.panel-header h2{font-size:12px}.panel-header p{font-size:7px;line-height:1.7}.panel-header .btn{font-size:8px;padding:10px;gap:7px;min-height:34px}.panel-header .btn svg{width:13px;height:13px}.week-strip{padding:16px 15px;gap:5px}.week-day{padding:9px 3px;gap:6px}.week-day>strong{font-size:15px}.week-day>span{font-size:5px}.table-toolbar{padding:19px 18px;gap:14px}.table-toolbar h3{font-size:10px}.search-field{width:100%;max-width:100%}.search-field input{width:100%;font-size:10px}.table-filters{padding-inline:17px;gap:3px}.table-filters button{font-size:7px;padding:7px 8px}.appointments-table td,.appointments-table th{padding:14px 16px}.appointments-table td{font-size:9px}.empty-state{padding:40px 20px 45px}.empty-state p{font-size:9px}.empty-state h3{font-size:13px}.table-footer{padding:14px 17px;font-size:6px;gap:10px}.table-footer>span:last-child{max-width:120px;text-align:right;line-height:1.8}.notice{padding:14px 16px;font-size:9px;gap:10px;align-items:flex-start;flex-wrap:wrap}.notice>svg{width:17px;height:17px}.notice>span{flex:1}.notice button,.notice a{font-size:8px;margin-left:27px}.admin-footer{font-size:6px;line-height:1.8}.admin-footer>span:last-child{font-size:5px;text-align:right;max-width:100px}.settings-body{padding:21px 19px}.settings-body>p{font-size:9px}.service-setting-meta{grid-template-columns:1fr 85px;gap:10px}.service-setting-title input[type=text]{font-size:11px}.service-setting-title{gap:9px}.day-setting{grid-template-columns:1fr 76px 8px 76px;gap:6px}.day-setting .checkbox-label{font-size:8px}.day-setting input[type=time]{font-size:9px;padding:6px;min-height:34px}.settings-save{bottom:12px}.settings-save .btn{width:100%}.form-two{gap:12px}.booking-dialog{width:450px}.dialog-top{padding:22px}.dialog-body{padding:23px 22px}.dialog-top h2{font-size:16px}.dialog-client h3{font-size:14px}.detail-grid{gap:20px 15px}.detail-grid dd{font-size:10px}.dialog-actions .btn{font-size:8px;padding-inline:11px;min-width:85px}.login-layout{display:flex;flex-direction:column;min-height:100dvh}.login-art{padding:27px 28px;min-height:290px}.login-art>.booking-brand strong{font-size:39px}.login-art>div{margin-top:35px}.login-art h1{font-size:31px;letter-spacing:-1.2px}.login-art p{font-size:9px;margin-top:13px;max-width:270px}.login-art>.login-art-bottom{display:none}.login-form{padding:35px 27px 45px}.login-form h2{font-size:25px}.login-form p{font-size:10px;margin-bottom:23px}.login-mark{width:38px;height:38px;margin-bottom:20px}.client-header-inner{width:calc(100% - 42px);min-height:85px}.client-header .booking-brand strong{font-size:39px}.client-header .booking-brand small{font-size:5px}.back-link{font-size:8px;gap:6px}.client-main{width:calc(100% - 42px);margin:30px auto 40px}.client-intro{margin-bottom:24px}.client-intro>.label{font-size:7px;letter-spacing:1.5px}.client-intro h1{font-size:31px;letter-spacing:-1.3px;line-height:1.24;margin:13px 0 11px}.client-intro>p:last-child{font-size:10px;line-height:1.9}.booking-layout{display:flex;flex-direction:column;gap:23px;align-items:stretch}.summary-card{position:static;order:2}.summary-photo{height:120px}.summary-photo img{object-position:center 50%}.summary-body{padding:21px}.summary-body h2{font-size:12px;margin-bottom:20px}.summary-row{gap:12px;margin-bottom:18px}.summary-row strong{font-size:10px}.summary-note{font-size:8px}.steps{padding:20px 18px;gap:9px}.step-label{font-size:8px;gap:7px}.step-label>span{width:24px;height:24px;font-size:7px}.step-body{padding:24px 19px}.step-body>h2{font-size:19px}.step-body>.step-subtitle{font-size:9px;margin-bottom:22px}.service-option{gap:12px;padding:15px 13px}.service-symbol{width:32px;height:32px}.service-symbol svg{width:18px;height:18px}.service-option-info strong{font-size:11px}.service-option-info p{font-size:8px}.service-option-info small{font-size:7px;margin-top:5px}.option-radio{width:15px;height:15px}.option-radio:after{width:6px!important;height:6px!important}.step-actions{margin-top:25px}.step-actions .btn{font-size:10px;min-width:130px;min-height:44px}.step-actions .step-back{font-size:9px}.month-header h3{font-size:12px}.calendar-grid{gap:5px}.calendar-date{font-size:11px;aspect-ratio:1.1}.calendar-grid .calendar-weekday{font-size:7px}.time-header{font-size:9px}.time-slots{grid-template-columns:repeat(4,1fr);gap:7px}.time-option{font-size:9px;min-height:39px}.field{font-size:10px}.field input,.field textarea{font-size:12px;min-height:45px}.consent{font-size:8px;line-height:1.9}.consent input{min-height:unset}.client-bottom{font-size:7px;margin-top:22px}.closed-state{margin:30px auto;padding:40px 23px}.closed-state h1{font-size:25px}.closed-state p{font-size:10px}.receipt-card{margin:20px auto 30px}.receipt-top{padding:30px 24px}.receipt-top h1{font-size:24px}.receipt-top p{font-size:9px}.receipt-body{padding:26px 22px}.receipt-body .detail-grid{gap:23px 17px}.receipt-code>strong{font-size:10px}.receipt-actions{flex-direction:column}.receipt-actions>.btn{font-size:10px}.settings-right{display:block}}
 @media(max-width:370px){.sidebar{padding-inline:16px}.admin-main{padding-inline:16px}.sidebar-nav{gap:4px}.sidebar-nav button{font-size:7px;gap:5px;padding-inline:7px}.client-main,.client-header-inner{width:calc(100% - 32px)}.client-intro h1{font-size:28px}.steps{gap:7px;padding-inline:13px}.step-label{font-size:7px;gap:5px}.step-label>span{width:21px;height:21px}.step-body{padding-inline:16px}.service-symbol{width:28px;height:28px}.service-option{gap:9px;padding:13px 11px}.service-option-info strong{font-size:10px}.service-option-info p{font-size:7px}.time-slots{grid-template-columns:repeat(3,1fr)}.date-picker{font-size:8px}.panel-header h2{font-size:11px}.welcome-banner{grid-template-columns:1fr 63px}.welcome-copy{padding:20px}.welcome-copy h2{font-size:17px}.day-setting{grid-template-columns:1fr 69px 6px 69px;gap:4px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+/* Anamnese e financeiro — extensões da identidade do instituto. */
+[hidden]{display:none!important}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.steps .step-line{display:none}
+.step-label{white-space:normal;line-height:1.5}
+.field select{width:100%;min-height:44px;border:1px solid var(--line);border-radius:6px;padding:11px 12px;background:white;color:var(--ink);font:inherit;font-size:12px}
+.field small{font-size:10px;line-height:1.7;font-weight:400;color:var(--muted)}
+.form-error{color:var(--red);font-size:12px;line-height:1.8;margin:15px 0}
+.intake-group{border:1px solid var(--line);border-radius:8px;padding:20px 18px 3px;margin:0 0 22px;min-width:0}
+.intake-group legend{font-size:13px;font-weight:500;padding:0 8px}
+.intake-group .field{font-size:12px;line-height:1.7}
+.intake-privacy{display:flex;align-items:flex-start;gap:12px;border-radius:8px;padding:17px;background:#eee9df;margin-bottom:20px;color:var(--muted)}
+.intake-privacy svg{width:20px;height:20px;color:var(--gold);flex-shrink:0}
+.intake-privacy p{font-size:12px;line-height:1.8;margin:0}
+.details-form .consent{font-size:11px;line-height:1.85;align-items:flex-start}
+.details-form .consent input{flex-shrink:0;margin-top:4px;width:16px;height:16px}
+.anamnesis-panel{background:#f6f3ed;border:1px solid var(--line);border-radius:8px;padding:20px;margin:24px 0}
+.anamnesis-panel h3{font-size:15px;font-weight:500;margin:0 0 17px}
+.anamnesis-panel .muted{font-size:12px;line-height:1.8}
+.intake-answers{display:grid;gap:18px;margin:0}
+.intake-answers dt{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px}
+.intake-answers dd{font-size:13px;line-height:1.85;margin:0}
+.intake-answers .intake-text{white-space:pre-wrap;overflow-wrap:anywhere;color:#5f574d}
+.intake-consent-note{font-size:10px;line-height:1.8;color:var(--muted);border-top:1px solid var(--line);margin:18px 0 0;padding-top:14px}
+.reschedule-form h3{font-size:15px;font-weight:500;margin:0 0 12px}
+.reschedule-form>p{font-size:12px;line-height:1.85}
+.reschedule-form .field,.dialog-body #finance-entry-form .field{font-size:12px;line-height:1.7}
+.reschedule-form input,.dialog-body #finance-entry-form input{font-size:13px}
+.finance-period{display:flex;align-items:flex-end;gap:16px;margin:0 0 26px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:9px}
+.finance-period .field{margin:0;flex:1;max-width:210px;font-size:11px}
+.finance-period input{font-size:13px}
+.finance-period .btn{min-height:44px;font-size:11px}
+.finance-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.finance-metrics .metric strong{font-size:clamp(20px,2.2vw,32px);letter-spacing:-1px;overflow-wrap:anywhere}
+.finance-metrics .metric-head{font-size:11px;line-height:1.7}
+.finance-metrics .metric>span{font-size:10px;line-height:1.7}
+.finance-income{color:#4d6b42}
+.finance-expense{color:#a4463c}
+.finance-warning{background:#f5eddd}
+.finance-table{width:100%;border-collapse:collapse;text-align:left;min-width:650px}
+.finance-table th{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:17px 22px;border-bottom:1px solid var(--line)}
+.finance-table td{padding:20px 22px;border-bottom:1px solid var(--line);font-size:12px;line-height:1.7}
+.finance-table td strong{display:block;font-size:12px;font-weight:500;max-width:330px;overflow-wrap:anywhere}
+.finance-table td small{display:block;font-size:10px;color:var(--muted);margin-top:5px}
+.finance-table .finance-value{white-space:nowrap;font-size:13px;font-weight:500}
+.finance-table tr:last-child td{border-bottom:0}
+.finance-void{opacity:.65}
+.finance-void .finance-value{text-decoration:line-through}
+.finance-pagination{border-top:1px solid var(--line);padding:18px 22px;display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.finance-pagination>span{margin-right:auto;font-size:11px;color:var(--muted)}
+.finance-pagination .btn{font-size:10px;padding:10px 15px;min-height:38px}
+.finance-origin-note{background:#f2ede3;border-radius:6px;padding:12px 14px;font-size:11px;line-height:1.85;color:var(--muted);margin:3px 0 20px}
+.finance-period .field input:focus-visible,.field select:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:900px){.finance-metrics{grid-template-columns:1fr}.finance-metrics .metric strong{font-size:30px}.finance-period{flex-wrap:wrap}.finance-period .field{max-width:none}}
+@media(max-width:700px){
+ .sidebar-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .sidebar-nav button{justify-content:flex-start;min-height:44px;font-size:11px;padding:11px 14px}
+ .sidebar-nav button svg{width:18px;height:18px}
+ .steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+ .step-label{font-size:10px}
+ .step-label>span{width:26px;height:26px}
+ .details-form .field{font-size:12px}
+ .details-form .field input,.details-form .field textarea,.details-form .field select{font-size:14px}
+ .intake-group{padding:17px 13px 0}
+ .intake-group legend{font-size:12px}
+ .intake-privacy{padding:14px;gap:10px}
+ .intake-privacy p{font-size:11px}
+ .details-form .consent{font-size:11px}
+ .finance-period{padding:17px;gap:14px}
+ .finance-period .field{min-width:110px}
+ .finance-period .btn{width:100%}
+ .finance-metrics{gap:13px}
+ .finance-metrics .metric{padding:21px}
+ .finance-metrics .metric-head{font-size:12px}
+ .finance-metrics .metric strong{font-size:30px}
+ .finance-metrics .metric>span{font-size:11px}
+ .page-title>.btn{margin-top:18px;min-height:44px;font-size:12px}
+ .finance-pagination{padding:17px;gap:8px;flex-wrap:wrap}
+ .finance-pagination .btn{font-size:11px;min-height:44px}
+ .anamnesis-panel{padding:17px}
+ .dialog-body .form-two{grid-template-columns:1fr;gap:0}
+ .dialog-actions .btn{min-height:44px;font-size:11px}
+}
+.finance-metrics .metric strong.finance-income{color:#4d6b42}
+.finance-metrics .metric strong.finance-expense{color:#a4463c}
+.finance-table .icon-btn{width:44px;height:44px}
+.admin-access-form{display:grid;gap:17px;margin-top:26px}.admin-access-form .field{font-size:12px}.admin-access-form input{font-size:14px;min-height:46px}.admin-access-form .btn{width:100%;font-size:12px;min-height:46px}.access-error{color:var(--red);font-size:12px;line-height:1.7}.access-error:empty{display:none}

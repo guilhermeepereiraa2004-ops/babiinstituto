@@ -19,3 +19,13 @@ Uso para a apresentação e portfólio pedido pela usuária a partir do perfil i
 | fabricia-leao.jpg | Avatar do perfil oficial |
 
 Os nomes dos resultados são títulos editoriais, sem alegação de serem legendas originais. O texto em primeira pessoa é uma proposta de apresentação, baseado nas especialidades da bio. Não há depoimentos, dados de atendimento ou promessas clínicas inventados. Poppins: Google Fonts, licença SIL Open Font License, https://fonts.google.com/specimen/Poppins/about . Favicon e demais elementos vetoriais criados no código.
+
+Refinamento de 2026-10-20: apresentação reescrita em terceira pessoa, mantendo os dados e especialidades desta fonte. Demais chamadas são propostas editoriais, não citações da profissional. Reutilizadas exclusivamente as fotografias acima; nenhuma imagem ou informação comercial nova.
+
+Escolha explícita da usuária em 2026-10-20: foto da Fabrícia de blusa clara como principal. O anexo codex-clipboard-cb386e21-57cb-4ef3-855d-f8922f8e49b7.png mostra a mesma imagem de fabricia-leao.jpg; reutilizado o original local de 150 × 150 px, sem bordas de captura, geração ou alteração do rosto. Cabelos concentrados na seção Resultados.
+
+Precisão sobre a resolução: o arquivo local é uma miniatura do avatar, não o original fotográfico. Em 2026-10-20, CUA confirmou 150 × 150 px no perfil público https://www.instagram.com/babi_institutodebeleza/ e nenhuma alternativa em srcset. Não foi recuperado original de maior resolução; solicitá-lo à usuária para corrigir a nitidez.
+
+Prévia solicitada em 2026-10-20: output/imagegen/fabricia-restaurada-previa.png editada com image_gen a partir de fabricia-leao.jpg. Prompt preservado em fabricia-restaurada-prompt.txt. É restauração generativa com detalhes reconstruídos, não fotografia original em alta resolução. Inspecionada e mantida como prévia, fora dos assets e sem referência na landing, pois não há garantia de preservar cada detalhe do rosto.
+
+Rollback solicitado em 2026-10-20: retomada a composição anterior ao retrato no hero. Foto principal loiro-perolado.jpg; avatar fabricia-leao.jpg pequeno no cartão. Especialidades volta a alternar as fotos reais já documentadas. Nenhuma nova fonte ou fotografia adicionada; prévia restaurada não participa da landing.

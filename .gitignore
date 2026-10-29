@@ -14,3 +14,6 @@ dist/server/
 dist/.openai/
 *.tar.gz
 *-preview.png
+
+.agents/
+skills-lock.json

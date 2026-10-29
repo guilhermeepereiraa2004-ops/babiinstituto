@@ -2,7 +2,7 @@
 
 Gerado por `node scripts/gate.mjs`. Fonte: `docs/acceptance.json`.
 
-Total: 12 | Concluídos: 12 | Progresso dos critérios do gate: 100%
+Total: 19 | Concluídos: 19 | Progresso dos critérios do gate: 100%
 
 | ID | Critério | Status | Evidência |
 | --- | --- | --- | --- |
@@ -18,5 +18,12 @@ Total: 12 | Concluídos: 12 | Progresso dos critérios do gate: 100%
 | A10 | Fluxo de cliente com serviço, calendário e comprovante integrado à landing | OK | check customer |
 | A11 | SQLite com slots únicos e dados locais fora do Git | OK | check persistence |
 | A12 | Testes de reserva, concorrência, autorização, cancelamento e reagendamento | OK | check runtime |
+| A13 | Anamnese com consentimento próprio, persistência e consulta privada | OK | check intake |
+| A14 | Financeiro com entradas, saídas, correções, anulações e saldo por período | OK | check finance |
+| A15 | Conclusão e recebimento atômicos sem duplicação por atendimento | OK | check completion |
+| A16 | Migração preserva reservas antigas e não inventa valores | OK | check migration |
+| A17 | Postgres com transações e migrações separadas, preservando SQLite local | OK | check cloud |
+| A18 | Login de produção com cadastro fechado e proteção da conta proprietária | OK | check authentication |
+| A19 | Vercel publica apenas dist e executa backend na região do banco | OK | check hosting |
 
 A inspeção visual e os testes interativos são registrados em `docs/qa.md`. O percentual mede os critérios deste gate, sem representar autenticação para produção ou publicação.

@@ -1,9 +1,13 @@
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,mkdirSync} from 'node:fs';
+import {resolve,dirname,basename} from 'node:path';
 import {DEFAULT_SETTINGS} from '../server/core.mjs';
-mkdirSync('data',{recursive:true});
-const db=new DatabaseSync('data/qa-preview.sqlite');
+const qaPath=resolve(process.env.BABI_QA_DB_PATH||'data/qa-preview.sqlite');
+if(dirname(qaPath)!==resolve('data')||!/^qa-[a-zA-Z0-9-]+\.sqlite$/.test(basename(qaPath)))throw Error('Use um banco data/qa-*.sqlite separado do banco real.');
+mkdirSync(dirname(qaPath),{recursive:true});
+const db=new DatabaseSync(qaPath);
 db.exec(readFileSync('migrations/0001-bookings.sql','utf8'));
+db.exec(readFileSync('migrations/0002-intake-finance.sql','utf8'));
 const settings=structuredClone(DEFAULT_SETTINGS);settings.enabled=true;settings.weekly.forEach(day=>day.enabled=true);settings.leadMinutes=0;
 db.prepare('INSERT INTO settings(id,value) VALUES(1,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value').run(JSON.stringify(settings));
 db.close();console.log('Banco de QA isolado preparado. A agenda real permanece pausada.');

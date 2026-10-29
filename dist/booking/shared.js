@@ -1,4 +1,5 @@
 export const icons={
+ wallet:'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 8h18m-5 4h5v5h-5zM6 5V3h12"/>',
  arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',up:'<path d="M6 18 18 6M6 6h12v12"/>',
  calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-11 4h1m4 0h1m-6 3h1"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
@@ -19,5 +20,8 @@ export const minuteLabel=value=>`${String(Math.floor(value/60)).padStart(2,'0')}
 export const durationLabel=value=>value>=60?`${Math.floor(value/60)}h${value%60?` ${value%60}min`:''}`:`${value}min`;
 export function addDays(date,days){const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10);}
 export const statusLabel={confirmed:'Confirmado',completed:'Concluído',cancelled:'Cancelado'};
+export const moneyLabel=cents=>cents===null?'Valor a informar':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
+export const paymentLabels={pix:'Pix',cash:'Dinheiro',credit:'Cartão de crédito',debit:'Cartão de débito',transfer:'Transferência',other:'Outro',unrecorded:'Não informado'};
+export function moneyCents(text){const value=String(text).trim();if(!/^\d+(?:[.,]\d{1,2})?$/.test(value))return NaN;const [whole,fraction='']=value.replace(',','.').split('.');const cents=Number(whole)*100+Number(fraction.padEnd(2,'0'));return Number.isSafeInteger(cents)?cents:NaN;}
 export const brand='<a class="booking-brand" href="/" aria-label="Babi Instituto de Beleza — início"><strong>babi<span>.</span></strong><small>INSTITUTO DE BELEZA</small></a>';
 export function notify(message,error=false){let el=document.getElementById('toast');if(!el){el=document.createElement('div');el.id='toast';el.className='toast';el.setAttribute('role','status');document.body.append(el);}el.textContent=message;el.classList.toggle('error',error);el.classList.add('show');clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove('show'),5500);}

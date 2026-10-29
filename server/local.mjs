@@ -1,15 +1,21 @@
 import {createServer} from 'node:http';
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync,existsSync,mkdirSync,statSync} from 'node:fs';
+import {readFileSync,existsSync,mkdirSync,statSync,readdirSync} from 'node:fs';
 import {resolve,extname,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomBytes,timingSafeEqual} from 'node:crypto';
 import {handleApi} from './core.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+if(process.env.VERCEL||process.env.NODE_ENV==='production')throw Error('Local development login cannot run in production. Use the cloud adapter.');
 const dataPath=process.env.BABI_DB_PATH||resolve(root,'data/appointments.sqlite');
 mkdirSync(dirname(dataPath),{recursive:true});
 const sqlite=new DatabaseSync(dataPath);sqlite.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;');
-sqlite.exec(readFileSync(resolve(root,'migrations/0001-bookings.sql'),'utf8'));
+// Migrations are additive and idempotent; an interrupted startup rolls back all changes.
+sqlite.exec('BEGIN IMMEDIATE');
+try {
+ for(const file of readdirSync(resolve(root,'migrations')).filter(f=>/^\d+.*\.sql$/.test(f)).sort())sqlite.exec(readFileSync(resolve(root,'migrations',file),'utf8'));
+ sqlite.exec('COMMIT');
+} catch(error) { sqlite.exec('ROLLBACK'); throw error; }
 export const localDb={
  get:async(sql,args=[])=>sqlite.prepare(sql).get(...args),
  all:async(sql,args=[])=>sqlite.prepare(sql).all(...args),

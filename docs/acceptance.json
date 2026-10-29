@@ -1,14 +1,97 @@
 [
-  {"id":"A01","criterion":"Documento em português com título, descrição e um h1","check":"document"},
-  {"id":"A02","criterion":"Poppins e layout responsivo com redução de movimento","check":"design"},
-  {"id":"A03","criterion":"Fotografias locais disponíveis","check":"assets"},
-  {"id":"A04","criterion":"Links internos com destinos existentes","check":"anchors"},
-  {"id":"A05","criterion":"Contato pelo Instagram oficial e links externos seguros","check":"contact"},
-  {"id":"A06","criterion":"JavaScript válido e dependências entre camadas respeitadas","check":"syntax"},
-  {"id":"A07","criterion":"Portfólio com filtros, fotos ampliáveis e diálogo acessível","check":"portfolio"},
-  {"id":"A08","criterion":"Serviços, apresentação, processo, FAQ e contato completos","check":"sections"},
-  {"id":"A09","criterion":"Admin com agenda, gestão e configurações, protegido no servidor","check":"admin"},
-  {"id":"A10","criterion":"Fluxo de cliente com serviço, calendário e comprovante integrado à landing","check":"customer"},
-  {"id":"A11","criterion":"SQLite com slots únicos e dados locais fora do Git","check":"persistence"},
-  {"id":"A12","criterion":"Testes de reserva, concorrência, autorização, cancelamento e reagendamento","check":"runtime"}
+  {
+    "id": "A01",
+    "criterion": "Documento em português com título, descrição e um h1",
+    "check": "document"
+  },
+  {
+    "id": "A02",
+    "criterion": "Poppins e layout responsivo com redução de movimento",
+    "check": "design"
+  },
+  {
+    "id": "A03",
+    "criterion": "Fotografias locais disponíveis",
+    "check": "assets"
+  },
+  {
+    "id": "A04",
+    "criterion": "Links internos com destinos existentes",
+    "check": "anchors"
+  },
+  {
+    "id": "A05",
+    "criterion": "Contato pelo Instagram oficial e links externos seguros",
+    "check": "contact"
+  },
+  {
+    "id": "A06",
+    "criterion": "JavaScript válido e dependências entre camadas respeitadas",
+    "check": "syntax"
+  },
+  {
+    "id": "A07",
+    "criterion": "Portfólio com filtros, fotos ampliáveis e diálogo acessível",
+    "check": "portfolio"
+  },
+  {
+    "id": "A08",
+    "criterion": "Serviços, apresentação, processo, FAQ e contato completos",
+    "check": "sections"
+  },
+  {
+    "id": "A09",
+    "criterion": "Admin com agenda, gestão e configurações, protegido no servidor",
+    "check": "admin"
+  },
+  {
+    "id": "A10",
+    "criterion": "Fluxo de cliente com serviço, calendário e comprovante integrado à landing",
+    "check": "customer"
+  },
+  {
+    "id": "A11",
+    "criterion": "SQLite com slots únicos e dados locais fora do Git",
+    "check": "persistence"
+  },
+  {
+    "id": "A12",
+    "criterion": "Testes de reserva, concorrência, autorização, cancelamento e reagendamento",
+    "check": "runtime"
+  },
+  {
+    "id": "A13",
+    "criterion": "Anamnese com consentimento próprio, persistência e consulta privada",
+    "check": "intake"
+  },
+  {
+    "id": "A14",
+    "criterion": "Financeiro com entradas, saídas, correções, anulações e saldo por período",
+    "check": "finance"
+  },
+  {
+    "id": "A15",
+    "criterion": "Conclusão e recebimento atômicos sem duplicação por atendimento",
+    "check": "completion"
+  },
+  {
+    "id": "A16",
+    "criterion": "Migração preserva reservas antigas e não inventa valores",
+    "check": "migration"
+  },
+  {
+    "id": "A17",
+    "criterion": "Postgres com transações e migrações separadas, preservando SQLite local",
+    "check": "cloud"
+  },
+  {
+    "id": "A18",
+    "criterion": "Login de produção com cadastro fechado e proteção da conta proprietária",
+    "check": "authentication"
+  },
+  {
+    "id": "A19",
+    "criterion": "Vercel publica apenas dist e executa backend na região do banco",
+    "check": "hosting"
+  }
 ]
