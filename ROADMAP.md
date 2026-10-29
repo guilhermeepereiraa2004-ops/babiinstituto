@@ -42,3 +42,11 @@ Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit fu
 - [x] Publicação e verificação final no domínio oficial.
 
 Publicado por main, commit funcional 6631126, deploy dpl_28M4rLYxMu1RW7XKdoNuP7JCJ4Xy READY, no domínio https://babi-instituto.vercel.app/admin/ e projeto Vercel autorizado. JS/CSS públicos correspondem ao código validado (normalizadas apenas quebras de linha). API pública manteve agenda ativa e os quatro serviços, sem preço; settings/financeiro exigem autenticação (403 sem login), sessão pública não é local/admin. Zero registros de erro na consulta inicial do novo deploy. Nenhum preço real foi atribuído; a usuária deve preencher Valor padrão (R$) em Serviços e horários e salvar. Não foram executadas migrações nem criados atendimentos/lançamentos fictícios na produção.
+
+
+## 2026-10-29 — Recuperação assistida da senha administrativa
+
+- [x] Fluxo de recuperação assistida sem senha atual, com token de uso único e revogação de sessões.
+- [x] Testes de segurança no Neon QA e inspeção desktop/mobile.
+- [ ] Publicação e entrega privada do link de 15 minutos.
+- [ ] Usuária definir a nova senha.

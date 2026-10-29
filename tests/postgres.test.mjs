@@ -7,6 +7,7 @@ import {createAdminAuth,secretMatches} from '../server/auth.mjs';
 import {migratePostgres} from '../scripts/migrate-postgres.mjs';
 import {handleCloudRequest,closeCloudConnections} from '../server/cloud.mjs';
 import {handleApi,DEFAULT_SETTINGS,clock,addDays} from '../server/core.mjs';
+import {createOwnerRecoveryLink} from '../scripts/admin-recovery.mjs';
 
 test('Postgres binding preserves quoted SQL and binds parameters',()=>{
  assert.equal(bindSql("SELECT '?' AS literal, \"?\" FROM bookings WHERE id=? AND date=?"),"SELECT '?' AS literal, \"?\" FROM bookings WHERE id=$1 AND date=$2");
@@ -89,6 +90,47 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.equal((await invoke(booking('11:00'))).status,500);assert.equal((await db.get('SELECT COUNT(*) AS n FROM bookings')).n,1);
    db.batch=async statements=>{if(statements.some(s=>s.sql.startsWith('INSERT INTO bookings')))await db.run('INSERT INTO schedule_blocks(id,date,start_minute,end_minute,note) VALUES(?,?,?,?,?)',[crypto.randomUUID(),date,660,720,'Late QA block']);return realBatch(statements);};
    assert.equal((await invoke(booking('11:00'))).status,409);assert.equal((await db.get('SELECT COUNT(*) AS n FROM bookings')).n,1);db.batch=realBatch;
+  });
+  await t.test('recovery issuance stays private; invalid credentials and origins do not reset access',async()=>{
+   const body={token:'x'.repeat(24),newPassword:randomBytes(24).toString('base64url')};
+   assert.equal((await call('/api/auth/request-password-reset',{method:'POST',data:{email},withCookie:false})).status,404);
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:body,headers:{origin:'https://wrong.test'},withCookie:false})).status,403);
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:{...body,token:''},withCookie:false})).status,400);
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:{...body,newPassword:'short'},withCookie:false})).status,400);
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:body,withCookie:false})).status,400);
+   await assert.rejects(createOwnerRecoveryLink(pool,{origin,secret,setupKey,adminEmail:'other@example.invalid'}));
+   assert.equal((await call('/api/session')).data.admin,true);
+  });
+  await t.test('recovery expires, is consumed once atomically and revokes all previous sessions',async()=>{
+   const options={origin,secret,setupKey,adminEmail:email};
+   const expired=await createOwnerRecoveryLink(pool,options);
+   const oldToken=new URLSearchParams(new URL(expired.recoveryUrl).hash.slice(1)).get('recovery');
+   const verification=await pool.query('SELECT "expiresAt" FROM babi_verification WHERE identifier=$1',['reset-password:'+oldToken]);
+   assert.equal(expired.expiresInSeconds,900);
+   assert(verification.rows[0].expiresAt.getTime()>Date.now()+840000);
+   await pool.query('UPDATE babi_verification SET "expiresAt"=$1 WHERE identifier=$2',[new Date(0),'reset-password:'+oldToken]);
+   const nextPassword=randomBytes(24).toString('base64url');
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:{token:oldToken,newPassword:nextPassword},withCookie:false})).status,400);
+   const secondLogin=await call('/api/auth/sign-in/email',{method:'POST',data:{email,password}});
+   assert.equal(secondLogin.status,200);
+   const secondCookie=secondLogin.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
+   const fresh=await createOwnerRecoveryLink(pool,options);
+   const resetToken=new URLSearchParams(new URL(fresh.recoveryUrl).hash.slice(1)).get('recovery');
+   const resetBody={token:resetToken,newPassword:nextPassword};
+   const changed=await Promise.all([0,1].map(()=>call('/api/auth/reset-password',{method:'POST',data:resetBody,headers:{'x-vercel-forwarded-for':'192.0.2.43'},withCookie:false})));
+   assert.deepEqual(changed.map(r=>r.status).sort(),[200,400]);assert.deepEqual(changed.find(r=>r.status===200).data,{ok:true});
+   assert.equal((await call('/api/auth/reset-password',{method:'POST',data:resetBody,headers:{'x-vercel-forwarded-for':'192.0.2.44'},withCookie:false})).status,400);
+   assert.equal((await call('/api/session')).data.admin,false);
+   assert.equal((await call('/api/admin/settings',{withCookie:false,headers:{cookie:secondCookie}})).status,403);
+   assert.equal((await call('/api/auth/sign-in/email',{method:'POST',data:{email,password}})).status,401);
+   const login=await call('/api/auth/sign-in/email',{method:'POST',data:{email,password:nextPassword}});assert.equal(login.status,200);
+   cookie=login.headers.getSetCookie().map(c=>c.split(';')[0]).join('; ');
+   assert.equal((await call('/api/session')).data.admin,true);
+  });
+  await t.test('reset attempts are persistently rate limited',async()=>{
+   const input={method:'POST',data:{token:'z'.repeat(24),newPassword:randomBytes(24).toString('base64url')},headers:{'x-vercel-forwarded-for':'192.0.2.55'},withCookie:false};
+   for(let i=0;i<5;i++)assert.equal((await call('/api/auth/reset-password',input)).status,400);
+   assert.equal((await call('/api/auth/reset-password',input)).status,429);
   });
   await t.test('logout revokes the session in Postgres',async()=>{
    assert.equal((await call('/api/auth/sign-out',{method:'POST',data:{}})).status,200);

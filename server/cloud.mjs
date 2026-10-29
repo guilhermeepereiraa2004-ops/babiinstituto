@@ -35,16 +35,27 @@ export async function handleCloudRequest(request){
    return json({ok:true},201);
   }
   if(path.startsWith('/api/auth/')){
-   const allowed={'/api/auth/sign-in/email':'POST','/api/auth/sign-out':'POST','/api/auth/get-session':'GET'};
+   const allowed={'/api/auth/sign-in/email':'POST','/api/auth/sign-out':'POST','/api/auth/get-session':'GET','/api/auth/reset-password':'POST'};
    if(allowed[path]!==method)return json({error:'Caminho não encontrado.'},404);
    if(method==='POST'){
     const input=await readBody(request);
     // Login only accepts the configured owner. No public sign-up, email changes,
-    // password-reset or account-linking endpoints are exposed.
+    // reset issuance or account-linking endpoints are exposed. A reset needs an
+    // expiring, single-use token issued by authenticated maintenance.
     if(path.endsWith('/sign-in/email')&&String(input.email).trim().toLowerCase()!==process.env.ADMIN_EMAIL.trim().toLowerCase())return json({error:'E-mail ou senha inválidos.'},401);
-    request=new Request(request.url,{method,headers:request.headers,body:JSON.stringify(input)});
+    if(path==='/api/auth/reset-password'){
+     if(typeof input.token!=='string'||input.token.length<20||input.token.length>200)return json({error:'Este link de recuperação é inválido ou expirou. Solicite um novo link.'},400);
+     if(typeof input.newPassword!=='string'||input.newPassword.length<12||input.newPassword.length>128)return json({error:'Escolha uma senha entre 12 e 128 caracteres.'},400);
+    }
+    request=new Request(request.url,{method,headers:request.headers,body:JSON.stringify(path==='/api/auth/reset-password'?{token:input.token,newPassword:input.newPassword}:input)});
    }
-   const response=await auth.handler(request);response.headers.set('Cache-Control','no-store');return response;
+   const response=await auth.handler(request);response.headers.set('Cache-Control','no-store');
+   if(path==='/api/auth/reset-password'){
+    const payload=await response.json().catch(()=>({})),headers=new Headers(response.headers);headers.delete('content-length');headers.set('Content-Type','application/json');
+    const message=response.status===429?'Muitas tentativas. Aguarde alguns minutos e tente novamente.':payload.code==='INVALID_TOKEN'?'Este link de recuperação é inválido ou expirou. Solicite um novo link.':'Não foi possível definir a nova senha. Tente novamente.';
+    return new Response(JSON.stringify(response.ok?{ok:true}:{error:message}),{status:response.status,headers});
+   }
+   return response;
   }
   const session=await auth.api.getSession({headers:request.headers});
   const admin=session?.user?.email?.toLowerCase()===process.env.ADMIN_EMAIL.trim().toLowerCase();

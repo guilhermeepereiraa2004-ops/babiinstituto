@@ -137,3 +137,18 @@ Validação: 32 testes offline aprovados, uma suíte remota ignorada no gate; 10
 - [x] Publicar via GitHub main e confirmar Vercel/alias/API sem mutar produção.
 
 Publicado por main, commit funcional 6631126, deploy dpl_28M4rLYxMu1RW7XKdoNuP7JCJ4Xy READY, no domínio https://babi-instituto.vercel.app/admin/ e projeto Vercel autorizado. JS/CSS públicos correspondem ao código validado (normalizadas apenas quebras de linha). API pública manteve agenda ativa e os quatro serviços, sem preço; settings/financeiro exigem autenticação (403 sem login), sessão pública não é local/admin. Zero registros de erro na consulta inicial do novo deploy. Nenhum preço real foi atribuído; a usuária deve preencher Valor padrão (R$) em Serviços e horários e salvar. Não foram executadas migrações nem criados atendimentos/lançamentos fictícios na produção.
+
+
+## 2026-10-29 — Recuperação assistida da senha administrativa
+
+Usuária esclareceu que não lembra a senha atual. Implementada recuperação assistida pelo Better Auth existente: link emitido por manutenção autenticada exclusivamente para a única conta ADMIN_EMAIL, válido por 900 segundos e consumido atomicamente uma única vez. POST /api/auth/reset-password exige origem correta, token válido e senha de 12 a 128 caracteres; tentativas limitadas no banco. Revoga todas as sessões anteriores, sem alterar reservas, anamnese ou financeiro. Emissão pública de links, cadastro, troca de e-mail e vinculação de contas seguem fechados. Sem migração, provedor de e-mail ou gravação de senha/token real em arquivos.
+
+A URL usa fragmento #recovery removido imediatamente do histórico; token fica somente em memória e é enviado no corpo do POST. Tela exige nova senha e confirmação, dispensa a antiga e retorna ao login após sucesso, sem guardar a senha. Trata também abertura do link na mesma aba com sessão já ativa. A senha real será digitada e enviada pela própria usuária; nenhum novo valor foi escolhido pelo agente.
+
+Validação: gate 20/20, 32 testes offline aprovados e uma suíte remota ignorada nesse gate; suíte real Neon QA com 13 casos/subtestes aprovados em schema descartável, incluindo expiração, consumo concorrente único, tentativa inválida, CSRF, revogação de duas sessões, senha antiga recusada/nova aceita e limite persistente. Navegador isolado em outro schema descartável QA: 14 verificações aprovadas, sem erro JavaScript, inspeção desktop e 390 px. Capturas sem credenciais reais: docs/qa/admin-recovery-desktop.png, admin-recovery-mobile.png e admin-recovery-success-mobile.png. Schemas descartáveis removidos. CUA continua indisponível; Chrome headless isolado foi a alternativa já documentada. A primeira inspeção identificou a navegação por fragmento na mesma aba e motivou correção com hashchange; o fluxo corrigido passou.
+
+- [x] Implementar emissão assistida, consumo único, revogação e formulário de recuperação.
+- [x] Validar banco e UI com dados descartáveis, preservando produção.
+- [ ] Publicar e verificar domínio, assets e rotas.
+- [ ] Emitir link temporário privado após deploy.
+- [ ] Usuária definir pessoalmente a nova senha no painel.
