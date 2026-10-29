@@ -39,4 +39,6 @@ Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit fu
 
 - [x] Valor padrão opcional e privado por serviço, preenchendo o recebimento na conclusão.
 - [x] Testes offline, Neon QA e UI desktop/mobile, incluindo desconto/cortesia e histórico.
-- [ ] Publicação e verificação final no domínio oficial.
+- [x] Publicação e verificação final no domínio oficial.
+
+Publicado por main, commit funcional 6631126, deploy dpl_28M4rLYxMu1RW7XKdoNuP7JCJ4Xy READY, no domínio https://babi-instituto.vercel.app/admin/ e projeto Vercel autorizado. JS/CSS públicos correspondem ao código validado (normalizadas apenas quebras de linha). API pública manteve agenda ativa e os quatro serviços, sem preço; settings/financeiro exigem autenticação (403 sem login), sessão pública não é local/admin. Zero registros de erro na consulta inicial do novo deploy. Nenhum preço real foi atribuído; a usuária deve preencher Valor padrão (R$) em Serviços e horários e salvar. Não foram executadas migrações nem criados atendimentos/lançamentos fictícios na produção.
