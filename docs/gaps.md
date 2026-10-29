@@ -61,3 +61,10 @@ Pendência anterior resolvida pela escolha da usuária: https://github.com/guilh
 ## Agenda pública ativa — 2026-10-29
 
 Usuária confirmou os quatro serviços e durações e autorizou o agente a escolher os horários. Salvo em produção: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Mechas/loiros 3h, cor/visagismo 2h, cortes/cachos 1h e terapia capilar 1h; antecedência de 1h e janela de 60 dias. A configuração é editável no painel. Nenhum preço ou dado de cliente foi inventado e nenhuma reserva fictícia foi criada.
+
+
+## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+
+Pendência visual resolvida por inspeção das capturas e 14 verificações interativas em navegador isolado de QA. CUA e Computer Use continuam indisponíveis (failed to write kernel assets / os error 3). Após a retomada solicitada pela usuária, a inspeção foi concluída por testes e capturas de um Chrome headless separado, usando Playwright já disponível no runtime e Chrome já instalado; nenhum navegador ou sessão pessoal foi controlado. Essa alternativa resolveu a pendência visual, sem alterar a preferência por CUA para QA normal.
+
+Falta concluir o push e confirmar o deploy READY, domínio e API pública.

@@ -120,3 +120,13 @@
 - Escolhida e informada configuração inicial: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Mantidas antecedência de 60 min e janela de 60 dias.
 - Preservado backup privado da configuração anterior. Salvo enabled=true pelo handleApi de manutenção autorizada e createPostgresDb da produção, com validação e trava transacional. Nenhuma credencial exibida e nenhuma reserva fictícia criada. SQLite/QA e dados de clientes/financeiro preservados.
 - GET público confirmou ativação. Disponibilidade dos quatro serviços respeita 09h–18h e duração; sábado fechado. Página pública de reservas aberta para uso. Memória atualizada e raia liberada.
+
+
+## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+
+Botão Adicionar serviço no painel Serviços e horários: nome, descrição, duração obrigatória de 15 a 480 min em passos de 15 e disponibilidade para agendamento. Limite existente de 12 serviços; cancelar rascunhos preserva outras edições; os serviços só ficam públicos ao salvar. Backend e migrações preservados.
+
+- Gate 19/19 e 29 testes offline aprovados; uma suíte remota ignorada. Em Chrome headless isolado, com SQLite exclusivo data/qa-services-20261029.sqlite na porta 4174, 14 verificações passaram: foco, campos obrigatórios, preservação de edições/cancelamento, publicação somente após salvar, persistência após recarregar, serviço no fluxo da cliente, desativação, limite de 12, cancelamento liberando inclusão, mobile 390 px sem rolagem horizontal e zero erros de JavaScript/console. Capturas inspecionadas: docs/qa/services-add-desktop.png, services-add-mobile.png, services-add-mobile-top.png e services-add-mobile-draft.png. Todos os dados de teste são fictícios e estão apenas em QA.
+- CUA e Computer Use continuam indisponíveis (failed to write kernel assets / os error 3). Após a retomada solicitada pela usuária, a inspeção foi concluída por testes e capturas de um Chrome headless separado, usando Playwright já disponível no runtime e Chrome já instalado; nenhum navegador ou sessão pessoal foi controlado. Essa alternativa resolveu a pendência visual, sem alterar a preferência por CUA para QA normal.
+- Destino confirmado por vercel project inspect: guilherme-pereiras-projects-5a38e3ba/babi-instituto, prj_zw4UHlBR6UJaS6KXY6PENJELAbg9. Origin guilhermeepereiraa2004-ops/babiinstituto; main. Nenhuma migração ou alteração de dados de produção.
+- Publicação automática em andamento; registrar resultado após confirmação.

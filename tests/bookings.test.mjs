@@ -5,6 +5,41 @@ import {readFileSync,unlinkSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DEFAULT_SETTINGS,handleApi,clock} from '../server/core.mjs';
+
+test('novo serviço fica disponível para reservar e preserva a duração das reservas após edição',async()=>{
+ const f=fixture();
+ try{
+  const service={id:'servico-'+crypto.randomUUID().replaceAll('-',''),name:'Cuidado de teste',description:'Serviço fictício somente no teste',duration:45,active:true};
+  f.settings.services.push(service);
+  assert.equal((await f.save()).status,200);
+  const config=(await f.call('/api/config')).data;
+  assert.equal(config.services.find(s=>s.id===service.id).duration,45);
+  assert.equal((await f.booking('09:00',{serviceId:service.id})).status,201);
+  service.name='Cuidado revisado de teste';service.duration=90;
+  assert.equal((await f.save()).status,200);
+  const reservation=(await f.call('/api/admin/bookings',{admin:true})).data.bookings[0];
+  assert.equal(reservation.service_name,'Cuidado de teste');
+  assert.equal(reservation.duration,45);
+  service.active=false;
+  assert.equal((await f.save()).status,200);
+  assert.equal((await f.call('/api/config')).data.services.some(s=>s.id===service.id),false);
+  assert.equal((await f.booking('11:00',{serviceId:service.id})).status,400);
+ }finally{f.sqlite.close();}
+});
+
+test('cadastro aceita até doze serviços e rejeita excesso ou duração inválida sem sobrescrever',async()=>{
+ const f=fixture();
+ try{
+  while(f.settings.services.length<12)f.settings.services.push({id:'extra-'+f.settings.services.length,name:'Cuidado de teste '+f.settings.services.length,description:'',duration:30,active:true});
+  assert.equal((await f.save()).status,200);
+  f.settings.services.push({id:'excedente',name:'Excedente de teste',description:'',duration:30,active:true});
+  assert.equal((await f.save()).status,400);
+  assert.equal((await f.call('/api/admin/settings',{admin:true})).data.services.length,12);
+  f.settings.services.pop();f.settings.services[11].duration=17;
+  assert.equal((await f.save()).status,400);
+  assert.equal((await f.call('/api/admin/settings',{admin:true})).data.services[11].duration,30);
+ }finally{f.sqlite.close();}
+});
 function fixture(){const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON;');sqlite.exec(readFileSync(new URL('../migrations/0001-bookings.sql',import.meta.url),'utf8'));sqlite.exec(readFileSync(new URL('../migrations/0002-intake-finance.sql',import.meta.url),'utf8'));const db={get:async(s,a=[])=>sqlite.prepare(s).get(...a),all:async(s,a=[])=>sqlite.prepare(s).all(...a),run:async(s,a=[])=>sqlite.prepare(s).run(...a),batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const result=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return result;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};const now=new Date('2026-10-18T15:00:00Z');let count=0;const call=async(path,{method='GET',data,admin=false,origin='https://babi.test'}={})=>{const request=new Request('https://babi.test'+path,{method,headers:{...(data?{'content-type':'application/json',origin}: {})},...(data?{body:JSON.stringify(data)}:{})});const response=await handleApi(request,db,{admin,now,clientKey:'test'+count++});return {status:response.status,data:await response.json()};};const settings=structuredClone(DEFAULT_SETTINGS);settings.enabled=true;settings.weekly.forEach(d=>d.enabled=true);settings.services.forEach(s=>s.duration=60);const save=()=>call('/api/admin/settings',{method:'PUT',admin:true,data:settings});const booking=(time='09:00',extra={})=>call('/api/bookings',{method:'POST',data:{name:'Cliente de teste',phone:'71999990000',consent:true,anamnesis:{chemicalHistory:'no',allergies:'no',consent:true},serviceId:'corte',date:'2026-10-19',time,idempotencyKey:crypto.randomUUID(),...extra}});return {sqlite,db,call,settings,save,booking};}
 test('admin protegido, cabeçalhos e origem não concedem permissão',async()=>{const f=fixture();assert.equal((await f.call('/api/admin/settings')).status,403);assert.equal((await f.call('/api/admin/settings',{method:'PUT',admin:true,data:f.settings,origin:'https://outro.test'})).status,403);f.sqlite.close();});
 test('agenda inicia fechada e só abre com configurações válidas',async()=>{const f=fixture();assert.equal((await f.call('/api/config')).data.enabled,false);assert.equal((await f.booking()).status,409);f.settings.services[0].duration=17;assert.equal((await f.save()).status,400);f.settings.services[0].duration=60;assert.equal((await f.save()).status,200);f.sqlite.close();});

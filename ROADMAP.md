@@ -23,3 +23,11 @@ Atualizado: 2026-10-22. Estágio: landing, agendamento, anamnese e financeiro lo
 | Conexão ao GitHub/Vercel | Concluída em 2026-10-29 | Código em guilhermeepereiraa2004-ops/babiinstituto, main conectada ao projeto Vercel existente |
 
 Aceitação do gate atual: 19/19. Aplicação publicada na Vercel, com backend Neon e login de produção. Produção começou vazia e pausada; quatro reservas locais preservadas em SQLite, sem importação. GitHub principal agora é guilhermeepereiraa2004-ops/babiinstituto, conectado à Vercel em main. Primeira publicação foi por CLI; atualizações passam a usar Git. Agenda ativada em 2026-10-29, com serviços/durações confirmados e horários iniciais definidos pelo agente por delegação expressa da usuária.
+
+
+## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+
+- [x] Implementar Adicionar serviço, campos obrigatórios, cancelamento e limite de 12.
+- [x] Gate 19/19, 29 testes offline e 14 verificações de navegador.
+- [x] Inspecionar desktop e mobile 390 px em QA isolado.
+- [ ] Concluir push e confirmar deploy e API pública.

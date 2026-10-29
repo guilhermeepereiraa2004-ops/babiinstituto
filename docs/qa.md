@@ -110,3 +110,14 @@ Destino vazio confirmado por git ls-remote. main enviada com a credencial existe
 Usuária confirmou serviços/durações e delegou os horários iniciais. Configuração salva pelo núcleo validado e adaptador Postgres de produção, com a mesma trava transacional dos demais escritores. Backup anterior apenas em .vercel/, ignorado. Agenda ativa seg–sex 09h–18h, sem pausa fixa, antecedência 1h e janela 60 dias.
 
 Verificação pública GET /api/config: enabled=true. Em 30/10/2026, disponibilidade conferida para os quatro serviços: mechas 09h–15h (13 inícios), cor 09h–16h (15), corte e terapia 09h–17h (17 cada); fim de atendimento sempre até 18h. Sábado sem horários. Não foi criada reserva fictícia, nem houve alteração de UI, schema, senha, clientes, anamnese ou financeiro.
+
+
+## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+
+Botão Adicionar serviço no painel Serviços e horários: nome, descrição, duração obrigatória de 15 a 480 min em passos de 15 e disponibilidade para agendamento. Limite existente de 12 serviços; cancelar rascunhos preserva outras edições; os serviços só ficam públicos ao salvar. Backend e migrações preservados.
+
+Gate 19/19 e 29 testes offline aprovados; uma suíte remota ignorada. Em Chrome headless isolado, com SQLite exclusivo data/qa-services-20261029.sqlite na porta 4174, 14 verificações passaram: foco, campos obrigatórios, preservação de edições/cancelamento, publicação somente após salvar, persistência após recarregar, serviço no fluxo da cliente, desativação, limite de 12, cancelamento liberando inclusão, mobile 390 px sem rolagem horizontal e zero erros de JavaScript/console. Capturas inspecionadas: docs/qa/services-add-desktop.png, services-add-mobile.png, services-add-mobile-top.png e services-add-mobile-draft.png. Todos os dados de teste são fictícios e estão apenas em QA.
+
+CUA e Computer Use continuam indisponíveis (failed to write kernel assets / os error 3). Após a retomada solicitada pela usuária, a inspeção foi concluída por testes e capturas de um Chrome headless separado, usando Playwright já disponível no runtime e Chrome já instalado; nenhum navegador ou sessão pessoal foi controlado. Essa alternativa resolveu a pendência visual, sem alterar a preferência por CUA para QA normal.
+
+Publicação por push em main no projeto Vercel autorizado; confirmar commit, READY, alias e arquivos/API públicos após deploy. Nenhum serviço fictício foi criado na produção.
