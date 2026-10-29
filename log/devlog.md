@@ -114,3 +114,9 @@
 - Vercel git connect retornou Connected. API confirmou org/repo novos e main como branch de produção, mantendo projeto prj_zw4UHlBR6UJaS6KXY6PENJELAbg9, conta, Neon, ambientes e domínio atuais.
 - Corrigida a orientação anterior: repositórios pessoais precisam ser conectados pelo proprietário, e colaboração/Escrita não é suficiente segundo a documentação Vercel.
 - Gate 19/19 antes do commit; atualização documental inicia a primeira publicação automática pelo novo vínculo. Sem alterações funcionais, de UI, de banco ou de agenda. Raia liberada.
+
+## 2026-10-29 — Agenda online ativada em produção
+- Usuária confirmou Mechas & loiros 3h, Cor & visagismo 2h, Cortes & cachos 1h e Terapia capilar 1h; autorizou o agente a definir os dias/horários.
+- Escolhida e informada configuração inicial: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Mantidas antecedência de 60 min e janela de 60 dias.
+- Preservado backup privado da configuração anterior. Salvo enabled=true pelo handleApi de manutenção autorizada e createPostgresDb da produção, com validação e trava transacional. Nenhuma credencial exibida e nenhuma reserva fictícia criada. SQLite/QA e dados de clientes/financeiro preservados.
+- GET público confirmou ativação. Disponibilidade dos quatro serviços respeita 09h–18h e duração; sábado fechado. Página pública de reservas aberta para uso. Memória atualizada e raia liberada.

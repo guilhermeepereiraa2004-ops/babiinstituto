@@ -104,3 +104,9 @@ Gate 19/19 antes do commit; 56 arquivos revisados, nenhum caminho privado ou pad
 ## Conexão do repositório próprio — 2026-10-29
 
 Destino vazio confirmado por git ls-remote. main enviada com a credencial existente de Guilherme, selecionada somente neste checkout. Vercel git connect retornou Connected; API do projeto confirmou org guilhermeepereiraa2004-ops, repo babiinstituto, repoId 1438468251, productionBranch main. Gate 19/19; nenhuma mudança funcional ou de UI nesta etapa. Dados e segredos permanecem fora do Git.
+
+## Ativação da agenda de produção — 2026-10-29
+
+Usuária confirmou serviços/durações e delegou os horários iniciais. Configuração salva pelo núcleo validado e adaptador Postgres de produção, com a mesma trava transacional dos demais escritores. Backup anterior apenas em .vercel/, ignorado. Agenda ativa seg–sex 09h–18h, sem pausa fixa, antecedência 1h e janela 60 dias.
+
+Verificação pública GET /api/config: enabled=true. Em 30/10/2026, disponibilidade conferida para os quatro serviços: mechas 09h–15h (13 inícios), cor 09h–16h (15), corte e terapia 09h–17h (17 cada); fim de atendimento sempre até 18h. Sábado sem horários. Não foi criada reserva fictícia, nem houve alteração de UI, schema, senha, clientes, anamnese ou financeiro.

@@ -100,3 +100,11 @@ Foto atual preservada enquanto aguarda o arquivo; não gerar detalhes do rosto p
 - [x] Enviar main e histórico ao novo origin, sem bancos/ambientes/segredos.
 - [x] Conectar ao mesmo projeto Vercel e confirmar productionBranch main por API.
 - [x] Gate 19/19 antes do commit e atualização da documentação.
+
+## Ativar agenda pública — 2026-10-29
+- [x] Ler configuração de produção sem expor dados de clientes ou credenciais.
+- [x] Usuária confirmar quatro serviços e durações e delegar os horários ao agente.
+- [x] Salvar/ativar seg–sex 09h–18h, sem pausa fixa, antecedência 1h e janela 60 dias.
+- [x] Usar validação do núcleo e adaptador Postgres com trava transacional; guardar backup privado da configuração anterior.
+- [x] Conferir enabled=true e disponibilidade dos quatro serviços no site público, incluindo duração/limite 18h e sábado fechado.
+- [x] Atualizar memória e liberar raia, sem reserva fictícia em produção.

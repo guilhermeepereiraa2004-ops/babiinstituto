@@ -14,7 +14,7 @@ Não foram acrescentados dados comerciais não verificados.
 | Item | Estado | Evidência |
 | --- | --- | --- |
 | Admin e página da cliente | Concluído localmente | Fluxo de reserva, comprovante, reagendamento e cancelamento verificado |
-| Horários reais e durações | A revisar pela usuária | Agenda inicial pausada; sugestões editáveis no admin |
+| Horários e durações para reservas | Configurados e ativados em 2026-10-29 | Usuária confirmou quatro serviços/durações e delegou os horários iniciais; seg–sex 09h–18h, sem pausa fixa |
 | Acesso administrativo de produção | Resolvido em 2026-10-22 | Adaptador separado e Better Auth no Neon, com cadastro fechado; sessão local permanece apenas loopback |
 | GitHub | Conectado | main rastreia origin/main; refinamento de 20/10 permanece local |
 | Publicação do MVP e do refinamento | Fora do escopo atual | Etapa local, sem novo deploy |
@@ -48,7 +48,7 @@ QA isolado validou o fluxo completo e mobile 390 px. Banco real já estava ativo
 
 ## Nuvem — encerramento em 2026-10-22
 
-Neon e Vercel publicados na conta solicitada, com cadastro administrativo fechado e senha definida pela usuária. Produção confirmou zero reservas, anamneses e lançamentos, uma conta proprietária e agenda pausada. Horários reais ainda precisam ser revisados/salvos pela administradora antes de ativação. Recuperação de senha por e-mail e deploy automático por Git não foram configurados; operação documentada em docs/deploy.md.
+Neon e Vercel publicados na conta solicitada, com cadastro administrativo fechado e senha definida pela usuária. Produção confirmou zero reservas, anamneses e lançamentos, uma conta proprietária e agenda pausada. Situação inicial superada em 2026-10-29: agenda ativa após confirmação dos serviços/durações e delegação expressa dos horários iniciais. Recuperação de senha por e-mail e deploy automático por Git não foram configurados; operação documentada em docs/deploy.md.
 
 ## Integração GitHub/Vercel — 2026-10-29
 
@@ -57,3 +57,7 @@ Código atual sincronizado no GitHub, main, 6ddb004. Site e Neon continuam publi
 ## Repositório próprio conectado — 2026-10-29
 
 Pendência anterior resolvida pela escolha da usuária: https://github.com/guilhermeepereiraa2004-ops/babiinstituto.git . origin/main recebeu código e histórico; Vercel confirmou esse repositório e main no projeto já publicado. Colaborador em repositório pessoal não basta para conectar na Vercel; o novo destino pertence à conta apropriada. previous-origin preserva a referência anterior. Sem alteração de banco, credenciais, domínio ou configuração de agenda.
+
+## Agenda pública ativa — 2026-10-29
+
+Usuária confirmou os quatro serviços e durações e autorizou o agente a escolher os horários. Salvo em produção: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Mechas/loiros 3h, cor/visagismo 2h, cortes/cachos 1h e terapia capilar 1h; antecedência de 1h e janela de 60 dias. A configuração é editável no painel. Nenhum preço ou dado de cliente foi inventado e nenhuma reserva fictícia foi criada.
