@@ -49,3 +49,7 @@ QA isolado validou o fluxo completo e mobile 390 px. Banco real já estava ativo
 ## Nuvem — encerramento em 2026-10-22
 
 Neon e Vercel publicados na conta solicitada, com cadastro administrativo fechado e senha definida pela usuária. Produção confirmou zero reservas, anamneses e lançamentos, uma conta proprietária e agenda pausada. Horários reais ainda precisam ser revisados/salvos pela administradora antes de ativação. Recuperação de senha por e-mail e deploy automático por Git não foram configurados; operação documentada em docs/deploy.md.
+
+## Integração GitHub/Vercel — 2026-10-29
+
+Código atual sincronizado no GitHub, main, 6ddb004. Site e Neon continuam publicados por CLI. A Vercel recusou conectar o repositório porque a conta GitHub usada nela não possui acesso de admin/Escrita em andrelopees04-source/babi. A usuária precisa liberar e aceitar esse acesso antes da conexão. O banco e as credenciais permanecem privados; nenhuma configuração de agenda ou de banco foi alterada nesta etapa.

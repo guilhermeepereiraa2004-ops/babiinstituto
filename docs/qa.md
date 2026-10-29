@@ -96,3 +96,7 @@ Produção: https://babi-instituto.vercel.app/ . Deployment dpl_Dyi3CigVpe3NVDB2
 Primeiro build falhou porque .gitignore não é enviado pela Vercel. Build ajustado para sintaxe e testes, mantendo o gate completo obrigatório localmente. Não houve teste em aparelho físico ou auditoria formal de acessibilidade. Publicação por CLI, sem CI Git automática.
 
 Encerramento: comando npm run test:postgres aprovado (9/9); gate final 19/19. Contagem de produção após primeiro acesso: 0 reservas, 0 anamneses, 0 lançamentos, 1 conta proprietária; agenda=false. Servidor temporário 4175 encerrado, 4173 preservado.
+
+## Sincronização e tentativa de conexão Git — 2026-10-29
+
+Gate 19/19 antes do commit; 56 arquivos revisados, nenhum caminho privado ou padrão de credencial no conjunto preparado. Código enviado a main no commit 6ddb004. Vercel project inspect confirmou Guilherme Pereira/babi-instituto. vercel git connect recusou com 400: You need admin or write access to the repository. Integração não concluída; aguarda autorização GitHub da usuária. Não houve alteração funcional, de UI ou de dados de produção.

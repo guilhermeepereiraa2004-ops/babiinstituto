@@ -85,3 +85,11 @@ Foto atual preservada enquanto aguarda o arquivo; não gerar detalhes do rosto p
 - [x] Gate 19/19, testes offline e Neon, privacidade, preview e CUA.
 - [x] Publicar e verificar produção na conta solicitada; usuária definir senha e abrir painel.
 - [x] Atualizar memória, preservar SQLite e liberar raia.
+
+## GitHub na Vercel — 2026-10-29
+- [x] Confirmar projeto e conta Vercel, repositório autorizado e versão remota anterior.
+- [x] Gate 19/19, revisão de exclusão de dados privados e commit/push da versão atual (6ddb004).
+- [x] Tentar conexão ao projeto existente e identificar bloqueio admin/write do GitHub.
+- [ ] Usuária liberar acesso de Escrita à conta GitHub usada na Vercel e aceitar convite.
+- [ ] Concluir conexão, verificar main como branch de produção e confirmar vínculo.
+- [ ] Atualizar memória de conclusão da integração e liberar raia.

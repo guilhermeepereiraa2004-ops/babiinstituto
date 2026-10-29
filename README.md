@@ -4,7 +4,7 @@ Landing page e MVP de agendamentos, em Poppins e tons café/champagne.
 
 Publicado em https://babi-instituto.vercel.app/ . Painel em https://babi-instituto.vercel.app/admin/ . Neon e Vercel na conta de Guilherme Pereira, conforme pedido de 2026-10-22. Produção começou sem reservas, com agenda pausada; acesso inicial definido pela usuária. Detalhes em docs/deploy.md.
 
-Repositório de destino: https://github.com/andrelopees04-source/babi . A raiz do projeto Git é esta pasta. O deploy atual foi realizado por CLI, sem conectar publicação automática por Git.
+Repositório de destino: https://github.com/andrelopees04-source/babi . A raiz do projeto Git é esta pasta. O deploy atual foi realizado por CLI. Código atualizado em main em 2026-10-29; a conexão Vercel/GitHub aguarda acesso de Escrita da conta GitHub usada na Vercel ao repositório.
 
 ## Rodar
 

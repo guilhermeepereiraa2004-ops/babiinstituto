@@ -101,3 +101,9 @@
 - Build, preview e produção READY verificados. Deployment final dpl_Dyi3CigVpe3NVDB2xyKE6Ga9rezj promovido para https://babi-instituto.vercel.app/; função gru1 e alias conferidos. Primeiro build sem .gitignore corrigido com build-cloud.mjs.
 - Gate 19/19, 27 casos offline e nove casos/subtestes no Neon. CUA com reserva/anamnese em QA; recebimento e saída do mesmo registro validados por API. Produção sem reservas/anamneses/lançamentos, com agenda pausada.
 - CUA confirmou painel real e financeiro vazio em desktop/mobile 390, sem overflow ou erros. Evidências em docs/qa.md. Base local preservada, sem sincronização. Deploy por CLI; sem novo commit/push ou CI Git automático nesta etapa. Memória atualizada e raia liberada.
+
+## 2026-10-29 — Código sincronizado; vínculo GitHub/Vercel aguarda permissão
+- Usuária informou que a Vercel mostra repositório desconectado. Confirmado deploy anterior por CLI, com main remoto ainda na versão anterior 6d21300.
+- Conferidos destino Vercel e remoto autorizado. Gate 19/19, revisão de arquivos privados e commit/push 6ddb004 com a versão já publicada: landing refinada, anamnese, financeiro, Neon e autenticação. Não foram enviados ambientes, bancos, credenciais ou a prévia de IA em output/.
+- Tentada conexão de andrelopees04-source/babi ao projeto existente. Vercel recusou com 400, exigindo admin/write no repositório para a conta GitHub usada na Vercel. Usuária orientada a liberar Escrita e aceitar convite antes de nova tentativa. Sem troca de conta, transferência de repo ou mudança em outros projetos.
+- Site/banco de produção preservados. Local Babi atualmente em 4176; 4173 pertence a outro projeto e não foi encerrado. Memória atualizada; conexão ainda pendente da permissão externa.
