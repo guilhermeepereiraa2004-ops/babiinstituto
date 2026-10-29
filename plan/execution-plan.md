@@ -110,7 +110,7 @@ Foto atual preservada enquanto aguarda o arquivo; não gerar detalhes do rosto p
 - [x] Atualizar memória e liberar raia, sem reserva fictícia em produção.
 
 
-## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+## 2026-10-29 — Inclusão de serviços no painel (publicada)
 
 Botão Adicionar serviço no painel Serviços e horários: nome, descrição, duração obrigatória de 15 a 480 min em passos de 15 e disponibilidade para agendamento. Limite existente de 12 serviços; cancelar rascunhos preserva outras edições; os serviços só ficam públicos ao salvar. Backend e migrações preservados.
 
@@ -119,4 +119,6 @@ Gate 19/19 e 29 testes offline aprovados; uma suíte remota ignorada. Em Chrome 
 CUA e Computer Use continuam indisponíveis (failed to write kernel assets / os error 3). Após a retomada solicitada pela usuária, a inspeção foi concluída por testes e capturas de um Chrome headless separado, usando Playwright já disponível no runtime e Chrome já instalado; nenhum navegador ou sessão pessoal foi controlado. Essa alternativa resolveu a pendência visual, sem alterar a preferência por CUA para QA normal.
 
 - [x] Implementar e validar cadastro em ambiente isolado.
-- [ ] Enviar main ao GitHub e verificar publicação automática na Vercel autorizada.
+- [x] Enviar main ao GitHub e verificar publicação automática na Vercel autorizada.
+
+Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit funcional 1bb2d6c, deploy dpl_7WdDLwy3bN6u4ieahWt3J6QoTZGn READY e alias de produção confirmado. JS/CSS públicos correspondem à versão validada (normalizadas apenas quebras de linha CRLF/LF). API pública confirmou enabled=true e os mesmos quatro serviços; sessão pública sem privilégio/local e /api/admin/settings responde 403 sem login. Zero registros de erro no novo deploy durante a consulta inicial de 10 min. Nenhuma migração, dado ou credencial real foi alterado. Uso: Serviços e horários → Adicionar serviço → preencher nome/descrição/duração, marcar disponibilidade → Salvar configurações.

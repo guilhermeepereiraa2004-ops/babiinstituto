@@ -63,8 +63,8 @@ Pendência anterior resolvida pela escolha da usuária: https://github.com/guilh
 Usuária confirmou os quatro serviços e durações e autorizou o agente a escolher os horários. Salvo em produção: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Mechas/loiros 3h, cor/visagismo 2h, cortes/cachos 1h e terapia capilar 1h; antecedência de 1h e janela de 60 dias. A configuração é editável no painel. Nenhum preço ou dado de cliente foi inventado e nenhuma reserva fictícia foi criada.
 
 
-## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+## 2026-10-29 — Inclusão de serviços no painel (publicada)
 
 Pendência visual resolvida por inspeção das capturas e 14 verificações interativas em navegador isolado de QA. CUA e Computer Use continuam indisponíveis (failed to write kernel assets / os error 3). Após a retomada solicitada pela usuária, a inspeção foi concluída por testes e capturas de um Chrome headless separado, usando Playwright já disponível no runtime e Chrome já instalado; nenhum navegador ou sessão pessoal foi controlado. Essa alternativa resolveu a pendência visual, sem alterar a preferência por CUA para QA normal.
 
-Falta concluir o push e confirmar o deploy READY, domínio e API pública.
+Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit funcional 1bb2d6c, deploy dpl_7WdDLwy3bN6u4ieahWt3J6QoTZGn READY e alias de produção confirmado. JS/CSS públicos correspondem à versão validada (normalizadas apenas quebras de linha CRLF/LF). API pública confirmou enabled=true e os mesmos quatro serviços; sessão pública sem privilégio/local e /api/admin/settings responde 403 sem login. Zero registros de erro no novo deploy durante a consulta inicial de 10 min. Nenhuma migração, dado ou credencial real foi alterado. Uso: Serviços e horários → Adicionar serviço → preencher nome/descrição/duração, marcar disponibilidade → Salvar configurações.

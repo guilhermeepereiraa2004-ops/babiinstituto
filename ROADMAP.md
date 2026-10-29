@@ -25,9 +25,11 @@ Atualizado: 2026-10-22. Estágio: landing, agendamento, anamnese e financeiro lo
 Aceitação do gate atual: 19/19. Aplicação publicada na Vercel, com backend Neon e login de produção. Produção começou vazia e pausada; quatro reservas locais preservadas em SQLite, sem importação. GitHub principal agora é guilhermeepereiraa2004-ops/babiinstituto, conectado à Vercel em main. Primeira publicação foi por CLI; atualizações passam a usar Git. Agenda ativada em 2026-10-29, com serviços/durações confirmados e horários iniciais definidos pelo agente por delegação expressa da usuária.
 
 
-## 2026-10-29 — Inclusão de serviços no painel (validada, publicação em andamento)
+## 2026-10-29 — Inclusão de serviços no painel (publicada)
 
 - [x] Implementar Adicionar serviço, campos obrigatórios, cancelamento e limite de 12.
 - [x] Gate 19/19, 29 testes offline e 14 verificações de navegador.
 - [x] Inspecionar desktop e mobile 390 px em QA isolado.
-- [ ] Concluir push e confirmar deploy e API pública.
+- [x] Concluir push e confirmar deploy e API pública.
+
+Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit funcional 1bb2d6c, deploy dpl_7WdDLwy3bN6u4ieahWt3J6QoTZGn READY e alias de produção confirmado. JS/CSS públicos correspondem à versão validada (normalizadas apenas quebras de linha CRLF/LF). API pública confirmou enabled=true e os mesmos quatro serviços; sessão pública sem privilégio/local e /api/admin/settings responde 403 sem login. Zero registros de erro no novo deploy durante a consulta inicial de 10 min. Nenhuma migração, dado ou credencial real foi alterado. Uso: Serviços e horários → Adicionar serviço → preencher nome/descrição/duração, marcar disponibilidade → Salvar configurações.

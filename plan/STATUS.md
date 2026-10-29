@@ -2,7 +2,7 @@
 
 Atualizado: 2026-10-29.
 
-Em publicação: botão Adicionar serviço validado no admin, com gate 19/19, 29 testes offline aprovados e 14 verificações no navegador isolado de QA. Desktop e mobile 390 px inspecionados. CUA indisponível; Chrome headless separado usado como alternativa documentada. Aguardando push e confirmação do deploy no projeto Vercel existente. Nenhuma alteração de dados reais.
+Cadastro de serviços publicado: botão Adicionar serviço no admin, até 12 serviços, com nome, descrição, duração e disponibilidade. Gate 19/19, 29 testes offline e 14 verificações no navegador isolado; desktop/mobile inspecionados. Deploy dpl_7WdDLwy3bN6u4ieahWt3J6QoTZGn READY (commit funcional 1bb2d6c), alias e arquivos públicos confirmados; agenda ativa e os quatro serviços reais preservados. CUA indisponível; alternativa de Chrome headless isolado documentada em docs/qa.md. Raia concluída.
 
 Marco atual: agenda de produção ATIVA desde 2026-10-29. Configuração inicial escolhida por delegação expressa da usuária: segunda a sexta, 09:00–18:00, sem pausa fixa; sábado/domingo fechados; America/Bahia. Aplicação na Vercel de Guilherme Pereira, com Neon separado para produção e QA. Anamnese integrada ao agendamento e financeiro no admin, com conclusão/recebimento atômicos. Login fechado por Better Auth; a usuária definiu a senha e abriu o painel. Gate 19/19, 27 testes offline aprovados e suíte Neon com nove casos/subtestes aprovados. UI inspecionada em desktop/mobile. Landing preservada após rollback anterior.
 
