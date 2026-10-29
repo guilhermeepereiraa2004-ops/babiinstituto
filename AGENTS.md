@@ -9,7 +9,7 @@ Leia `plan/STATUS.md`, `plan/execution-plan.md`, `ROADMAP.md` e a última entrad
 - Preserve a identidade editorial em café, champagne e off-white, e a fonte Poppins.
 - Não invente telefone, endereço, preços, depoimentos, certificados ou resultados. Dados confirmados: `docs/fontes.md`.
 - Use o Instagram oficial para dúvidas. O formulário de reserva chama o backend e confirma automaticamente; nunca simule confirmação sem persistência.
-- A usuária autorizou conectar e enviar o projeto para https://github.com/andrelopees04-source/babi.git . Em 2026-10-22 autorizou Neon e Vercel somente no projeto guilherme-pereiras-projects-5a38e3ba/babi-instituto. Não publicar em outros destinos sem pedido. O manifesto Sites preservado identifica a landing estática anterior.
+- A usuária autorizou o repositório próprio https://github.com/guilhermeepereiraa2004-ops/babiinstituto.git em 2026-10-29, substituindo andrelopees04-source/babi como destino principal. origin aponta para o novo repositório; previous-origin preserva o anterior como referência. Em 2026-10-22 autorizou Neon e Vercel somente no projeto guilherme-pereiras-projects-5a38e3ba/babi-instituto. Não publicar em outros destinos sem pedido. O manifesto Sites preservado identifica a landing estática anterior.
 - A agenda inicia pausada: horários e durações sugeridos só passam a valer depois de revisados e salvos no admin. Não adicione dados de demonstração ao banco real.
 - Preserve acessibilidade, redução de movimento e funcionamento sem dependências JavaScript externas.
 - Nunca grave credenciais. Registre a origem de novas fotografias.

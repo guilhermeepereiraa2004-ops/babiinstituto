@@ -107,3 +107,10 @@
 - Conferidos destino Vercel e remoto autorizado. Gate 19/19, revisão de arquivos privados e commit/push 6ddb004 com a versão já publicada: landing refinada, anamnese, financeiro, Neon e autenticação. Não foram enviados ambientes, bancos, credenciais ou a prévia de IA em output/.
 - Tentada conexão de andrelopees04-source/babi ao projeto existente. Vercel recusou com 400, exigindo admin/write no repositório para a conta GitHub usada na Vercel. Usuária orientada a liberar Escrita e aceitar convite antes de nova tentativa. Sem troca de conta, transferência de repo ou mudança em outros projetos.
 - Site/banco de produção preservados. Local Babi atualmente em 4176; 4173 pertence a outro projeto e não foi encerrado. Memória atualizada; conexão ainda pendente da permissão externa.
+
+## 2026-10-29 — Repositório próprio conectado à Vercel
+- Usuária escolheu https://github.com/guilhermeepereiraa2004-ops/babiinstituto.git como novo destino. Confirmado vazio antes do envio.
+- Preservado repositório anterior em previous-origin; origin passou ao repositório próprio. Git tentou inicialmente a credencial Andre; selecionada a credencial GCM já existente de Guilherme somente no Git local desta pasta, sem login novo ou exibição de segredos. Push main concluído com histórico.
+- Vercel git connect retornou Connected. API confirmou org/repo novos e main como branch de produção, mantendo projeto prj_zw4UHlBR6UJaS6KXY6PENJELAbg9, conta, Neon, ambientes e domínio atuais.
+- Corrigida a orientação anterior: repositórios pessoais precisam ser conectados pelo proprietário, e colaboração/Escrita não é suficiente segundo a documentação Vercel.
+- Gate 19/19 antes do commit; atualização documental inicia a primeira publicação automática pelo novo vínculo. Sem alterações funcionais, de UI, de banco ou de agenda. Raia liberada.

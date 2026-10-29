@@ -53,3 +53,7 @@ Neon e Vercel publicados na conta solicitada, com cadastro administrativo fechad
 ## Integração GitHub/Vercel — 2026-10-29
 
 Código atual sincronizado no GitHub, main, 6ddb004. Site e Neon continuam publicados por CLI. A Vercel recusou conectar o repositório porque a conta GitHub usada nela não possui acesso de admin/Escrita em andrelopees04-source/babi. A usuária precisa liberar e aceitar esse acesso antes da conexão. O banco e as credenciais permanecem privados; nenhuma configuração de agenda ou de banco foi alterada nesta etapa.
+
+## Repositório próprio conectado — 2026-10-29
+
+Pendência anterior resolvida pela escolha da usuária: https://github.com/guilhermeepereiraa2004-ops/babiinstituto.git . origin/main recebeu código e histórico; Vercel confirmou esse repositório e main no projeto já publicado. Colaborador em repositório pessoal não basta para conectar na Vercel; o novo destino pertence à conta apropriada. previous-origin preserva a referência anterior. Sem alteração de banco, credenciais, domínio ou configuração de agenda.

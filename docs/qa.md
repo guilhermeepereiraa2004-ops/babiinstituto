@@ -100,3 +100,7 @@ Encerramento: comando npm run test:postgres aprovado (9/9); gate final 19/19. Co
 ## Sincronização e tentativa de conexão Git — 2026-10-29
 
 Gate 19/19 antes do commit; 56 arquivos revisados, nenhum caminho privado ou padrão de credencial no conjunto preparado. Código enviado a main no commit 6ddb004. Vercel project inspect confirmou Guilherme Pereira/babi-instituto. vercel git connect recusou com 400: You need admin or write access to the repository. Integração não concluída; aguarda autorização GitHub da usuária. Não houve alteração funcional, de UI ou de dados de produção.
+
+## Conexão do repositório próprio — 2026-10-29
+
+Destino vazio confirmado por git ls-remote. main enviada com a credencial existente de Guilherme, selecionada somente neste checkout. Vercel git connect retornou Connected; API do projeto confirmou org guilhermeepereiraa2004-ops, repo babiinstituto, repoId 1438468251, productionBranch main. Gate 19/19; nenhuma mudança funcional ou de UI nesta etapa. Dados e segredos permanecem fora do Git.

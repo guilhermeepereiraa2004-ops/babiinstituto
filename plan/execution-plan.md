@@ -90,6 +90,13 @@ Foto atual preservada enquanto aguarda o arquivo; não gerar detalhes do rosto p
 - [x] Confirmar projeto e conta Vercel, repositório autorizado e versão remota anterior.
 - [x] Gate 19/19, revisão de exclusão de dados privados e commit/push da versão atual (6ddb004).
 - [x] Tentar conexão ao projeto existente e identificar bloqueio admin/write do GitHub.
-- [ ] Usuária liberar acesso de Escrita à conta GitHub usada na Vercel e aceitar convite.
-- [ ] Concluir conexão, verificar main como branch de produção e confirmar vínculo.
-- [ ] Atualizar memória de conclusão da integração e liberar raia.
+- [x] Etapa substituída: usuária escolheu repositório próprio, pois colaboração em repositório pessoal não basta para conexão.
+- [x] Concluir conexão ao repositório próprio, verificar main como branch de produção e confirmar vínculo por API.
+- [x] Atualizar memória de conclusão da integração e liberar raia.
+
+## Repositório próprio — 2026-10-29
+- [x] Confirmar destino guilhermeepereiraa2004-ops/babiinstituto vazio.
+- [x] Preservar repositório anterior como previous-origin e selecionar conta GitHub correta somente neste projeto.
+- [x] Enviar main e histórico ao novo origin, sem bancos/ambientes/segredos.
+- [x] Conectar ao mesmo projeto Vercel e confirmar productionBranch main por API.
+- [x] Gate 19/19 antes do commit e atualização da documentação.
