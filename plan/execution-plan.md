@@ -149,6 +149,8 @@ Validação: gate 20/20, 32 testes offline aprovados e uma suíte remota ignorad
 
 - [x] Implementar emissão assistida, consumo único, revogação e formulário de recuperação.
 - [x] Validar banco e UI com dados descartáveis, preservando produção.
-- [ ] Publicar e verificar domínio, assets e rotas.
-- [ ] Emitir link temporário privado após deploy.
+- [x] Publicar e verificar domínio, assets e rotas.
+- [x] Emitir link temporário privado após deploy.
+
+Recuperação publicada no commit b0928de, deploy dpl_EkLvqz5NBZmzvDfmHdB6vRpD7otR READY, domínio https://babi-instituto.vercel.app/admin/ confirmado. JS publicado corresponde ao código testado (normalizadas quebras de linha); agenda ativa, quatro serviços preservados, admin protegido e emissão pública de links fechada. Link real de 15 min emitido por scripts/admin-recovery.mjs para a única conta configurada após verificar projeto/equipe/origem e recurso de produção. Não armazenar o URL/token na memória do projeto. A senha real ainda não foi alterada pelo agente; a usuária deve concluir o formulário. Backend/fluxo entregue, aguardando essa ação pessoal.
 - [ ] Usuária definir pessoalmente a nova senha no painel.

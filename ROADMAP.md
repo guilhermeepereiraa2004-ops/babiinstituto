@@ -48,5 +48,7 @@ Publicado por main, commit funcional 6631126, deploy dpl_28M4rLYxMu1RW7XKdoNuP7J
 
 - [x] Fluxo de recuperação assistida sem senha atual, com token de uso único e revogação de sessões.
 - [x] Testes de segurança no Neon QA e inspeção desktop/mobile.
-- [ ] Publicação e entrega privada do link de 15 minutos.
+- [x] Publicação e entrega privada do link de 15 minutos.
+
+Recuperação publicada no commit b0928de, deploy dpl_EkLvqz5NBZmzvDfmHdB6vRpD7otR READY, domínio https://babi-instituto.vercel.app/admin/ confirmado. JS publicado corresponde ao código testado (normalizadas quebras de linha); agenda ativa, quatro serviços preservados, admin protegido e emissão pública de links fechada. Link real de 15 min emitido por scripts/admin-recovery.mjs para a única conta configurada após verificar projeto/equipe/origem e recurso de produção. Não armazenar o URL/token na memória do projeto. A senha real ainda não foi alterada pelo agente; a usuária deve concluir o formulário. Backend/fluxo entregue, aguardando essa ação pessoal.
 - [ ] Usuária definir a nova senha.
