@@ -6,6 +6,57 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DEFAULT_SETTINGS,handleApi,clock} from '../server/core.mjs';
 
+test('valores dos serviços são opcionais, persistem em centavos e ficam privados',async()=>{
+ const f=fixture();
+ try{
+  f.settings.services.forEach(s=>delete s.priceCents);
+  assert.equal((await f.save()).status,200);
+  assert((await f.call('/api/admin/settings',{admin:true})).data.services.every(s=>s.priceCents===null));
+  f.settings.services[0].priceCents=12550;f.settings.services[1].priceCents=0;
+  assert.equal((await f.save()).status,200);
+  const saved=(await f.call('/api/admin/settings',{admin:true})).data;
+  assert.equal(saved.services[0].priceCents,12550);assert.equal(saved.services[1].priceCents,0);
+  const publicConfig=(await f.call('/api/config')).data;
+  assert(publicConfig.services.every(s=>!Object.hasOwn(s,'priceCents')));
+  const booked=await f.booking('09:00',{serviceId:saved.services[0].id});
+  assert.equal(booked.status,201);
+  assert(!Object.hasOwn(booked.data,'priceCents'));
+  const receipt=(await f.call('/api/receipt/'+booked.data.token)).data;
+  assert(!Object.hasOwn(receipt,'priceCents'));
+  assert.equal((await f.call('/api/admin/finance?from=2026-10-18&to=2026-10-18',{admin:true})).data.entries.length,0);
+ }finally{f.sqlite.close();}
+});
+
+test('preço de serviço rejeita valores inválidos sem sobrescrever a configuração',async()=>{
+ const f=fixture();
+ try{
+  f.settings.services[0].priceCents=19990;assert.equal((await f.save()).status,200);
+  for(const invalid of [-1,1.5,'19990',100000001,{},true]){
+   f.settings.services[0].priceCents=invalid;assert.equal((await f.save()).status,400);
+   assert.equal((await f.call('/api/admin/settings',{admin:true})).data.services[0].priceCents,19990);
+  }
+  f.settings.services[0].priceCents=null;assert.equal((await f.save()).status,200);
+  assert.equal((await f.call('/api/admin/settings',{admin:true})).data.services[0].priceCents,null);
+ }finally{f.sqlite.close();}
+});
+
+test('recebimento confirmado aceita ajuste e cortesia sem seguir alterações posteriores no catálogo',async()=>{
+ const f=fixture();
+ try{
+  const service=f.settings.services.find(s=>s.id==='corte');service.priceCents=12550;
+  await f.save();await f.booking();await f.booking('11:00');
+  const bookings=(await f.call('/api/admin/bookings',{admin:true})).data.bookings;
+  const complete=(b,amountCents)=>f.call('/api/admin/bookings/'+b.id,{method:'PATCH',admin:true,data:{revision:0,status:'completed',amountCents,paymentMethod:'pix'}});
+  assert.equal((await complete(bookings[0],10000)).status,200);
+  assert.equal((await complete(bookings[0],12550)).status,409);
+  assert.equal((await complete(bookings[1],0)).status,200);
+  service.priceCents=20000;await f.save();
+  const finance=(await f.call('/api/admin/finance?from=2026-10-18&to=2026-10-18',{admin:true})).data;
+  assert.equal(finance.entries.length,2);assert.equal(finance.summary.incomeCents,10000);
+  assert.deepEqual(finance.entries.map(e=>e.amount_cents).sort((a,b)=>a-b),[0,10000]);
+ }finally{f.sqlite.close();}
+});
+
 test('novo serviço fica disponível para reservar e preserva a duração das reservas após edição',async()=>{
  const f=fixture();
  try{

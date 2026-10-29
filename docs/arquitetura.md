@@ -65,3 +65,10 @@ Migrações em migrations/postgres/ são aplicadas explicitamente por scripts/mi
 O login de produção é Better Auth no próprio backend, sem provedor de e-mail. O hook de criação exige o e-mail autorizado, chave privada e ausência de usuários. A API pública de autenticação só expõe sign-in/email, sign-out e get-session. A configuração inicial exige origem, JSON limitado e chave privada, e deixa de funcionar após criar o proprietário. A usuária definiu a senha diretamente na UI; o agente não a recebeu.
 
 Cookies são HttpOnly/Secure em HTTPS; sessões e limites vivem no Postgres, com restrição de origem a domínio canônico e URLs da própria implantação informadas pela Vercel. Cabeçalhos de identidade externos não concedem acesso. /api/local-* retorna 404 na nuvem. Cada rota privada compara o usuário da sessão com ADMIN_EMAIL. O IP para limites usa o cabeçalho que a Vercel sobrescreve. Não há confiança em host arbitrário, cadastro público ou fallback SQLite na nuvem.
+
+
+## 2026-10-29 — Valor padrão dos serviços e conclusão financeira
+
+Cada serviço aceita priceCents opcional (inteiro de 0 a 100000000, null para não definido), salvo no JSON de configurações por validação e trava já existentes. No painel, o valor em reais é exibido em Serviços e horários e preenche o Valor recebido ao concluir. É o valor atual do catálogo carregado no painel, inclusive para reservas anteriores; pode ser ajustado para desconto/cortesia. Serviços sem preço mantêm o preenchimento manual obrigatório. Forma de pagamento e confirmação da conclusão continuam obrigatórias. A entrada recebida usa o valor confirmado, na transação existente, sem duplicação. Alterar o catálogo não altera lançamentos concluídos.
+
+Valores de catálogo são privados: /api/config retorna apenas os campos públicos dos serviços; reserva/comprovante continuam sem preço. Preços existentes ficam não definidos, sem estimar valores reais. Sem alteração de schema, migração ou dados de produção; a estrutura JSON de settings já suporta o campo. Compatível com configurações antigas sem priceCents.

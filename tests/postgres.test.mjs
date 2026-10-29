@@ -68,8 +68,16 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    const receipt=await call('/api/receipt/'+booked.token);assert.equal(receipt.status,200);assert(!JSON.stringify(receipt.data).includes('Private QA intake'));
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM booking_slots')).n,4);
   });
+  await t.test('service prices persist privately in settings without creating income',async()=>{
+   settings.services.find(s=>s.id==='corte').priceCents=15050;
+   assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
+   assert.equal((await call('/api/admin/settings')).data.services.find(s=>s.id==='corte').priceCents,15050);
+   assert((await call('/api/config',{withCookie:false})).data.services.every(s=>!Object.hasOwn(s,'priceCents')));
+   assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries')).n,0);
+  });
   await t.test('completion is atomic and unique; finance totals use integer cents',async()=>{
-   const complete={revision:0,status:'completed',amountCents:15050,paymentMethod:'pix'};
+   const price=(await call('/api/admin/settings')).data.services.find(s=>s.id==='corte').priceCents;
+   const complete={revision:0,status:'completed',amountCents:price,paymentMethod:'pix'};
    const results=await Promise.all([call('/api/admin/bookings/'+id,{method:'PATCH',data:complete}),call('/api/admin/bookings/'+id,{method:'PATCH',data:complete})]);
    assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries WHERE booking_id=?',[id])).n,1);
    assert.equal((await call('/api/admin/finance',{method:'POST',data:{kind:'expense',category:'Produtos',description:'Material QA',amountCents:3525,date:today,paymentMethod:'pix',idempotencyKey:crypto.randomUUID()}})).status,201);

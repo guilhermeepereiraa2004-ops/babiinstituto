@@ -93,5 +93,10 @@
     "id": "A19",
     "criterion": "Vercel publica apenas dist e executa backend na região do banco",
     "check": "hosting"
+  },
+  {
+    "id": "A20",
+    "criterion": "Valor padrão privado por serviço, em centavos, preenchendo conclusão sem alterar recebimentos anteriores",
+    "check": "runtime"
   }
 ]

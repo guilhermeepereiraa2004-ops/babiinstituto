@@ -33,3 +33,10 @@ Aceitação do gate atual: 19/19. Aplicação publicada na Vercel, com backend N
 - [x] Concluir push e confirmar deploy e API pública.
 
 Publicado em https://babi-instituto.vercel.app/admin/ por GitHub main, commit funcional 1bb2d6c, deploy dpl_7WdDLwy3bN6u4ieahWt3J6QoTZGn READY e alias de produção confirmado. JS/CSS públicos correspondem à versão validada (normalizadas apenas quebras de linha CRLF/LF). API pública confirmou enabled=true e os mesmos quatro serviços; sessão pública sem privilégio/local e /api/admin/settings responde 403 sem login. Zero registros de erro no novo deploy durante a consulta inicial de 10 min. Nenhuma migração, dado ou credencial real foi alterado. Uso: Serviços e horários → Adicionar serviço → preencher nome/descrição/duração, marcar disponibilidade → Salvar configurações.
+
+
+## 2026-10-29 — Valor padrão dos serviços e conclusão financeira
+
+- [x] Valor padrão opcional e privado por serviço, preenchendo o recebimento na conclusão.
+- [x] Testes offline, Neon QA e UI desktop/mobile, incluindo desconto/cortesia e histórico.
+- [ ] Publicação e verificação final no domínio oficial.
