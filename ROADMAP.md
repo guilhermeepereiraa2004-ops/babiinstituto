@@ -78,3 +78,10 @@ Execução local reiniciada por npm start em http://localhost:4176/ , /admin/ e 
 - [x] Confirmar publicação da correção.
 
 Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx READY. Landing/agendamento e os dois CSS do domínio oficial correspondem aos arquivos locais validados. Servidor local 4176 permanece ativo. Sem alteração de dados ou serviços. Raia concluída e liberada.
+
+
+## 2026-10-29 — Autorização na confirmação, sem checkboxes
+
+- [x] Remover caixas extras de autorização no agendamento.
+- [x] Aviso visível na confirmação, validação do fluxo e UI desktop/mobile.
+- [ ] Publicar e verificar a versão final.

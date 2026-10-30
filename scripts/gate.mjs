@@ -28,7 +28,7 @@ const checks={
   admin:admin.includes('renderSettings()')&&admin.includes('renderAgenda()')&&admin.includes('mutateBooking(')&&core.includes('assert(context.admin,403'),
   customer:client.includes('submitBooking(')&&client.includes('renderReceipt(')&&client.includes('renderCalendar()')&&html.includes('href="/agendar/"'),
   persistence:schema.includes('PRIMARY KEY(date, minute)')&&schema.includes('idempotency_key TEXT NOT NULL UNIQUE')&&readFileSync(resolve(root,'.gitignore'),'utf8').includes('data/'),
-  intake:client.includes('renderAnamnesis(')&&client.includes('anamnesisConsent')&&core.includes('validateAnamnesis(')&&core.includes('consentedAt')&&extensionSchema.includes('booking_anamnesis'),
+  intake:client.includes('renderAnamnesis(')&&client.includes('id="booking-authorization"')&&client.includes('aria-describedby="booking-authorization"')&&core.includes('validateAnamnesis(')&&core.includes('consentedAt')&&extensionSchema.includes('booking_anamnesis'),
   finance:admin.includes('renderFinance()')&&admin.includes('openFinanceEntry(')&&core.includes('balanceCents')&&extensionSchema.includes('finance_audit'),
   completion:core.includes('if(completing)')&&core.includes("'service:'+id")&&admin.includes('Concluir e registrar entrada')&&extensionSchema.includes('booking_id TEXT UNIQUE'),
   migration:readFileSync(resolve(root,'server/local.mjs'),'utf8').includes('readdirSync')&&extensionSchema.includes('FROM bookings WHERE status=\'completed\'')&&extensionSchema.includes('NULL'),

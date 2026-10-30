@@ -18,7 +18,7 @@ Total: 20 | Concluídos: 20 | Progresso dos critérios do gate: 100%
 | A10 | Fluxo de cliente com serviço, calendário e comprovante integrado à landing | OK | check customer |
 | A11 | SQLite com slots únicos e dados locais fora do Git | OK | check persistence |
 | A12 | Testes de reserva, concorrência, autorização, cancelamento e reagendamento | OK | check runtime |
-| A13 | Anamnese com consentimento próprio, persistência e consulta privada | OK | check intake |
+| A13 | Anamnese com autorização na confirmação final, persistência e consulta privada | OK | check intake |
 | A14 | Financeiro com entradas, saídas, correções, anulações e saldo por período | OK | check finance |
 | A15 | Conclusão e recebimento atômicos sem duplicação por atendimento | OK | check completion |
 | A16 | Migração preserva reservas antigas e não inventa valores | OK | check migration |

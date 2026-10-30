@@ -95,3 +95,8 @@ Execução local reiniciada por npm start em http://localhost:4176/ , /admin/ e 
 ## 2026-10-29 — Correção do ícone de WhatsApp
 
 Desenho deformado corrigido e publicado. Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx READY. Landing/agendamento e os dois CSS do domínio oficial correspondem aos arquivos locais validados. Servidor local 4176 permanece ativo. Sem alteração de dados ou serviços. Raia concluída e liberada. Substituído o desenho aproximado do WhatsApp por SVG preenchido da Bootstrap Icons (viewBox 16 × 16), com stroke=none e fill=currentColor. Removido o contorno que se sobrepunha ao telefone; símbolo e botões da landing/agendamento usam a mesma geometria, dimensionada em 28 px e centralizada. Número, link, comportamento, textos, banco e funcionalidades preservados. Código nativo, sem dependência externa em tempo de execução.
+
+
+## 2026-10-29 — Autorização na confirmação, sem checkboxes
+
+Caixas removidas e fluxo validado. A autorização está vinculada à confirmação final com aviso específico, sem controles extras. Falta confirmar publicação.

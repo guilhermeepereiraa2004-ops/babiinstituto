@@ -192,3 +192,14 @@ Inspeção local em http://localhost:4176/ e /agendar/, sem mutações no banco:
 - [x] Publicar e confirmar arquivos no domínio oficial.
 
 Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx READY. Landing/agendamento e os dois CSS do domínio oficial correspondem aos arquivos locais validados. Servidor local 4176 permanece ativo. Sem alteração de dados ou serviços. Raia concluída e liberada.
+
+
+## 2026-10-29 — Autorização na confirmação, sem checkboxes
+
+Por solicitação da usuária, removidos os checkboxes de autorização nos dados pessoais e na anamnese. Aviso específico e visível junto ao botão Confirmar meu horário explica o uso de nome/contato/observações e das respostas da anamnese que a cliente optar por informar. Botão associado ao aviso por aria-describedby. Os dois sinais de autorização são enviados apenas no submit final; avançar entre etapas não envia reserva nem autorização ao backend. Mantidos os campos obrigatórios e a opção Prefiro conversar pessoalmente. Contrato, validação, autorização específica/timestamp e privacidade do backend preservados; sem migração.
+
+Gate 20/20, 34 testes offline aprovados e uma suíte remota ignorada. Sem necessidade de nova execução da suíte remota: backend e contrato não foram modificados. Navegador isolado de QA 4177/data/qa-authorization-20261029.sqlite com 16 verificações aprovadas: nenhuma caixa nas duas etapas, continuidade/retorno preservando dados, aviso e associação acessível, nenhuma reserva antes do clique final, campos válidos/opção privada, payload com as autorizações no submit, reserva persistida com pagamento pendente, anamnese e consentedAt privados no banco, sem erro JS ou rolagem horizontal em 390 px. Capturas inspecionadas: docs/qa/authorization-data-desktop.png e authorization-intake-mobile.png, exclusivamente com dados fictícios. CUA indisponível; Chrome headless isolado usado como alternativa documentada. Produção e SQLite real não receberam dados fictícios.
+
+- [x] Remover checkboxes e vincular aviso ao submit final.
+- [x] Validar persistência/privacidade e inspecionar UI desktop/mobile em QA.
+- [ ] Publicar e confirmar arquivos do domínio oficial.

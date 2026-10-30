@@ -104,3 +104,5 @@
 @media(max-width:600px){.client-page .steps{gap:7px;padding:20px 14px}.client-page .step-label{font-size:10px;gap:7px}.client-page .client-intro h1{font-size:36px;letter-spacing:-1.7px}.client-page .step-body>h2{font-size:24px}.client-page .service-option-info strong{font-size:14px}.client-page .service-option-info p{font-size:12px}.client-page .service-option-info small{font-size:11px}.client-page .step-body{padding:25px 20px}.client-page .step-actions{gap:12px}.client-page .receipt-body{padding:25px 22px}.client-page .receipt-actions{gap:12px}.client-page .receipt-actions>.btn{font-size:12px}}
 
 .client-page .status{font-size:11px;line-height:1.5;padding:5px 9px}.client-page .summary-note>span{font-size:11px}.client-page .step-label>span{font-size:10px}@media(max-width:600px){.client-page .receipt-code{flex-direction:column;align-items:flex-start;gap:10px}}
+
+.client-page .booking-authorization{font-size:12px;line-height:1.85;color:var(--muted);margin:24px 0 14px}.client-page .booking-authorization+.step-actions{margin-top:20px}
