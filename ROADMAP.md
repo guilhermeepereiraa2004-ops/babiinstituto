@@ -75,4 +75,6 @@ Execução local reiniciada por npm start em http://localhost:4176/ , /admin/ e 
 ## 2026-10-29 — Correção do ícone de WhatsApp
 
 - [x] Corrigir desenho e inspecionar botão em desktop/mobile.
-- [ ] Confirmar publicação da correção.
+- [x] Confirmar publicação da correção.
+
+Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx READY. Landing/agendamento e os dois CSS do domínio oficial correspondem aos arquivos locais validados. Servidor local 4176 permanece ativo. Sem alteração de dados ou serviços. Raia concluída e liberada.
