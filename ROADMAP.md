@@ -62,4 +62,6 @@ Usuária confirmou a definição da nova senha. Verificação somente de metadad
 - [x] Tipografia editorial da cliente alinhada à landing e mais legível.
 - [x] Pagamento separado da reserva e recebido somente conforme financeiro.
 - [x] Gate, Neon QA e navegador desktop/mobile aprovados.
-- [ ] Publicar e conferir produção.
+- [x] Publicar e conferir produção.
+
+Publicado por GitHub main no commit funcional c6b83fa, deploy dpl_6bHHkTfcsy2Z4YuYqvwGCf4UuJSa READY e domínio https://babi-instituto.vercel.app/ confirmado pelos seis arquivos públicos correspondentes ao código validado (normalizadas quebras de linha). Landing e agendamento de produção inspecionados em navegador isolado a 390 px: WhatsApp confirmado, Poppins carregada, sem rolagem horizontal. API pública preservou agenda ativa e os quatro serviços; admin exige autenticação; token de reserva inexistente retorna 404; zero registros de erro no deploy na consulta inicial. QA 4177 encerrado após conferir processo/caminho absoluto; outros servidores preservados. Sem migração ou alteração de reservas, pagamentos ou credenciais reais.
