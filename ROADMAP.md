@@ -84,4 +84,6 @@ Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx 
 
 - [x] Remover caixas extras de autorização no agendamento.
 - [x] Aviso visível na confirmação, validação do fluxo e UI desktop/mobile.
-- [ ] Publicar e verificar a versão final.
+- [x] Publicar e verificar a versão final.
+
+Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.

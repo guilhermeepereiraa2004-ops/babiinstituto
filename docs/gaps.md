@@ -99,4 +99,4 @@ Desenho deformado corrigido e publicado. Correção publicada no commit dc6c7f7,
 
 ## 2026-10-29 — Autorização na confirmação, sem checkboxes
 
-Caixas removidas e fluxo validado. A autorização está vinculada à confirmação final com aviso específico, sem controles extras. Falta confirmar publicação.
+Caixas removidas e fluxo validado. A autorização está vinculada à confirmação final com aviso específico, sem controles extras. Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.

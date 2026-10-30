@@ -2,7 +2,7 @@
 
 Atualizado: 2026-10-29.
 
-Em publicação: caixas de autorização removidas das duas etapas da cliente; aviso específico vinculado ao botão de confirmação e consentimentos enviados somente no submit final. Gate 20/20 e 16 verificações de navegador aprovados; desktop/mobile inspecionados com dados de QA. Backend/contrato e privacidade preservados.
+Caixas de autorização retiradas das duas etapas da cliente. Aviso específico vinculado ao botão de confirmação; autorizações enviadas apenas no submit final. Gate 20/20 e 16 verificações de navegador aprovados; desktop/mobile inspecionados com dados de QA. Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.
 
 Ícone de WhatsApp corrigido com SVG preenchido Bootstrap Icons/MIT, sem traços sobrepostos. Centro/forma conferidos localmente em landing/agendamento, desktop e 390 px; gate 20/20. Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx READY. Landing/agendamento e os dois CSS do domínio oficial correspondem aos arquivos locais validados. Servidor local 4176 permanece ativo. Sem alteração de dados ou serviços. Raia concluída e liberada.
 

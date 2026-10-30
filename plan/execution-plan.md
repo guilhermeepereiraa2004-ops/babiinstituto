@@ -202,4 +202,6 @@ Gate 20/20, 34 testes offline aprovados e uma suíte remota ignorada. Sem necess
 
 - [x] Remover checkboxes e vincular aviso ao submit final.
 - [x] Validar persistência/privacidade e inspecionar UI desktop/mobile em QA.
-- [ ] Publicar e confirmar arquivos do domínio oficial.
+- [x] Publicar e confirmar arquivos do domínio oficial.
+
+Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.
