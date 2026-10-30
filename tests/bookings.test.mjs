@@ -6,6 +6,42 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DEFAULT_SETTINGS,handleApi,clock} from '../server/core.mjs';
 
+test('almoço recorrente bloqueia sobreposição completa, preserva limites e reservas existentes',async()=>{
+ const f=fixture();try{
+  await f.save();const existing=await f.booking('12:00');assert.equal(existing.status,201);
+  f.settings.weekly[1].lunch={start:'12:00',end:'13:00'};assert.equal((await f.save()).status,200);
+  assert.deepEqual((await f.call('/api/admin/settings',{admin:true})).data.weekly[1].lunch,{start:'12:00',end:'13:00'});
+  const slots=(await f.call('/api/availability?date=2026-10-19&service=corte')).data.slots;
+  assert(slots.includes('11:00'));assert(slots.includes('13:00'));assert(!slots.includes('11:30'));assert(!slots.includes('12:00'));assert(!slots.includes('12:30'));
+  assert.equal((await f.booking('11:30')).status,409);
+  assert.equal((await f.call('/api/receipt/'+existing.data.token)).data.status,'confirmed');
+  const row=(await f.call('/api/admin/bookings',{admin:true})).data.bookings[0];
+  const available=(await f.call(`/api/admin/availability?date=2026-10-19&booking=${row.id}`,{admin:true})).data.slots;
+  assert(!available.includes('12:00'));
+  assert.equal((await f.call('/api/admin/bookings/'+row.id,{method:'PATCH',admin:true,data:{date:'2026-10-19',time:'12:30',revision:0}})).status,409);
+  assert((await f.call('/api/availability?date=2026-10-20&service=corte')).data.slots.includes('12:00'));
+  f.settings.services.find(s=>s.id==='mechas').duration=180;await f.save();
+  const long=(await f.call('/api/availability?date=2026-10-19&service=mechas')).data.slots;
+  assert(long.includes('09:00'));assert(!long.includes('09:30'));assert(!long.includes('11:00'));assert(long.includes('13:00'));
+  f.settings.weekly[1].lunch=null;await f.save();
+  assert((await f.call('/api/availability?date=2026-10-26&service=corte')).data.slots.includes('12:00'));
+ }finally{f.sqlite.close();}
+});
+
+test('almoço valida formato, ordem, expediente e quartos de hora; settings antigos continuam válidos',async()=>{
+ const f=fixture();try{
+  f.settings.weekly.forEach(d=>delete d.lunch);assert.equal((await f.save()).status,200);
+  assert((await f.call('/api/admin/settings',{admin:true})).data.weekly.every(d=>d.lunch===null));
+  for(const lunch of [true,[],{}, {start:'12:00',end:'12:00'},{start:'13:00',end:'12:00'},{start:'08:00',end:'10:00'},{start:'17:00',end:'19:00'},{start:'12:10',end:'13:00'},{start:'25:00',end:'26:00'}]){
+   f.settings.weekly[1].lunch=lunch;assert.equal((await f.save()).status,400,JSON.stringify(lunch));
+   assert.equal((await f.call('/api/admin/settings',{admin:true})).data.weekly[1].lunch,null);
+  }
+  f.settings.weekly[1].lunch={start:'12:15',end:'13:15'};await f.save();
+  const slots=(await f.call('/api/availability?date=2026-10-19&service=corte')).data.slots;
+  assert(slots.includes('11:00'));assert(!slots.includes('11:30'));assert(!slots.includes('13:00'));assert(slots.includes('13:30'));
+ }finally{f.sqlite.close();}
+});
+
 test('confirmar reserva não confirma pagamento; acompanhamento segue o recebimento e o reenvio',async()=>{
  const f=fixture();
  try{

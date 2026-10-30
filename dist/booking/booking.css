@@ -106,3 +106,14 @@
 .client-page .status{font-size:11px;line-height:1.5;padding:5px 9px}.client-page .summary-note>span{font-size:11px}.client-page .step-label>span{font-size:10px}@media(max-width:600px){.client-page .receipt-code{flex-direction:column;align-items:flex-start;gap:10px}}
 
 .client-page .booking-authorization{font-size:12px;line-height:1.85;color:var(--muted);margin:24px 0 14px}.client-page .booking-authorization+.step-actions{margin-top:20px}
+
+/* Recurring lunch interval, independent for each weekday. */
+.weekly-day{padding:15px 0;border-bottom:1px solid var(--line)}
+.weekly-day:last-child{border-bottom:0}
+.weekly-day .day-setting{border:0;padding:0}
+.lunch-setting{margin-top:13px;padding:12px 14px;background:var(--soft);border-radius:6px}
+.lunch-setting>.checkbox-label{font-size:11px}
+.lunch-times{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:13px;max-width:320px}
+.lunch-times[hidden]{display:none}
+.lunch-times .field{margin:0;font-size:10px;min-width:0}
+.lunch-times input{width:100%;min-width:0}

@@ -87,3 +87,12 @@ Correção publicada no commit dc6c7f7, deploy dpl_3LtKTH9H9H4pwFFrnLCHEz6i8Nwx 
 - [x] Publicar e verificar a versão final.
 
 Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.
+
+
+## 2026-10-29 — Almoço recorrente
+
+Almoço recorrente configurável por dia em Serviços e horários → Dias e horários. Campo weekly[].lunch opcional/null (sem pausa) ou {start,end}; início/fim dentro do expediente, em passos de 15 minutos. A disponibilidade, criação e reagendamento consideram toda a duração do serviço; permitem terminar no início da pausa ou começar no fim. Reservas existentes preservadas, com aviso no painel. Nenhuma pausa foi ativada nas bases reais. Sem migração; compatível com settings antigos.
+
+Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados, schema descartável removido. CUA voltou a funcionar: QA isolado em 4177/data/qa-lunch-20261029.sqlite confirmou campos opcionais, foco, salvar, persistência após reload, rejeição de intervalo invertido, ocultação/desabilitação dos campos ao desativar, retirada dos horários 11:30/12:00 e preservação de 11:00/13:00 para serviço de 1h com almoço 12h–13h; remoção da pausa restaurou 12:00. Inspeção 1440 e 390 px sem rolagem horizontal, nenhum erro de console. Capturas exclusivamente de QA: docs/qa/lunch-desktop.jpg e lunch-mobile.jpg. Viewport restaurado e abas temporárias fechadas.
+
+Implementação validada; publicação em andamento no destino autorizado.

@@ -91,3 +91,7 @@ A versão publicada anterior não continha o literal pago no comprovante, mas ex
 ## 2026-10-29 — Autorização na confirmação, sem checkboxes
 
 Por solicitação da usuária, removidos os checkboxes de autorização nos dados pessoais e na anamnese. Aviso específico e visível junto ao botão Confirmar meu horário explica o uso de nome/contato/observações e das respostas da anamnese que a cliente optar por informar. Botão associado ao aviso por aria-describedby. Os dois sinais de autorização são enviados apenas no submit final; avançar entre etapas não envia reserva nem autorização ao backend. Mantidos os campos obrigatórios e a opção Prefiro conversar pessoalmente. Contrato, validação, autorização específica/timestamp e privacidade do backend preservados; sem migração.
+
+
+### Almoço recorrente
+Almoço recorrente configurável por dia em Serviços e horários → Dias e horários. Campo weekly[].lunch opcional/null (sem pausa) ou {start,end}; início/fim dentro do expediente, em passos de 15 minutos. A disponibilidade, criação e reagendamento consideram toda a duração do serviço; permitem terminar no início da pausa ou começar no fim. Reservas existentes preservadas, com aviso no painel. Nenhuma pausa foi ativada nas bases reais. Sem migração; compatível com settings antigos. A regra fica em availableSlots, reutilizada no POST de reserva e no reagendamento. O intervalo se soma aos bloqueios por data, sem criar schedule_blocks recorrentes nem alterar booking_slots antigos. A proteção transacional e o snapshot de settings existentes continuam cobrindo concorrência.

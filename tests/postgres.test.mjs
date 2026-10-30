@@ -58,6 +58,18 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
   const intake={chemicalHistory:'yes',chemicalDetails:'Private QA intake',allergies:'no',hairCare:'QA care',consent:true};
   const booking=(time='09:00')=>({name:'Cliente QA Postgres',phone:'71999990000',consent:true,anamnesis:intake,serviceId:'corte',date,time,idempotencyKey:crypto.randomUUID()});
   let booked,id;
+  await t.test('recurring lunch persists and protects availability and booking in Postgres',async()=>{
+   const weekday=new Date(date+'T12:00:00Z').getUTCDay();
+   settings.weekly[weekday].lunch={start:'12:00',end:'13:00'};
+   assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
+   assert.deepEqual((await call('/api/admin/settings')).data.weekly[weekday].lunch,{start:'12:00',end:'13:00'});
+   const slots=(await call(`/api/availability?date=${date}&service=corte`,{withCookie:false})).data.slots;
+   assert(slots.includes('11:00'));assert(slots.includes('13:00'));assert(!slots.includes('11:30'));assert(!slots.includes('12:00'));
+   assert.equal((await call('/api/bookings',{method:'POST',data:booking('11:30'),withCookie:false})).status,409);
+   settings.weekly[weekday].lunch=null;
+   assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
+   assert((await call(`/api/availability?date=${date}&service=corte`,{withCookie:false})).data.slots.includes('12:00'));
+  });
   await t.test('concurrent reservations occupy unique slots; intake and receipts remain private',async()=>{
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
    const results=await Promise.all([call('/api/bookings',{method:'POST',data:booking()}),call('/api/bookings',{method:'POST',data:booking()})]);

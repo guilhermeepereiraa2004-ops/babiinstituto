@@ -174,3 +174,12 @@ Por solicitação da usuária, removidos os checkboxes de autorização nos dado
 Gate 20/20, 34 testes offline aprovados e uma suíte remota ignorada. Sem necessidade de nova execução da suíte remota: backend e contrato não foram modificados. Navegador isolado de QA 4177/data/qa-authorization-20261029.sqlite com 16 verificações aprovadas: nenhuma caixa nas duas etapas, continuidade/retorno preservando dados, aviso e associação acessível, nenhuma reserva antes do clique final, campos válidos/opção privada, payload com as autorizações no submit, reserva persistida com pagamento pendente, anamnese e consentedAt privados no banco, sem erro JS ou rolagem horizontal em 390 px. Capturas inspecionadas: docs/qa/authorization-data-desktop.png e authorization-intake-mobile.png, exclusivamente com dados fictícios. CUA indisponível; Chrome headless isolado usado como alternativa documentada. Produção e SQLite real não receberam dados fictícios.
 
 Publicado no commit funcional 1e6781c, deploy dpl_Hg3btuXikXJ5R7dVnqBgDMxyqv3h READY. JS do agendamento e CSS do domínio oficial correspondem ao código validado (normalizadas quebras de linha). Servidor local 4176 atualizado; QA isolado 4177 encerrado. Nenhuma alteração de banco, migração, cliente ou credencial real. Raia concluída e liberada.
+
+
+## 2026-10-29 — Almoço recorrente
+
+Almoço recorrente configurável por dia em Serviços e horários → Dias e horários. Campo weekly[].lunch opcional/null (sem pausa) ou {start,end}; início/fim dentro do expediente, em passos de 15 minutos. A disponibilidade, criação e reagendamento consideram toda a duração do serviço; permitem terminar no início da pausa ou começar no fim. Reservas existentes preservadas, com aviso no painel. Nenhuma pausa foi ativada nas bases reais. Sem migração; compatível com settings antigos.
+
+Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados, schema descartável removido. CUA voltou a funcionar: QA isolado em 4177/data/qa-lunch-20261029.sqlite confirmou campos opcionais, foco, salvar, persistência após reload, rejeição de intervalo invertido, ocultação/desabilitação dos campos ao desativar, retirada dos horários 11:30/12:00 e preservação de 11:00/13:00 para serviço de 1h com almoço 12h–13h; remoção da pausa restaurou 12:00. Inspeção 1440 e 390 px sem rolagem horizontal, nenhum erro de console. Capturas exclusivamente de QA: docs/qa/lunch-desktop.jpg e lunch-mobile.jpg. Viewport restaurado e abas temporárias fechadas.
+
+Implementação validada; publicação em andamento no destino autorizado.
