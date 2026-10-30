@@ -175,3 +175,18 @@ Gate 20/20, 34 testes offline aprovados e uma suíte remota ignorada nesse gate;
 - [x] Publicar via main e confirmar domínio/assets/API.
 
 Publicado por GitHub main no commit funcional c6b83fa, deploy dpl_6bHHkTfcsy2Z4YuYqvwGCf4UuJSa READY e domínio https://babi-instituto.vercel.app/ confirmado pelos seis arquivos públicos correspondentes ao código validado (normalizadas quebras de linha). Landing e agendamento de produção inspecionados em navegador isolado a 390 px: WhatsApp confirmado, Poppins carregada, sem rolagem horizontal. API pública preservou agenda ativa e os quatro serviços; admin exige autenticação; token de reserva inexistente retorna 404; zero registros de erro no deploy na consulta inicial. QA 4177 encerrado após conferir processo/caminho absoluto; outros servidores preservados. Sem migração ou alteração de reservas, pagamentos ou credenciais reais.
+
+
+## 2026-10-29 — Projeto rodando localmente
+
+Execução local reiniciada por npm start em http://localhost:4176/ , /admin/ e /agendar/, com PORT=4176 e SQLite existente data/appointments.sqlite. Porta 4173 responde por outro projeto (ZM Exclusiva), preservado. Landing, admin, agendamento, /api/session e /api/config responderam HTTP 200; sessão local=true e configuração existente ativa, sem alterar horários, cadastrar fixtures ou criar reservas. Banco Neon e produção preservados. Processo mantido ativo; sem mudança de UI/código ou novo deploy.
+
+
+## 2026-10-29 — Correção do ícone de WhatsApp
+
+Substituído o desenho aproximado do WhatsApp por SVG preenchido da Bootstrap Icons (viewBox 16 × 16), com stroke=none e fill=currentColor. Removido o contorno que se sobrepunha ao telefone; símbolo e botões da landing/agendamento usam a mesma geometria, dimensionada em 28 px e centralizada. Número, link, comportamento, textos, banco e funcionalidades preservados. Código nativo, sem dependência externa em tempo de execução.
+
+Inspeção local em http://localhost:4176/ e /agendar/, sem mutações no banco: quatro combinações de página/viewport (1440 e 390 px), dispositivo 3×, cor branca/preenchimento e ausência de stroke conferidos, centro do SVG alinhado ao botão com tolerância de 1 px e URL correto preservado. Capturas inspecionadas docs/qa/whatsapp-icon-{landing,booking}-{1440,390}.png. Nenhuma nova fotografia ou dado fictício no banco real. Publicação em andamento no destino autorizado.
+
+- [x] Substituir SVG e conferir desktop/mobile nas duas páginas.
+- [ ] Publicar e confirmar arquivos no domínio oficial.

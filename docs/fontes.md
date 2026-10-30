@@ -34,3 +34,8 @@ Rollback solicitado em 2026-10-20: retomada a composição anterior ao retrato n
 ## Contato atualizado — 2026-10-29
 
 A usuária solicitou substituir as chamadas de conversa/atendimento no Instagram por WhatsApp e incluir botão fixo no canto inferior direito. Número confirmado por ela após conferência do nono dígito: +55 73 98170-1666, link https://wa.me/5573981701666 . Esta confirmação substitui a decisão anterior de manter somente contato pelo Instagram. O botão apenas abre a conversa para envio pela própria cliente; a integração de avisos automáticos continua em standby. Fontes e links das fotografias permanecem documentados. A fonte Poppins já carregava nas duas páginas; o ajuste atual alinha tamanhos, pesos, itálicos e legibilidade da experiência de agendamento à identidade da landing. Nenhuma nova fotografia adicionada.
+
+
+## 2026-10-29 — Correção do ícone de WhatsApp
+
+Ícone de WhatsApp: Bootstrap Icons, SVG de https://raw.githubusercontent.com/twbs/icons/main/icons/whatsapp.svg , licença MIT de https://raw.githubusercontent.com/twbs/icons/main/LICENSE preservada em dist/assets/whatsapp-license.txt. Geometria vetorial incorporada localmente; sem dependência de CDN ou pacote JavaScript. Substitui o desenho aproximado anterior.
