@@ -66,7 +66,7 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert(!JSON.stringify(listed.data).includes('Private QA intake'));
    assert.equal((await call('/api/admin/bookings/'+id+'/anamnesis',{withCookie:false})).status,403);
    assert.equal((await call('/api/admin/bookings/'+id+'/anamnesis')).data.anamnesis.chemicalDetails,intake.chemicalDetails);
-   const receipt=await call('/api/receipt/'+booked.token);assert.equal(receipt.status,200);assert(!JSON.stringify(receipt.data).includes('Private QA intake'));
+   const receipt=await call('/api/receipt/'+booked.token);assert.equal(receipt.status,200);assert.equal(booked.paymentStatus,'pending');assert.equal(receipt.data.paymentStatus,'pending');assert(!JSON.stringify(receipt.data).includes('Private QA intake'));
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM booking_slots')).n,4);
   });
   await t.test('service prices persist privately in settings without creating income',async()=>{
@@ -83,6 +83,7 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries WHERE booking_id=?',[id])).n,1);
    assert.equal((await call('/api/admin/finance',{method:'POST',data:{kind:'expense',category:'Produtos',description:'Material QA',amountCents:3525,date:today,paymentMethod:'pix',idempotencyKey:crypto.randomUUID()}})).status,201);
    const finance=await call(`/api/admin/finance?from=${today}&to=${today}`);assert.equal(finance.data.summary.incomeCents,15050);assert.equal(finance.data.summary.expenseCents,3525);assert.equal(finance.data.summary.balanceCents,11525);
+   const receipt=await call('/api/receipt/'+booked.token,{withCookie:false});assert.equal(receipt.data.paymentStatus,'received');assert(!Object.hasOwn(receipt.data,'amountCents'));assert(!Object.hasOwn(receipt.data,'paymentMethod'));
   });
   await t.test('failed transaction rolls back all writes and a late block prevents booking',async()=>{
    const realBatch=db.batch;db.batch=async statements=>realBatch(statements.some(s=>s.sql.startsWith('INSERT INTO booking_anamnesis'))?[...statements,{sql:'INSERT INTO booking_anamnesis(booking_id,answers,consented_at,version) VALUES(?,?,?,1)',args:['missing','{}','now']}]:statements);

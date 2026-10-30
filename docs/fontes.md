@@ -29,3 +29,8 @@ Precisão sobre a resolução: o arquivo local é uma miniatura do avatar, não 
 Prévia solicitada em 2026-10-20: output/imagegen/fabricia-restaurada-previa.png editada com image_gen a partir de fabricia-leao.jpg. Prompt preservado em fabricia-restaurada-prompt.txt. É restauração generativa com detalhes reconstruídos, não fotografia original em alta resolução. Inspecionada e mantida como prévia, fora dos assets e sem referência na landing, pois não há garantia de preservar cada detalhe do rosto.
 
 Rollback solicitado em 2026-10-20: retomada a composição anterior ao retrato no hero. Foto principal loiro-perolado.jpg; avatar fabricia-leao.jpg pequeno no cartão. Especialidades volta a alternar as fotos reais já documentadas. Nenhuma nova fonte ou fotografia adicionada; prévia restaurada não participa da landing.
+
+
+## Contato atualizado — 2026-10-29
+
+A usuária solicitou substituir as chamadas de conversa/atendimento no Instagram por WhatsApp e incluir botão fixo no canto inferior direito. Número confirmado por ela após conferência do nono dígito: +55 73 98170-1666, link https://wa.me/5573981701666 . Esta confirmação substitui a decisão anterior de manter somente contato pelo Instagram. O botão apenas abre a conversa para envio pela própria cliente; a integração de avisos automáticos continua em standby. Fontes e links das fotografias permanecem documentados. A fonte Poppins já carregava nas duas páginas; o ajuste atual alinha tamanhos, pesos, itálicos e legibilidade da experiência de agendamento à identidade da landing. Nenhuma nova fotografia adicionada.

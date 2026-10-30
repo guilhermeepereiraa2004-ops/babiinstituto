@@ -156,3 +156,20 @@ Recuperação publicada no commit b0928de, deploy dpl_EkLvqz5NBZmzvDfmHdB6vRpD7o
 - [x] Usuária definir pessoalmente a nova senha no painel.
 
 Usuária confirmou a definição da nova senha. Verificação somente de metadados em produção confirmou: token de recuperação consumido, credencial atualizada após a emissão do link e sessões anteriores revogadas. Nenhuma senha ou hash foi lido. Recuperação concluída; link transitório removido do estado operacional do agente, sem gravação em arquivos.
+
+
+## 2026-10-29 — WhatsApp, tipografia da cliente e situação do pagamento
+
+Número confirmado pela usuária após conferência do nono dígito: +55 73 98170-1666 (https://wa.me/5573981701666). Botão fixo no canto inferior direito da landing, agendamento e acompanhamento; rodapé, FAQ e chamadas de atendimento/conversa passam ao WhatsApp. Instagram permanece como referência de portfólio/origem das fotografias, sem direcionar a conversa para lá. Botão abre conversa para envio pela própria pessoa; a integração de avisos automáticos continua em standby.
+
+Poppins já carregava corretamente na landing e no agendamento; família confirmada no navegador de produção. Alinhados os tamanhos, pesos 400/300, itálicos, cores café/champagne/off-white e hierarquia da página da cliente, com textos/controles mais legíveis, etapas em grade e comportamento responsivo. Estilos restritos à client-page; admin preservado.
+
+A versão publicada anterior não continha o literal pago no comprovante, mas exibia a reserva como Confirmada sem distinguir pagamento. O comprovante agora separa Agendamento e Pagamento. Novo campo público paymentStatus é derivado no servidor: pending para confirmado, received apenas para concluído com entrada income/posted e valor positivo, courtesy para zero explícito, unrecorded para concluído antigo sem recebimento informado e not_applicable para cancelado. Valores, forma de pagamento, telefone, observações e anamnese continuam privados. Consulta de receipt e reenvio idempotente usam a mesma regra. Nova reserva não cria entrada financeira; nenhum registro real foi alterado ou classificado retroativamente por esta mudança.
+
+Gate 20/20, 34 testes offline aprovados e uma suíte remota ignorada nesse gate; Neon QA gentle-dawn-48537104 com 13 casos/subtestes aprovados em schema descartável. Navegador isolado com 24 verificações aprovadas: número/posição/segurança dos links, ausência de CTA de conversa no Instagram, Poppins real e itálico, mobile 390 px sem rolagem horizontal, reserva completa com anamnese, pagamento pendente antes do recebimento, mudança somente após entrada financeira e privacidade do comprovante. Capturas inspecionadas em docs/qa/: whatsapp-landing-{desktop,mobile}.png, client-booking-{desktop,mobile}.png, client-calendar-mobile.png, client-receipt-pending-{desktop,mobile}.png e client-receipt-received-desktop.png. Dados, códigos e recebimentos das capturas são fictícios. CUA indisponível; Chrome headless isolado foi a alternativa já documentada. Porta 4174 estava ocupada por scripts/qa-server.mjs de outro projeto, preservado; QA desta frente usou 4177 e data/qa-client-contact-20261029.sqlite. Sem fixtures, capturas ou mutações no banco de produção.
+
+- [x] Confirmar WhatsApp com a usuária e substituir contato/CTA.
+- [x] Alinhar tipografia e inspecionar desktop/mobile.
+- [x] Distinguir pagamento no acompanhamento com dados reais do financeiro.
+- [x] Verificar testes, privacidade e fluxo completo com fixtures de QA.
+- [ ] Publicar via main e confirmar domínio/assets/API.

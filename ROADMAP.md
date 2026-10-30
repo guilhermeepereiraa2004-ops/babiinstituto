@@ -54,3 +54,12 @@ Recuperação publicada no commit b0928de, deploy dpl_EkLvqz5NBZmzvDfmHdB6vRpD7o
 - [x] Usuária definir a nova senha.
 
 Usuária confirmou a definição da nova senha. Verificação somente de metadados em produção confirmou: token de recuperação consumido, credencial atualizada após a emissão do link e sessões anteriores revogadas. Nenhuma senha ou hash foi lido. Recuperação concluída; link transitório removido do estado operacional do agente, sem gravação em arquivos.
+
+
+## 2026-10-29 — WhatsApp, tipografia da cliente e situação do pagamento
+
+- [x] Contato por WhatsApp com botão fixo e número confirmado.
+- [x] Tipografia editorial da cliente alinhada à landing e mais legível.
+- [x] Pagamento separado da reserva e recebido somente conforme financeiro.
+- [x] Gate, Neon QA e navegador desktop/mobile aprovados.
+- [ ] Publicar e conferir produção.

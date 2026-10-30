@@ -6,6 +6,39 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DEFAULT_SETTINGS,handleApi,clock} from '../server/core.mjs';
 
+test('confirmar reserva não confirma pagamento; acompanhamento segue o recebimento e o reenvio',async()=>{
+ const f=fixture();
+ try{
+  f.settings.services.find(s=>s.id==='corte').priceCents=12550;await f.save();
+  const key=crypto.randomUUID(),created=await f.booking('09:00',{idempotencyKey:key});
+  assert.equal(created.data.status,'confirmed');assert.equal(created.data.paymentStatus,'pending');
+  const path='/api/receipt/'+created.data.token;
+  assert.equal((await f.call(path)).data.paymentStatus,'pending');
+  assert.equal((await f.db.get('SELECT COUNT(*) AS n FROM finance_entries')).n,0);
+  const booking=(await f.call('/api/admin/bookings',{admin:true})).data.bookings[0];
+  assert.equal((await f.call('/api/admin/bookings/'+booking.id,{method:'PATCH',admin:true,data:{status:'completed',revision:0,amountCents:12550,paymentMethod:'pix'}})).status,200);
+  const receipt=(await f.call(path)).data;
+  assert.equal(receipt.status,'completed');assert.equal(receipt.paymentStatus,'received');
+  assert.equal((await f.booking('09:00',{idempotencyKey:key})).data.paymentStatus,'received');
+  for(const privateField of ['amountCents','amount_cents','paymentMethod','priceCents','phone','notes','anamnesis'])assert(!Object.hasOwn(receipt,privateField));
+ }finally{f.sqlite.close();}
+});
+
+test('acompanhamento distingue cortesia, cancelamento e concluído antigo sem valor',async()=>{
+ const f=fixture();
+ try{
+  await f.save();const courtesy=await f.booking('09:00'),cancelled=await f.booking('11:00'),legacy=await f.booking('13:00');
+  const bookings=(await f.call('/api/admin/bookings',{admin:true})).data.bookings;
+  await f.call('/api/admin/bookings/'+bookings[0].id,{method:'PATCH',admin:true,data:{status:'completed',revision:0,amountCents:0,paymentMethod:'other'}});
+  await f.call('/api/admin/bookings/'+bookings[1].id,{method:'PATCH',admin:true,data:{status:'cancelled',revision:0}});
+  await f.db.run("UPDATE bookings SET status='completed' WHERE id=?",[bookings[2].id]);
+  f.sqlite.exec(readFileSync(new URL('../migrations/0002-intake-finance.sql',import.meta.url),'utf8'));
+  assert.equal((await f.call('/api/receipt/'+courtesy.data.token)).data.paymentStatus,'courtesy');
+  assert.equal((await f.call('/api/receipt/'+cancelled.data.token)).data.paymentStatus,'not_applicable');
+  assert.equal((await f.call('/api/receipt/'+legacy.data.token)).data.paymentStatus,'unrecorded');
+ }finally{f.sqlite.close();}
+});
+
 test('valores dos serviços são opcionais, persistem em centavos e ficam privados',async()=>{
  const f=fixture();
  try{

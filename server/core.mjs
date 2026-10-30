@@ -42,7 +42,13 @@ export async function availableSlots(db,settings,date,serviceId,now=new Date(),i
   return {slots,reason:slots.length?'':'Os horários deste dia já foram preenchidos. Tente outra data.'};
 }
 async function rateLimit(db,key,now){const bucket=Math.floor(now.getTime()/600000);const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(key)))).map(v=>v.toString(16).padStart(2,'0')).join('');const id=`${hash}:${bucket}`;await db.batch([{sql:'DELETE FROM rate_limits WHERE expires<?',args:[now.getTime()]},{sql:'INSERT INTO rate_limits(key,count,expires) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=rate_limits.count+1',args:[id,now.getTime()+600000]}]);const row=await db.get('SELECT count FROM rate_limits WHERE key=?',[id]);assert(row.count<=10,429,'Muitas tentativas. Aguarde alguns minutos para tentar novamente.');}
-function publicBooking(row){return {code:`BABI-${row.id.slice(0,8).toUpperCase()}`,name:row.customer_name.split(' ')[0],service:row.service_name,date:row.date,time:timeLabel(row.start_minute),duration:row.duration,status:row.status,token:row.token};}
+async function publicBooking(db,row){
+ let paymentStatus=row.status==='cancelled'?'not_applicable':'pending';
+ if(row.status==='completed'){
+  const entry=await db.get('SELECT kind,status,amount_cents FROM finance_entries WHERE booking_id=?',[row.id]);
+  paymentStatus=entry?.kind==='income'&&entry.status==='posted'&&Number.isSafeInteger(entry.amount_cents)&&entry.amount_cents>=0?(entry.amount_cents===0?'courtesy':'received'):'unrecorded';
+ }
+ return {paymentStatus,code:`BABI-${row.id.slice(0,8).toUpperCase()}`,name:row.customer_name.split(' ')[0],service:row.service_name,date:row.date,time:timeLabel(row.start_minute),duration:row.duration,status:row.status,token:row.token};}
 function validateAnamnesis(input){
   assert(input&&typeof input==='object'&&input.consent===true,400,'Autorize o uso da anamnese para preparar seu atendimento.');
   const choices=new Set(['no','yes','unsure','private']);
@@ -96,7 +102,7 @@ export async function createBooking(db,input,context){
   const anamnesis=JSON.stringify(validateAnamnesis(input.anamnesis));
   assert(typeof input.idempotencyKey==='string'&&/^[a-zA-Z0-9-]{20,60}$/.test(input.idempotencyKey),400,'Recarregue a página e tente novamente.');
   const old=await db.get('SELECT * FROM bookings WHERE idempotency_key=?',[input.idempotencyKey]);
-  if(old){const intake=await db.get('SELECT answers FROM booking_anamnesis WHERE booking_id=?',[old.id]);assert(old.customer_name===name&&old.phone===phone&&old.notes===clean(input.notes,500)&&old.service_id===input.serviceId&&old.date===input.date&&timeLabel(old.start_minute)===input.time&&intake?.answers===anamnesis,409,'Essa solicitação já foi utilizada. Recarregue a página.');return publicBooking(old);}
+  if(old){const intake=await db.get('SELECT answers FROM booking_anamnesis WHERE booking_id=?',[old.id]);assert(old.customer_name===name&&old.phone===phone&&old.notes===clean(input.notes,500)&&old.service_id===input.serviceId&&old.date===input.date&&timeLabel(old.start_minute)===input.time&&intake?.answers===anamnesis,409,'Essa solicitação já foi utilizada. Recarregue a página.');return publicBooking(db,old);}
   const now=context.now||new Date();await rateLimit(db,context.clientKey||'unknown',now);
   const service=serviceFor(settings,input.serviceId);const availability=await availableSlots(db,settings,input.date,input.serviceId,now);assert(availability.slots.includes(input.time),409,'Esse horário não está mais disponível. Escolha outro.');
   const id=uid(),secret=token(),minute=minutes(input.time),stamp=now.toISOString();
@@ -105,7 +111,7 @@ export async function createBooking(db,input,context){
   for(let m=minute;m<minute+service.duration;m+=15)statements.push({sql:'INSERT INTO booking_slots(date,minute,booking_id) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM bookings WHERE id=?)',args:[input.date,m,id,id]});
   statements.push({sql:'INSERT INTO booking_anamnesis(booking_id,answers,consented_at,version) SELECT ?,?,?,1 WHERE EXISTS(SELECT 1 FROM bookings WHERE id=?)',args:[id,anamnesis,stamp,id]});
   try{const result=await db.batch(statements);assert(result[0].changes>0,409,'A disponibilidade da agenda mudou. Consulte os horários novamente.');}catch(error){if(/UNIQUE/i.test(error.message))throw new ApiError(409,'Esse horário acabou de ser reservado. Escolha outro.');throw error;}
-  return publicBooking(record);
+  return publicBooking(db,record);
 }
 export async function updateBooking(db,id,input,now=new Date()){
   const row=await db.get('SELECT * FROM bookings WHERE id=?',[id]);assert(row,404,'Agendamento não encontrado.');assert(input.revision===row.revision,409,'Esse agendamento mudou. Atualize a agenda.');
@@ -138,7 +144,7 @@ export async function handleApi(request,db,context={}){
     if(path==='/api/config'&&method==='GET'){const settings=await readSettings(db),today=clock(now).date;return json({enabled:settings.enabled,timezone:settings.timezone,services:settings.services.filter(s=>s.active).map(s=>({id:s.id,name:s.name,description:s.description,duration:s.duration,active:s.active})),today,maxDate:addDays(today,settings.advanceDays)});}
     if(path==='/api/availability'&&method==='GET')return json(await availableSlots(db,await readSettings(db),url.searchParams.get('date'),url.searchParams.get('service'),now));
     if(path==='/api/bookings'&&method==='POST')return json(await createBooking(db,await body(request),{...context,now}),201);
-    if(/^\/api\/receipt\/[a-f0-9]{48}$/.test(path)&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE token=?',[path.split('/').pop()]);assert(row,404,'Reserva não encontrada.');return json(publicBooking(row));}
+    if(/^\/api\/receipt\/[a-f0-9]{48}$/.test(path)&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE token=?',[path.split('/').pop()]);assert(row,404,'Reserva não encontrada.');return json(await publicBooking(db,row));}
     if(path.startsWith('/api/admin/')){
       assert(context.admin,403,'Entre com a conta proprietária para acessar a administração.');
       if(path==='/api/admin/finance'){

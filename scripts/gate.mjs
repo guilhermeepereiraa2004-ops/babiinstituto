@@ -21,7 +21,7 @@ const checks={
   design:html.includes('family=Poppins')&&css.includes('@media(max-width:700px)')&&css.includes('prefers-reduced-motion'),
   assets:assets.every(asset=>existsSync(resolve(root,'dist',asset.replace(/^\//,''))))&&[...html.matchAll(/<img\b[^>]*>/g)].every(match=>/\balt="/.test(match[0])),
   anchors:urls.filter(url=>url.startsWith('#')).every(url=>ids.includes(url.slice(1)))&&ids.length===new Set(ids).size,
-  contact:html.includes('https://www.instagram.com/babi_institutodebeleza/')&&[...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/g)].every(match=>match[0].includes('noopener noreferrer'))&&!html.includes('api.whatsapp.com'),
+  contact:html.includes('https://wa.me/5573981701666')&&html.includes('class="whatsapp-float"')&&!/Convers(?:ar|e)[^<.]*Instagram/i.test(html)&&[...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/g)].every(match=>match[0].includes('noopener noreferrer'))&&!html.includes('api.whatsapp.com'),
   syntax:['dist/app.js','dist/booking/shared.js','dist/admin/admin.js','dist/agendar/booking.js','server/core.mjs','server/local.mjs','server/postgres.mjs','server/auth.mjs','server/cloud.mjs','api/index.mjs'].every(path=>spawnSync(process.execPath,['--check',resolve(root,path)],{encoding:'utf8'}).status===0)&&checkLayers(),
   portfolio:html.includes('aria-labelledby="lightbox-title"')&&html.includes('aria-live="polite"')&&[...html.matchAll(/data-filter="/g)].length===4&&js.includes('dialog.showModal()')&&js.includes('card.hidden = !visible'),
   sections:['servicos','sobre','portfolio','contato'].every(id=>ids.includes(id))&&html.includes('class="faq-list reveal"')&&html.includes('class="ritual-grid"'),

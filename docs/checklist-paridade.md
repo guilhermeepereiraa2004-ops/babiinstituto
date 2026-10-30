@@ -10,7 +10,7 @@ Total: 20 | Concluídos: 20 | Progresso dos critérios do gate: 100%
 | A02 | Poppins e layout responsivo com redução de movimento | OK | check design |
 | A03 | Fotografias locais disponíveis | OK | check assets |
 | A04 | Links internos com destinos existentes | OK | check anchors |
-| A05 | Contato pelo Instagram oficial e links externos seguros | OK | check contact |
+| A05 | Contato pelo WhatsApp confirmado e links externos seguros | OK | check contact |
 | A06 | JavaScript válido e dependências entre camadas respeitadas | OK | check syntax |
 | A07 | Portfólio com filtros, fotos ampliáveis e diálogo acessível | OK | check portfolio |
 | A08 | Serviços, apresentação, processo, FAQ e contato completos | OK | check sections |
