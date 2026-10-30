@@ -117,3 +117,6 @@
 .lunch-times[hidden]{display:none}
 .lunch-times .field{margin:0;font-size:10px;min-width:0}
 .lunch-times input{width:100%;min-width:0}
+
+.client-page .service-price{display:block;margin-top:10px;font-size:16px;font-weight:500;color:var(--brown);line-height:1.5}
+.client-page .summary-price strong{font-size:17px;font-weight:500}

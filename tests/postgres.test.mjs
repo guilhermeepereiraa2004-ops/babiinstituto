@@ -81,11 +81,13 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    const receipt=await call('/api/receipt/'+booked.token);assert.equal(receipt.status,200);assert.equal(booked.paymentStatus,'pending');assert.equal(receipt.data.paymentStatus,'pending');assert(!JSON.stringify(receipt.data).includes('Private QA intake'));
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM booking_slots')).n,4);
   });
-  await t.test('service prices persist privately in settings without creating income',async()=>{
+  await t.test('catalog prices are public without exposing financial records or creating income',async()=>{
    settings.services.find(s=>s.id==='corte').priceCents=15050;
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
    assert.equal((await call('/api/admin/settings')).data.services.find(s=>s.id==='corte').priceCents,15050);
-   assert((await call('/api/config',{withCookie:false})).data.services.every(s=>!Object.hasOwn(s,'priceCents')));
+   const catalog=(await call('/api/config',{withCookie:false})).data;
+   assert.equal(catalog.services.find(s=>s.id==='corte').priceCents,15050);
+   assert.deepEqual(Object.keys(catalog.services[0]).sort(),['active','description','duration','id','name','priceCents']);
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries')).n,0);
   });
   await t.test('completion is atomic and unique; finance totals use integer cents',async()=>{

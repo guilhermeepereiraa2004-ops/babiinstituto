@@ -214,3 +214,17 @@ Almoço recorrente configurável por dia em Serviços e horários → Dias e hor
 Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados, schema descartável removido. CUA voltou a funcionar: QA isolado em 4177/data/qa-lunch-20261029.sqlite confirmou campos opcionais, foco, salvar, persistência após reload, rejeição de intervalo invertido, ocultação/desabilitação dos campos ao desativar, retirada dos horários 11:30/12:00 e preservação de 11:00/13:00 para serviço de 1h com almoço 12h–13h; remoção da pausa restaurou 12:00. Inspeção 1440 e 390 px sem rolagem horizontal, nenhum erro de console. Capturas exclusivamente de QA: docs/qa/lunch-desktop.jpg e lunch-mobile.jpg. Viewport restaurado e abas temporárias fechadas.
 
 Publicado no GitHub main, commit funcional 9b1fceb, deploy dpl_8tDe3pvKZutjcHz2saDARXVpqx6f READY em https://babi-instituto.vercel.app/. JS/CSS públicos conferidos contra os arquivos validados, agenda ativa com os quatro serviços e admin protegido (403 sem sessão). Servidor local 4176 reiniciado com o backend atualizado e banco existente; QA 4177 encerrado. Nenhum almoço ativado em bases reais: a profissional deve marcar os dias, informar início/fim e salvar. Raia concluída e liberada.
+
+
+## 2026-10-29 — Almoço ativado em produção
+
+Por pedido explícito da usuária, almoço ativado na produção das 12:00 às 13:00, de segunda a sexta, America/Bahia. Alteração somente de weekly[].lunch desses cinco dias; demais configurações e todas as reservas preservadas. Aplicação com validação do núcleo, mesma trava transacional Postgres e backup privado da configuração anterior em .vercel/. Persistência relida e comparada. API pública verificada em 20 combinações (quatro serviços × cinco dias, 02–06/11): nenhum serviço oferecido atravessa 12h–13h. Agenda segue ativa. Sem mudança de código, migração ou necessidade de deploy; banco SQLite local preservado.
+
+
+## 2026-10-29 — Preços no agendamento da cliente
+
+Por solicitação da usuária, o preço cadastrado passa a aparecer para a cliente na seleção do serviço e no resumo durante o agendamento, em reais. /api/config expõe priceCents apenas dos serviços ativos, mantendo projeção explícita dos campos públicos. Null/ausente aparece como Valor a consultar; zero aparece R$ 0,00. Texto do admin informa a visibilidade pública. Pagamento continua no atendimento; recebimentos individuais, forma de pagamento e dados pessoais permanecem privados. Não há snapshot de orçamento na reserva: esta mudança exibe o catálogo atual carregado, sem alterar valores históricos ou o comprovante. Sem migração ou mudança nos preços cadastrados.
+
+Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados em schema descartável. CUA em SQLite separado data/qa-public-prices-20261029.sqlite/4177 confirmou formato monetário, zero, null/ausente, preço no resumo, atualização ao trocar serviço e continuidade ao avançar para calendário. Layout inspecionado a 1440 e 390 px, sem rolagem horizontal e sem erros de console. Capturas exclusivamente fictícias: docs/qa/public-prices-desktop.jpg e public-prices-mobile.jpg. Viewport restaurado e aba QA encerrada.
+
+Publicação em andamento.

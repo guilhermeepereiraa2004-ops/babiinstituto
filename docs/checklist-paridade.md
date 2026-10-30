@@ -25,6 +25,6 @@ Total: 20 | Concluídos: 20 | Progresso dos critérios do gate: 100%
 | A17 | Postgres com transações e migrações separadas, preservando SQLite local | OK | check cloud |
 | A18 | Login de produção com cadastro fechado e proteção da conta proprietária | OK | check authentication |
 | A19 | Vercel publica apenas dist e executa backend na região do banco | OK | check hosting |
-| A20 | Valor padrão privado por serviço, em centavos, preenchendo conclusão sem alterar recebimentos anteriores | OK | check runtime |
+| A20 | Preço do catálogo visível no agendamento, em centavos, preenchendo conclusão sem alterar recebimentos anteriores | OK | check runtime |
 
 A inspeção visual e os testes interativos são registrados em `docs/qa.md`. O percentual mede os critérios deste gate, sem representar autenticação para produção ou publicação.

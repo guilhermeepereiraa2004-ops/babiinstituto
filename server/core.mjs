@@ -142,7 +142,7 @@ export async function handleApi(request,db,context={}){
   try{
     const url=new URL(request.url),path=url.pathname,method=request.method,now=context.now||new Date();
     if(path==='/api/session'&&method==='GET')return json({admin:!!context.admin,local:!!context.local,authenticated:!!context.authenticated});
-    if(path==='/api/config'&&method==='GET'){const settings=await readSettings(db),today=clock(now).date;return json({enabled:settings.enabled,timezone:settings.timezone,services:settings.services.filter(s=>s.active).map(s=>({id:s.id,name:s.name,description:s.description,duration:s.duration,active:s.active})),today,maxDate:addDays(today,settings.advanceDays)});}
+    if(path==='/api/config'&&method==='GET'){const settings=await readSettings(db),today=clock(now).date;return json({enabled:settings.enabled,timezone:settings.timezone,services:settings.services.filter(s=>s.active).map(s=>({id:s.id,name:s.name,description:s.description,duration:s.duration,priceCents:s.priceCents??null,active:s.active})),today,maxDate:addDays(today,settings.advanceDays)});}
     if(path==='/api/availability'&&method==='GET')return json(await availableSlots(db,await readSettings(db),url.searchParams.get('date'),url.searchParams.get('service'),now));
     if(path==='/api/bookings'&&method==='POST')return json(await createBooking(db,await body(request),{...context,now}),201);
     if(/^\/api\/receipt\/[a-f0-9]{48}$/.test(path)&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE token=?',[path.split('/').pop()]);assert(row,404,'Reserva não encontrada.');return json(await publicBooking(db,row));}

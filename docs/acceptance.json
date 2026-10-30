@@ -96,7 +96,7 @@
   },
   {
     "id": "A20",
-    "criterion": "Valor padrão privado por serviço, em centavos, preenchendo conclusão sem alterar recebimentos anteriores",
+    "criterion": "Preço do catálogo visível no agendamento, em centavos, preenchendo conclusão sem alterar recebimentos anteriores",
     "check": "runtime"
   }
 ]

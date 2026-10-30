@@ -75,7 +75,7 @@ test('acompanhamento distingue cortesia, cancelamento e concluído antigo sem va
  }finally{f.sqlite.close();}
 });
 
-test('valores dos serviços são opcionais, persistem em centavos e ficam privados',async()=>{
+test('preços do catálogo são públicos, opcionais e não expõem dados financeiros do atendimento',async()=>{
  const f=fixture();
  try{
   f.settings.services.forEach(s=>delete s.priceCents);
@@ -86,7 +86,8 @@ test('valores dos serviços são opcionais, persistem em centavos e ficam privad
   const saved=(await f.call('/api/admin/settings',{admin:true})).data;
   assert.equal(saved.services[0].priceCents,12550);assert.equal(saved.services[1].priceCents,0);
   const publicConfig=(await f.call('/api/config')).data;
-  assert(publicConfig.services.every(s=>!Object.hasOwn(s,'priceCents')));
+  assert.equal(publicConfig.services[0].priceCents,12550);assert.equal(publicConfig.services[1].priceCents,0);assert.equal(publicConfig.services[2].priceCents,null);
+  assert.deepEqual(Object.keys(publicConfig.services[0]).sort(),['active','description','duration','id','name','priceCents']);
   const booked=await f.booking('09:00',{serviceId:saved.services[0].id});
   assert.equal(booked.status,201);
   assert(!Object.hasOwn(booked.data,'priceCents'));
