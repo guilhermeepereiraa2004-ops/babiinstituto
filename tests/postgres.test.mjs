@@ -56,19 +56,19 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
   });
   const today=clock().date,date=addDays(today,1),settings=structuredClone(DEFAULT_SETTINGS);settings.enabled=true;settings.leadMinutes=0;settings.weekly.forEach(d=>d.enabled=true);settings.services.forEach(s=>s.duration=60);
   const intake={chemicalHistory:'yes',chemicalDetails:'Private QA intake',allergies:'no',hairCare:'QA care',consent:true};
-  const booking=(time='09:00')=>({name:'Cliente QA Postgres',phone:'71999990000',consent:true,anamnesis:intake,serviceId:'corte',date,time,idempotencyKey:crypto.randomUUID()});
+  const booking=(time='09:00')=>({name:'Cliente QA Postgres',phone:'71999990000',consent:true,anamnesis:intake,serviceId:'corte-tradicional',date,time,idempotencyKey:crypto.randomUUID()});
   let booked,id;
   await t.test('recurring lunch persists and protects availability and booking in Postgres',async()=>{
    const weekday=new Date(date+'T12:00:00Z').getUTCDay();
    settings.weekly[weekday].lunch={start:'12:00',end:'13:00'};
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
    assert.deepEqual((await call('/api/admin/settings')).data.weekly[weekday].lunch,{start:'12:00',end:'13:00'});
-   const slots=(await call(`/api/availability?date=${date}&service=corte`,{withCookie:false})).data.slots;
+   const slots=(await call(`/api/availability?date=${date}&service=corte-tradicional`,{withCookie:false})).data.slots;
    assert(slots.includes('11:00'));assert(slots.includes('13:00'));assert(!slots.includes('11:30'));assert(!slots.includes('12:00'));
    assert.equal((await call('/api/bookings',{method:'POST',data:booking('11:30'),withCookie:false})).status,409);
    settings.weekly[weekday].lunch=null;
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
-   assert((await call(`/api/availability?date=${date}&service=corte`,{withCookie:false})).data.slots.includes('12:00'));
+   assert((await call(`/api/availability?date=${date}&service=corte-tradicional`,{withCookie:false})).data.slots.includes('12:00'));
   });
   await t.test('concurrent reservations occupy unique slots; intake and receipts remain private',async()=>{
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
@@ -82,16 +82,16 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM booking_slots')).n,4);
   });
   await t.test('catalog prices are public without exposing financial records or creating income',async()=>{
-   settings.services.find(s=>s.id==='corte').priceCents=15050;
+   settings.services.find(s=>s.id==='corte-tradicional').priceCents=15050;
    assert.equal((await call('/api/admin/settings',{method:'PUT',data:settings})).status,200);
-   assert.equal((await call('/api/admin/settings')).data.services.find(s=>s.id==='corte').priceCents,15050);
+   assert.equal((await call('/api/admin/settings')).data.services.find(s=>s.id==='corte-tradicional').priceCents,15050);
    const catalog=(await call('/api/config',{withCookie:false})).data;
-   assert.equal(catalog.services.find(s=>s.id==='corte').priceCents,15050);
+   assert.equal(catalog.services.find(s=>s.id==='corte-tradicional').priceCents,15050);
    assert.deepEqual(Object.keys(catalog.services[0]).sort(),['active','description','duration','id','name','priceCents']);
    assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries')).n,0);
   });
   await t.test('completion is atomic and unique; finance totals use integer cents',async()=>{
-   const price=(await call('/api/admin/settings')).data.services.find(s=>s.id==='corte').priceCents;
+   const price=(await call('/api/admin/settings')).data.services.find(s=>s.id==='corte-tradicional').priceCents;
    const complete={revision:0,status:'completed',amountCents:price,paymentMethod:'pix'};
    const results=await Promise.all([call('/api/admin/bookings/'+id,{method:'PATCH',data:complete}),call('/api/admin/bookings/'+id,{method:'PATCH',data:complete})]);
    assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);assert.equal((await db.get('SELECT COUNT(*) AS n FROM finance_entries WHERE booking_id=?',[id])).n,1);

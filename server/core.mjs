@@ -1,11 +1,30 @@
+const catalog = [
+  ['corte-tradicional', 'Corte de cabelo tradicional', 90],
+  ['corte-seco-cacheadas', 'Corte a seco para cacheadas', 90],
+  ['progressiva', 'Progressiva', 90],
+  ['selagem', 'Selagem', 90],
+  ['botox-capilar', 'Botox capilar', 90],
+  ['reconstrucao', 'Tratamento de reconstrução', 90],
+  ['nutricao', 'Tratamento de nutrição', 90],
+  ['hidratacao', 'Tratamento de hidratação', 90],
+  ['plastica-capilar', 'Plástica capilar', 90],
+  ['mechas-loiras', 'Mechas loiras', 120],
+  ['mechas-iluminadas', 'Mechas iluminadas', 120],
+  ['morena-iluminada', 'Morena iluminada', 120],
+  ['cauterizacao-capilar', 'Cauterização capilar', 90],
+  ['soltura-cachos', 'Soltura de cachos', 90],
+  ['terapia', 'Terapia capilar', 90],
+  ['cronograma-capilar', 'Cronograma capilar', 90]
+];
+
+export function salonServices() {
+  return catalog.map(([id, name, duration]) => ({id, name, duration, description:'', priceCents:null, active:true}));
+}
+
+export const MAX_SERVICES = 32;
 export const DEFAULT_SETTINGS = {
   enabled: false, timezone: 'America/Bahia', leadMinutes: 60, advanceDays: 60,
-  services: [
-    {id:'mechas',name:'Mechas & loiros',description:'Luz, nuances e uma cor com a sua identidade.',duration:180,priceCents:null,active:true},
-    {id:'cor',name:'Cor & visagismo',description:'Um novo olhar para a cor que valoriza você.',duration:120,priceCents:null,active:true},
-    {id:'corte',name:'Cortes & cachos',description:'Movimento e liberdade para sua textura.',duration:60,priceCents:null,active:true},
-    {id:'terapia',name:'Terapia capilar',description:'Um momento dedicado ao cuidado dos fios.',duration:60,priceCents:null,active:true}
-  ],
+  services: salonServices(),
   weekly: [0,1,2,3,4,5,6].map(day=>({day,enabled:day>0&&day<6,open:'09:00',close:'18:00',lunch:null}))
 };
 const STATUSES = new Set(['confirmed','completed','cancelled']);
@@ -22,8 +41,9 @@ function clean(value,max){return typeof value==='string'?value.trim().replace(/[
 function json(data,status=200){return Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});}
 async function body(request){assert(request.headers.get('content-type')?.includes('application/json'),415,'Envie os dados no formato correto.');assert(request.headers.get('origin')===new URL(request.url).origin,403,'Origem da solicitação não autorizada.');const reader=request.body?.getReader();let size=0;const chunks=[];if(reader){while(true){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>12288){await reader.cancel();throw new ApiError(413,'Solicitação muito grande.');}chunks.push(value);}}try{const value=JSON.parse(new TextDecoder().decode(await new Blob(chunks).arrayBuffer()));assert(value&&typeof value==='object'&&!Array.isArray(value),400,'Dados inválidos.');return value;}catch{throw new ApiError(400,'Não foi possível ler os dados.');}}
 export async function readSettings(db){const row=await db.get('SELECT value FROM settings WHERE id=1');return row?JSON.parse(row.value):structuredClone(DEFAULT_SETTINGS);}
-function validateSettings(input){assert(input&&typeof input.enabled==='boolean',400,'Configuração inválida.');assert(Number.isInteger(input.leadMinutes)&&input.leadMinutes>=0&&input.leadMinutes<=2880,400,'Antecedência inválida.');assert(Number.isInteger(input.advanceDays)&&input.advanceDays>=1&&input.advanceDays<=180,400,'Limite de dias inválido.');assert(Array.isArray(input.services)&&input.services.length>=1&&input.services.length<=12,400,'Cadastre de 1 a 12 serviços.');const ids=new Set();const services=input.services.map(s=>{assert(typeof s.id==='string'&&/^[a-z0-9-]{1,40}$/.test(s.id)&&!ids.has(s.id),400,'Identificador de serviço inválido.');ids.add(s.id);assert(Number.isInteger(s.duration)&&s.duration>=15&&s.duration<=480&&s.duration%15===0,400,'A duração deve ser de 15 a 480 minutos, em intervalos de 15.');const name=clean(s.name,70);assert(name.length>=3,400,'Informe o nome de cada serviço.');return {id:s.id,name,description:clean(s.description,180),duration:s.duration,priceCents:s.priceCents==null?null:validateMoney(s.priceCents,true),active:!!s.active};});assert(Array.isArray(input.weekly)&&input.weekly.length===7,400,'Configure os sete dias da semana.');const weekly=input.weekly.map((day,index)=>{assert(day.day===index,400,'Dias da semana inválidos.');const open=minutes(day.open),close=minutes(day.close);assert(open%15===0&&close%15===0&&open<close,400,'A abertura deve ser anterior ao fechamento, em intervalos de 15 minutos.');let lunch=null;if(day.lunch!=null){assert(typeof day.lunch==='object'&&!Array.isArray(day.lunch)&&typeof day.lunch.start==='string'&&typeof day.lunch.end==='string',400,'Informe o início e o fim do almoço.');const start=minutes(day.lunch.start),end=minutes(day.lunch.end);assert(start%15===0&&end%15===0&&start<end&&start>=open&&end<=close,400,'O almoço deve começar antes de terminar, dentro do expediente e em intervalos de 15 minutos.');lunch={start:day.lunch.start,end:day.lunch.end};}return {day:index,enabled:!!day.enabled,open:day.open,close:day.close,lunch};});if(input.enabled)assert(services.some(s=>s.active)&&weekly.some(d=>d.enabled),400,'Ative pelo menos um serviço e um dia de atendimento.');return {enabled:input.enabled,timezone:'America/Bahia',leadMinutes:input.leadMinutes,advanceDays:input.advanceDays,services,weekly};}
+export function validateSettings(input){assert(input&&typeof input.enabled==='boolean',400,'Configuração inválida.');assert(Number.isInteger(input.leadMinutes)&&input.leadMinutes>=0&&input.leadMinutes<=2880,400,'Antecedência inválida.');assert(Number.isInteger(input.advanceDays)&&input.advanceDays>=1&&input.advanceDays<=180,400,'Limite de dias inválido.');assert(Array.isArray(input.services)&&input.services.length>=1&&input.services.length<=MAX_SERVICES,400,`Cadastre de 1 a ${MAX_SERVICES} serviços.`);const ids=new Set();const services=input.services.map(s=>{assert(typeof s.id==='string'&&/^[a-z0-9-]{1,40}$/.test(s.id)&&!ids.has(s.id),400,'Identificador de serviço inválido.');ids.add(s.id);assert(Number.isInteger(s.duration)&&s.duration>=15&&s.duration<=480&&s.duration%15===0,400,'A duração deve ser de 15 a 480 minutos, em intervalos de 15.');const name=clean(s.name,70);assert(name.length>=3,400,'Informe o nome de cada serviço.');return {id:s.id,name,description:clean(s.description,180),duration:s.duration,priceCents:s.priceCents==null?null:validateMoney(s.priceCents,true),active:!!s.active};});assert(Array.isArray(input.weekly)&&input.weekly.length===7,400,'Configure os sete dias da semana.');const weekly=input.weekly.map((day,index)=>{assert(day.day===index,400,'Dias da semana inválidos.');const open=minutes(day.open),close=minutes(day.close);assert(open%15===0&&close%15===0&&open<close,400,'A abertura deve ser anterior ao fechamento, em intervalos de 15 minutos.');let lunch=null;if(day.lunch!=null){assert(typeof day.lunch==='object'&&!Array.isArray(day.lunch)&&typeof day.lunch.start==='string'&&typeof day.lunch.end==='string',400,'Informe o início e o fim do almoço.');const start=minutes(day.lunch.start),end=minutes(day.lunch.end);assert(start%15===0&&end%15===0&&start<end&&start>=open&&end<=close,400,'O almoço deve começar antes de terminar, dentro do expediente e em intervalos de 15 minutos.');lunch={start:day.lunch.start,end:day.lunch.end};}return {day:index,enabled:!!day.enabled,open:day.open,close:day.close,lunch};});if(input.enabled)assert(services.some(s=>s.active)&&weekly.some(d=>d.enabled),400,'Ative pelo menos um serviço e um dia de atendimento.');return {enabled:input.enabled,timezone:'America/Bahia',leadMinutes:input.leadMinutes,advanceDays:input.advanceDays,services,weekly};}
 function serviceFor(settings,id){const service=settings.services.find(s=>s.id===id&&s.active);assert(service,400,'Escolha um serviço disponível.');return service;}
+function bookingServiceSnapshot(settings,row){return {...settings,services:[{id:row.service_id,duration:row.duration,active:true}]};}
 export async function availableSlots(db,settings,date,serviceId,now=new Date(),ignoreId=''){
   assert(validDate(date),400,'Data inválida.');const service=serviceFor(settings,serviceId),today=clock(now);const maxDate=addDays(today.date,settings.advanceDays);
   if(!settings.enabled)return {slots:[],reason:'A agenda ainda não está aberta.'};
@@ -177,7 +197,7 @@ export async function updateBooking(db,id,input,now=new Date()){
   const date=input.date||row.date,time=input.time||timeLabel(row.start_minute);const moving=date!==row.date||time!==timeLabel(row.start_minute);
   assert(!moving||row.status==='confirmed',409,'Somente agendamentos confirmados podem ser reagendados.');
   let movingSettings;
-  if(moving){const settings=await readSettings(db);movingSettings=JSON.stringify(settings);const snapshot={...settings,services:settings.services.map(s=>s.id===row.service_id?{...s,duration:row.duration}:s)};const available=await availableSlots(db,snapshot,date,row.service_id,now,id);assert(available.slots.includes(time),409,'O novo horário não está disponível.');}
+  if(moving){const settings=await readSettings(db);movingSettings=JSON.stringify(settings);const snapshot=bookingServiceSnapshot(settings,row);const available=await availableSlots(db,snapshot,date,row.service_id,now,id);assert(available.slots.includes(time),409,'O novo horário não está disponível.');}
   const start=minutes(time);const guard=moving?' AND NOT EXISTS(SELECT 1 FROM schedule_blocks WHERE date=? AND start_minute<? AND end_minute>?) AND EXISTS(SELECT 1 FROM settings WHERE id=1 AND value=?)':'';
   const statements=[{sql:'UPDATE bookings SET status=?,date=?,start_minute=?,updated_at=?,revision=revision+1,operation_key=? WHERE id=? AND revision=?'+guard,args:[status,date,start,now.toISOString(),operation,id,input.revision,...(moving?[date,start+row.duration,start,movingSettings]:[])]}];
   if(status==='cancelled'||moving)statements.push({sql:'DELETE FROM booking_slots WHERE booking_id=? AND EXISTS(SELECT 1 FROM bookings WHERE id=? AND operation_key=?)',args:[id,id,operation]});
@@ -222,7 +242,7 @@ export async function handleApi(request,db,context={}){
         const from=url.searchParams.get('from')||addDays(clock(now).date,-30),to=url.searchParams.get('to')||addDays(clock(now).date,90);assert(validDate(from)&&validDate(to)&&from<=to&&to<=addDays(from,366),400,'Período inválido.');
         return json({bookings:await db.all('SELECT id,customer_name,phone,notes,service_id,service_name,duration,date,start_minute,status,created_at,revision,EXISTS(SELECT 1 FROM booking_anamnesis WHERE booking_id=bookings.id) AS has_anamnesis FROM bookings WHERE date BETWEEN ? AND ? ORDER BY date,start_minute LIMIT 500',[from,to]),today:clock(now).date});
       }
-      if(path==='/api/admin/availability'&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE id=?',[url.searchParams.get('booking')]);assert(row,404,'Agendamento não encontrado.');const settings=await readSettings(db);const snapshot={...settings,services:settings.services.map(s=>s.id===row.service_id?{...s,duration:row.duration}:s)};return json(await availableSlots(db,snapshot,url.searchParams.get('date'),row.service_id,now,row.id));}
+      if(path==='/api/admin/availability'&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE id=?',[url.searchParams.get('booking')]);assert(row,404,'Agendamento não encontrado.');const settings=await readSettings(db);const snapshot=bookingServiceSnapshot(settings,row);return json(await availableSlots(db,snapshot,url.searchParams.get('date'),row.service_id,now,row.id));}
       if(/^\/api\/admin\/bookings\/[a-f0-9-]{36}$/.test(path)&&method==='PATCH')return json(await updateBooking(db,path.split('/').pop(),await body(request),now));
       if(path==='/api/admin/blocks'){
         if(method==='GET')return json({blocks:await db.all('SELECT * FROM schedule_blocks WHERE date>=? ORDER BY date,start_minute',[clock(now).date])});
