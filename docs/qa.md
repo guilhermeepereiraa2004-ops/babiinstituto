@@ -197,3 +197,9 @@ Por solicitação da usuária, o preço cadastrado passa a aparecer para a clien
 Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados em schema descartável. CUA em SQLite separado data/qa-public-prices-20261029.sqlite/4177 confirmou formato monetário, zero, null/ausente, preço no resumo, atualização ao trocar serviço e continuidade ao avançar para calendário. Layout inspecionado a 1440 e 390 px, sem rolagem horizontal e sem erros de console. Capturas exclusivamente fictícias: docs/qa/public-prices-desktop.jpg e public-prices-mobile.jpg. Viewport restaurado e aba QA encerrada.
 
 Publicação em andamento.
+
+## 2026-11-06 — Cadastro, aniversários e anamnese condicional
+
+- Gate 21/21; 38 testes offline. Neon exclusivo de QA: 15 verificações aprovadas em schema descartável, incluindo compatibilidade com inserts da versão anterior.
+- CUA em SQLite isolado (4180): opções ocultas antes do “Sim”, oito opções conferidas, esconder e reabrir apaga seleção anterior; reserva fictícia confirmada e comprovante sem nascimento ou respostas. Admin mostrou Clientes, total registrado, aviso de aniversário e lista mensal com Hoje. Testes de API confirmaram soma em centavos de recebimentos vinculados, proteção das rotas e recuperação de clientes antigos sem inventar valores/datas.
+- Inspeção visual desktop e 390 px, sem rolagem horizontal na lista e ficha. Segunda entrada no formulário recuperou nome, celular e dia/mês, deixando respostas vazias; Esquecer dados salvos limpou os campos. Capturas fictícias em output/qa-customers-20261106 (fora do commit).

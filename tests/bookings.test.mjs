@@ -6,6 +6,55 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DEFAULT_SETTINGS,handleApi,clock} from '../server/core.mjs';
 
+test('new intake validates branches and birth dates, hides private answers and keeps old data readable',async()=>{
+ const f=fixture();try{
+  await f.save();
+  const anamnesis={chemicalHistory:'yes',chemicalTypes:['mechas','progressiva'],hairProblems:'yes',hairProblemTypes:['scalp','thermal-breakage'],consent:true};
+  for(const birthday of [{day:31,month:4},{day:1},{day:'18',month:10}])assert.equal((await f.booking('09:00',{birthday,anamnesis})).status,400);
+  for(const bad of [{chemicalTypes:[]},{chemicalTypes:['fake']},{hairProblemTypes:[]}])assert.equal((await f.booking('09:00',{anamnesis:{...anamnesis,...bad}})).status,400);
+  const birthday={day:18,month:10},idempotencyKey=crypto.randomUUID(),input={birthday,anamnesis,idempotencyKey};
+  const created=await f.booking('09:00',input);assert.equal(created.status,201);
+  assert.equal((await f.booking('09:00',{...input,birthday:{day:17,month:10}})).status,409);
+  assert.equal((await f.booking('09:00',input)).data.token,created.data.token);
+  const {bookings:[b]}=(await f.call('/api/admin/bookings',{admin:true})).data;
+  for(const publicData of [created.data,(await f.call('/api/receipt/'+created.data.token)).data,b])for(const key of ['birthday','birth_day','birth_month','chemicalTypes','hairProblemTypes'])assert(!(key in publicData));
+  assert.equal((await f.call('/api/admin/bookings/'+b.id+'/anamnesis')).status,403);
+  const saved=(await f.call('/api/admin/bookings/'+b.id+'/anamnesis',{admin:true})).data.anamnesis;
+  assert.deepEqual(saved.chemicalTypes,['progressiva','mechas']);
+  assert.deepEqual(saved.hairProblemTypes,['thermal-breakage','scalp']);assert.deepEqual(saved.birthday,birthday);
+  const follow=await f.booking('11:00',{anamnesis:{...anamnesis,chemicalHistory:'no',hairProblems:'private',chemicalDetails:'hidden',allergyDetails:'hidden'},phone:'5571999990000'});
+  assert.equal(follow.status,201);
+  const second=await f.db.get('SELECT answers FROM booking_anamnesis JOIN bookings ON bookings.id=booking_id WHERE token=?',[follow.data.token]);
+  assert.deepEqual(JSON.parse(second.answers),{chemicalHistory:'no',chemicalDetails:'',chemicalTypes:[],hairProblems:'private',hairProblemTypes:[],allergyDetails:'',hairCare:''});
+  const directory=(await f.call('/api/admin/customers',{admin:true})).data;
+  assert.equal(directory.total,1);assert.equal(directory.customers[0].bookingCount,2);assert.equal(directory.customers[0].birth_day,18);
+ }finally{f.sqlite.close();}
+});
+
+test('admin counts only recorded service payments, preserves legacy customers and filters birthdays',async()=>{
+ const f=fixture();try{
+  await f.save();
+  for(const path of ['/api/admin/customers','/api/admin/birthdays','/api/admin/birthdays/today'])assert.equal((await f.call(path)).status,403);
+  const a=await f.booking('09:00',{birthday:{day:18,month:10}});assert.equal(a.status,201);
+  const b=await f.booking('11:00',{phone:'71999990001',name:'Cliente legado QA'});assert.equal(b.status,201);
+  await f.db.run('DELETE FROM customers WHERE phone=?',['5571999990001']);
+  const migration=readFileSync(new URL('../migrations/0003-customers.sql',import.meta.url),'utf8');
+  f.sqlite.exec(migration);f.sqlite.exec(migration);
+  const row=await f.db.get('SELECT id FROM bookings WHERE token=?',[a.data.token]);
+  const completed=await f.call('/api/admin/bookings/'+row.id,{method:'PATCH',admin:true,data:{status:'completed',revision:0,amountCents:12550,paymentMethod:'pix'}});
+  assert.equal(completed.status,200);
+  await f.call('/api/admin/finance',{method:'POST',admin:true,data:manual({amountCents:40000})});
+  const dir=(await f.call('/api/admin/customers',{admin:true})).data;
+  assert.equal(dir.total,2);assert.equal(dir.customers.find(c=>c.birth_day===18).spentCents,12550);
+  assert.equal(dir.customers.find(c=>c.name==='Cliente legado QA').birth_month,null);
+  assert.equal((await f.call('/api/admin/customers?q=legado',{admin:true})).data.total,1);
+  assert.equal((await f.call('/api/admin/customers?q=%25',{admin:true})).data.total,0);
+  assert.equal((await f.call('/api/admin/birthdays?month=10',{admin:true})).data.total,1);
+  assert.equal((await f.call('/api/admin/birthdays?month=11',{admin:true})).data.total,0);
+  assert.equal((await f.call('/api/admin/birthdays/today',{admin:true})).data.total,1);
+ }finally{f.sqlite.close();}
+});
+
 test('almoço recorrente bloqueia sobreposição completa, preserva limites e reservas existentes',async()=>{
  const f=fixture();try{
   await f.save();const existing=await f.booking('12:00');assert.equal(existing.status,201);
@@ -161,7 +210,7 @@ test('cadastro aceita até doze serviços e rejeita excesso ou duração inváli
   assert.equal((await f.call('/api/admin/settings',{admin:true})).data.services[11].duration,30);
  }finally{f.sqlite.close();}
 });
-function fixture(){const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON;');sqlite.exec(readFileSync(new URL('../migrations/0001-bookings.sql',import.meta.url),'utf8'));sqlite.exec(readFileSync(new URL('../migrations/0002-intake-finance.sql',import.meta.url),'utf8'));const db={get:async(s,a=[])=>sqlite.prepare(s).get(...a),all:async(s,a=[])=>sqlite.prepare(s).all(...a),run:async(s,a=[])=>sqlite.prepare(s).run(...a),batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const result=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return result;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};const now=new Date('2026-10-18T15:00:00Z');let count=0;const call=async(path,{method='GET',data,admin=false,origin='https://babi.test'}={})=>{const request=new Request('https://babi.test'+path,{method,headers:{...(data?{'content-type':'application/json',origin}: {})},...(data?{body:JSON.stringify(data)}:{})});const response=await handleApi(request,db,{admin,now,clientKey:'test'+count++});return {status:response.status,data:await response.json()};};const settings=structuredClone(DEFAULT_SETTINGS);settings.enabled=true;settings.weekly.forEach(d=>d.enabled=true);settings.services.forEach(s=>s.duration=60);const save=()=>call('/api/admin/settings',{method:'PUT',admin:true,data:settings});const booking=(time='09:00',extra={})=>call('/api/bookings',{method:'POST',data:{name:'Cliente de teste',phone:'71999990000',consent:true,anamnesis:{chemicalHistory:'no',allergies:'no',consent:true},serviceId:'corte',date:'2026-10-19',time,idempotencyKey:crypto.randomUUID(),...extra}});return {sqlite,db,call,settings,save,booking};}
+function fixture(){const sqlite=new DatabaseSync(':memory:');sqlite.exec('PRAGMA foreign_keys=ON;');sqlite.exec(readFileSync(new URL('../migrations/0001-bookings.sql',import.meta.url),'utf8'));sqlite.exec(readFileSync(new URL('../migrations/0002-intake-finance.sql',import.meta.url),'utf8'));sqlite.exec(readFileSync(new URL('../migrations/0003-customers.sql',import.meta.url),'utf8'));const db={get:async(s,a=[])=>sqlite.prepare(s).get(...a),all:async(s,a=[])=>sqlite.prepare(s).all(...a),run:async(s,a=[])=>sqlite.prepare(s).run(...a),batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const result=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return result;}catch(e){sqlite.exec('ROLLBACK');throw e;}}};const now=new Date('2026-10-18T15:00:00Z');let count=0;const call=async(path,{method='GET',data,admin=false,origin='https://babi.test'}={})=>{const request=new Request('https://babi.test'+path,{method,headers:{...(data?{'content-type':'application/json',origin}: {})},...(data?{body:JSON.stringify(data)}:{})});const response=await handleApi(request,db,{admin,now,clientKey:'test'+count++});return {status:response.status,data:await response.json()};};const settings=structuredClone(DEFAULT_SETTINGS);settings.enabled=true;settings.weekly.forEach(d=>d.enabled=true);settings.services.forEach(s=>s.duration=60);const save=()=>call('/api/admin/settings',{method:'PUT',admin:true,data:settings});const booking=(time='09:00',extra={})=>call('/api/bookings',{method:'POST',data:{name:'Cliente de teste',phone:'71999990000',consent:true,anamnesis:{chemicalHistory:'no',allergies:'no',consent:true},serviceId:'corte',date:'2026-10-19',time,idempotencyKey:crypto.randomUUID(),...extra}});return {sqlite,db,call,settings,save,booking};}
 test('admin protegido, cabeçalhos e origem não concedem permissão',async()=>{const f=fixture();assert.equal((await f.call('/api/admin/settings')).status,403);assert.equal((await f.call('/api/admin/settings',{method:'PUT',admin:true,data:f.settings,origin:'https://outro.test'})).status,403);f.sqlite.close();});
 test('agenda inicia fechada e só abre com configurações válidas',async()=>{const f=fixture();assert.equal((await f.call('/api/config')).data.enabled,false);assert.equal((await f.booking()).status,409);f.settings.services[0].duration=17;assert.equal((await f.save()).status,400);f.settings.services[0].duration=60;assert.equal((await f.save()).status,200);f.sqlite.close();});
 test('reserva automática persiste, bloqueia sobreposições e não expõe clientes',async()=>{const f=fixture();await f.save();const a=await f.booking();assert.equal(a.status,201);assert.equal(a.data.status,'confirmed');assert.equal((await f.booking('09:30')).status,409);assert.equal((await f.booking('10:00')).status,201);const list=await f.call('/api/admin/bookings',{admin:true});assert.equal(list.data.bookings.length,2);const avail=await f.call('/api/availability?date=2026-10-19&service=corte');assert(!avail.data.slots.includes('09:00'));assert(!JSON.stringify(avail.data).includes('7199999'));assert(!('phone' in a.data));assert.equal((await f.call('/api/receipt/'+a.data.token)).data.code,a.data.code);f.sqlite.close();});

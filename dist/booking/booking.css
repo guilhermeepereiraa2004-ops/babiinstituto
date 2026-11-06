@@ -120,3 +120,35 @@
 
 .client-page .service-price{display:block;margin-top:10px;font-size:16px;font-weight:500;color:var(--brown);line-height:1.5}
 .client-page .summary-price strong{font-size:17px;font-weight:500}
+
+.birthday-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.birthday-fields select{width:100%;min-width:0}
+.intake-options{min-width:0;margin:0 0 20px;padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.intake-options[hidden],.remember-contact [hidden]{display:none}
+.intake-options legend{font-size:13px;font-weight:500}
+.intake-options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;margin-bottom:14px}
+.intake-options-grid label,.remember-contact label{display:flex;align-items:center;gap:9px;min-height:44px;font-size:14px}
+.intake-options-grid input,.remember-contact input{flex:0 0 auto;width:18px;height:18px;accent-color:var(--brown)}
+.intake-options .field:last-child{margin-bottom:0}
+.remember-contact{margin-bottom:20px;padding:13px 16px;background:var(--soft);border:1px solid var(--line);border-radius:8px}
+.remember-contact small{display:block;color:var(--muted);line-height:1.55}
+.remember-contact button{margin-top:10px;min-height:44px}
+.birthday-count{margin-inline-start:auto;min-width:20px;text-align:center;padding:2px 5px;border-radius:20px;background:var(--soft);color:var(--brown);font-size:11px}
+.birthday-alert{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:20px}
+.birthday-alert .btn{margin-inline-start:auto}
+.directory-list{margin:0;padding:0;list-style:none}
+.directory-row{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));align-items:center;gap:18px;padding:18px 22px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.directory-birthday{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+.directory-today{background:var(--soft)}
+.directory-row strong,.directory-row small{display:block}
+.directory-row small{color:var(--muted);margin:3px 0;font-size:12px}
+.directory-row strong{font-size:14px}
+.directory-row .status{margin-top:5px}
+.directory-message{padding:22px;margin:0}
+@media(max-width:700px){
+ .intake-options-grid{grid-template-columns:1fr;gap:0}
+ .intake-options-grid label,.remember-contact label{font-size:13px}
+ .directory-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:17px}
+ .directory-row .client-cell{grid-column:1/-1}
+ .birthday-alert .btn{margin-inline-start:0}
+}

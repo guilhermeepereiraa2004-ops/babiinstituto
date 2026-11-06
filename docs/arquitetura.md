@@ -99,3 +99,11 @@ Almoço recorrente configurável por dia em Serviços e horários → Dias e hor
 
 ### Atualização: preços públicos do catálogo — 2026-10-29
 Por solicitação da usuária, o preço cadastrado passa a aparecer para a cliente na seleção do serviço e no resumo durante o agendamento, em reais. /api/config expõe priceCents apenas dos serviços ativos, mantendo projeção explícita dos campos públicos. Null/ausente aparece como Valor a consultar; zero aparece R$ 0,00. Texto do admin informa a visibilidade pública. Pagamento continua no atendimento; recebimentos individuais, forma de pagamento e dados pessoais permanecem privados. Não há snapshot de orçamento na reserva: esta mudança exibe o catálogo atual carregado, sem alterar valores históricos ou o comprovante. Sem migração ou mudança nos preços cadastrados. Substitui a decisão anterior de manter priceCents somente no admin.
+
+### Cadastro e aniversários — 2026-11-06
+
+A migração 0003 cria customers em SQLite e Postgres e recupera nomes/telefones das reservas existentes, sem inventar datas. O cadastro é identificado pelo celular normalizado (números nacionais de 10/11 dígitos recebem 55). A reserva, os slots, a ficha e a atualização do cadastro usam a mesma transação. Reservar sem informar o aniversário preserva a data conhecida. No Postgres, um gatilho de inserção compatibiliza a versão anterior durante a troca do deploy.
+
+As rotas privadas GET /api/admin/customers, /api/admin/birthdays e /api/admin/birthdays/today usam a sessão existente. O total recebido soma só entradas lançadas e vinculadas aos atendimentos; pagamentos antigos sem valor são sinalizados, e valores avulsos não são atribuídos a clientes. O módulo de aniversários filtra por mês e destaca o dia exato em America/Bahia. O dia 29 de fevereiro permanece registrado em fevereiro, sem substituição automática em anos não bissextos.
+
+A ficha preserva a leitura de respostas antigas e valida as escolhas condicionais do formulário atual. O nascimento, sem ano, é opcional e também é registrado na ficha privada quando informado. Com a opção de lembrar marcada, o navegador guarda apenas nome, celular e dia/mês após a reserva confirmada; é possível apagar no passo Seus dados. Anamnese, observações e comprovante não entram nesse armazenamento local. As referências da migração são a documentação de INSERT do PostgreSQL e de pooling do Neon.

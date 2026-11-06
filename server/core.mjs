@@ -53,9 +53,56 @@ async function publicBooking(db,row){
 function validateAnamnesis(input){
   assert(input&&typeof input==='object'&&input.consent===true,400,'Autorize o uso da anamnese para preparar seu atendimento.');
   const choices=new Set(['no','yes','unsure','private']);
-  assert(choices.has(input.chemicalHistory)&&choices.has(input.allergies),400,'Responda às perguntas sobre química e reações a produtos.');
+  const current=Object.hasOwn(input,'hairProblems');
+  assert(choices.has(input.chemicalHistory)&&choices.has(current?input.hairProblems:input.allergies),400,'Responda às perguntas sobre química e problemas capilares.');
   for(const key of ['chemicalDetails','allergyDetails','hairCare'])assert(input[key]===undefined||(typeof input[key]==='string'&&input[key].length<=500),400,'Use até 500 caracteres em cada observação da anamnese.');
-  return {chemicalHistory:input.chemicalHistory,chemicalDetails:input.chemicalHistory==='yes'?clean(input.chemicalDetails,500):'',allergies:input.allergies,allergyDetails:input.allergies==='yes'?clean(input.allergyDetails,500):'',hairCare:clean(input.hairCare,500)};
+  const answers={chemicalHistory:input.chemicalHistory,chemicalDetails:input.chemicalHistory==='yes'?clean(input.chemicalDetails,500):''};
+  // Accept the previous form during a rollout; keep old answers readable.
+  if(!current)return {...answers,allergies:input.allergies,allergyDetails:input.allergies==='yes'?clean(input.allergyDetails,500):'',hairCare:clean(input.hairCare,500)};
+  function selections(flag,values,allowed,message){
+    if(flag!=='yes')return [];
+    assert(Array.isArray(values)&&values.length>0&&values.length<=allowed.length&&values.every(value=>allowed.includes(value)),400,message);
+    return allowed.filter(value=>values.includes(value));
+  }
+  return {...answers,chemicalTypes:selections(input.chemicalHistory,input.chemicalTypes,['progressiva','mechas','botox','soltura'],'Escolha pelo menos um procedimento químico.'),
+    hairProblems:input.hairProblems,hairProblemTypes:selections(input.hairProblems,input.hairProblemTypes,['allergy','chemical-breakage','thermal-breakage','scalp'],'Escolha pelo menos um problema capilar.'),
+    allergyDetails:input.hairProblems==='yes'?clean(input.allergyDetails,500):'',hairCare:clean(input.hairCare,500)};
+}
+function validateBirthday(value){
+  if(value==null)return null;
+  const {day,month}=value;
+  const monthDays=[31,29,31,30,31,30,31,31,30,31,30,31];
+  assert(Number.isInteger(day)&&Number.isInteger(month)&&month>=1&&month<=12&&day>=1&&day<=monthDays[month-1],400,'Informe um dia e mês de nascimento válidos.');
+  return {day,month};
+}
+const customerPhone=phone=>[10,11].includes(phone.length)?'55'+phone:phone;
+const bookingPhoneSql="(CASE WHEN length(b.phone) IN (10,11) THEN '55'||b.phone ELSE b.phone END)";
+async function listCustomers(db,url,now,birthdays=false){
+  const today=clock(now).date,monthToday=Number(today.slice(5,7)),dayToday=Number(today.slice(8));
+  const month=birthdays?Number(url.searchParams.get('month')??monthToday):null;
+  assert(!birthdays||(Number.isInteger(month)&&month>=1&&month<=12),400,'Escolha um mês válido.');
+  const offset=Number(url.searchParams.get('offset')||0),limit=50;
+  assert(Number.isSafeInteger(offset)&&offset>=0&&offset<=1000000,400,'Página inválida.');
+  const search=(url.searchParams.get('q')||'').trim().slice(0,100).toLowerCase();
+  const where=birthdays?'c.birth_month=?':"LOWER(c.name) LIKE ? ESCAPE '!' OR c.phone LIKE ? ESCAPE '!'";
+  const escaped=search.replace(/[!%_]/g,'!$&'),digits=search.replace(/\D/g,'');
+  const args=birthdays?[month]:['%'+escaped+'%',digits?'%'+digits+'%':search?'x':'%'];
+  const count=await db.get(`SELECT COUNT(*) AS total FROM customers c WHERE ${where}`,args);
+  const order=alias=>birthdays?`${alias}.birth_day,LOWER(${alias}.name),${alias}.phone`:`LOWER(${alias}.name),${alias}.phone`;
+  const customers=await db.all(`WITH page AS (
+    SELECT c.phone,c.name,c.birth_day,c.birth_month FROM customers c WHERE ${where} ORDER BY ${order('c')} LIMIT ? OFFSET ?
+  )
+  SELECT p.phone,p.name,p.birth_day,p.birth_month,
+    COUNT(b.id) AS "bookingCount",MAX(CASE WHEN b.status='completed' THEN b.date END) AS "lastVisit",
+    COALESCE(SUM(CASE WHEN f.status='posted' AND f.kind='income' THEN f.amount_cents ELSE 0 END),0) AS "spentCents",
+    COUNT(CASE WHEN b.status='completed' AND (f.id IS NULL OR f.amount_cents IS NULL) THEN 1 END) AS "unrecordedCount"
+  FROM page p LEFT JOIN bookings b ON ${bookingPhoneSql}=p.phone LEFT JOIN finance_entries f ON f.booking_id=b.id
+  GROUP BY p.phone,p.name,p.birth_day,p.birth_month ORDER BY ${order('p')}`,[...args,limit,offset]);
+  return {customers,total:count.total,offset,limit,today,month};
+}
+async function birthdaysToday(db,now){
+  const today=clock(now).date;
+  return await db.get('SELECT COUNT(*) AS total FROM customers WHERE birth_month=? AND birth_day=?',[Number(today.slice(5,7)),Number(today.slice(8))]);
 }
 const PAYMENT_METHODS=new Set(['pix','cash','credit','debit','transfer','other']);
 function validateMoney(value,allowZero=false){assert(Number.isSafeInteger(value)&&value>=(allowZero?0:1)&&value<=100000000,400,allowZero?'Informe um valor válido em centavos (zero para cortesia).':'Informe um valor maior que zero, com até duas casas decimais.');return value;}
@@ -100,7 +147,8 @@ async function updateFinanceEntry(db,id,input,now){
 export async function createBooking(db,input,context){
   const settings=await readSettings(db);assert(settings.enabled,409,'A agenda ainda não está aberta.');const name=clean(input.name,100),phone=String(input.phone||'').replace(/\D/g,'');
   assert(name.length>=3&&phone.length>=10&&phone.length<=13,400,'Informe seu nome e um telefone válido com DDD.');assert(input.consent===true,400,'Confirme o uso dos dados para seu agendamento.');
-  const anamnesis=JSON.stringify(validateAnamnesis(input.anamnesis));
+  const birthday=validateBirthday(input.birthday),answers=validateAnamnesis(input.anamnesis);
+  const anamnesis=JSON.stringify(birthday?{...answers,birthday}:answers);
   assert(typeof input.idempotencyKey==='string'&&/^[a-zA-Z0-9-]{20,60}$/.test(input.idempotencyKey),400,'Recarregue a página e tente novamente.');
   const old=await db.get('SELECT * FROM bookings WHERE idempotency_key=?',[input.idempotencyKey]);
   if(old){const intake=await db.get('SELECT answers FROM booking_anamnesis WHERE booking_id=?',[old.id]);assert(old.customer_name===name&&old.phone===phone&&old.notes===clean(input.notes,500)&&old.service_id===input.serviceId&&old.date===input.date&&timeLabel(old.start_minute)===input.time&&intake?.answers===anamnesis,409,'Essa solicitação já foi utilizada. Recarregue a página.');return publicBooking(db,old);}
@@ -111,6 +159,11 @@ export async function createBooking(db,input,context){
   const statements=[{sql:'INSERT INTO bookings(id,token,idempotency_key,customer_name,phone,notes,service_id,service_name,duration,date,start_minute,status,created_at,updated_at,revision,operation_key) SELECT ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM schedule_blocks WHERE date=? AND start_minute<? AND end_minute>?) AND EXISTS(SELECT 1 FROM settings WHERE id=1 AND value=?)',args:[...Object.values(record),input.date,minute+service.duration,minute,JSON.stringify(settings)]}];
   for(let m=minute;m<minute+service.duration;m+=15)statements.push({sql:'INSERT INTO booking_slots(date,minute,booking_id) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM bookings WHERE id=?)',args:[input.date,m,id,id]});
   statements.push({sql:'INSERT INTO booking_anamnesis(booking_id,answers,consented_at,version) SELECT ?,?,?,1 WHERE EXISTS(SELECT 1 FROM bookings WHERE id=?)',args:[id,anamnesis,stamp,id]});
+  statements.push({sql:`INSERT INTO customers(phone,name,birth_day,birth_month,updated_at)
+    SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM bookings WHERE id=?)
+    ON CONFLICT(phone) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at,
+    birth_day=COALESCE(excluded.birth_day,customers.birth_day),birth_month=COALESCE(excluded.birth_month,customers.birth_month)`,
+    args:[customerPhone(phone),name,birthday?.day??null,birthday?.month??null,stamp,id]});
   try{const result=await db.batch(statements);assert(result[0].changes>0,409,'A disponibilidade da agenda mudou. Consulte os horários novamente.');}catch(error){if(/UNIQUE/i.test(error.message))throw new ApiError(409,'Esse horário acabou de ser reservado. Escolha outro.');throw error;}
   return publicBooking(db,record);
 }
@@ -148,6 +201,9 @@ export async function handleApi(request,db,context={}){
     if(/^\/api\/receipt\/[a-f0-9]{48}$/.test(path)&&method==='GET'){const row=await db.get('SELECT * FROM bookings WHERE token=?',[path.split('/').pop()]);assert(row,404,'Reserva não encontrada.');return json(await publicBooking(db,row));}
     if(path.startsWith('/api/admin/')){
       assert(context.admin,403,'Entre com a conta proprietária para acessar a administração.');
+      if(path==='/api/admin/customers'&&method==='GET')return json(await listCustomers(db,url,now));
+      if(path==='/api/admin/birthdays'&&method==='GET')return json(await listCustomers(db,url,now,true));
+      if(path==='/api/admin/birthdays/today'&&method==='GET')return json(await birthdaysToday(db,now));
       if(path==='/api/admin/finance'){
         if(method==='GET')return json(await listFinance(db,url,now));
         if(method==='POST')return json(await createFinanceEntry(db,await body(request),now),201);

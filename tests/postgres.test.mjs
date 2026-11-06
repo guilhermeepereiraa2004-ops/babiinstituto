@@ -147,6 +147,26 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    for(let i=0;i<5;i++)assert.equal((await call('/api/auth/reset-password',input)).status,400);
    assert.equal((await call('/api/auth/reset-password',input)).status,429);
   });
+  await t.test('customer profile, actual spending and birthdays are private in Postgres',async()=>{
+   const payload={...booking('16:00'),birthday:{day:Number(today.slice(8)),month:Number(today.slice(5,7))},
+    anamnesis:{consent:true,chemicalHistory:'yes',chemicalTypes:['mechas'],hairProblems:'no'}};
+   const result=await call('/api/bookings',{method:'POST',data:payload,headers:{'x-vercel-forwarded-for':'192.0.2.85'},withCookie:false});
+   assert.equal(result.status,201,JSON.stringify(result.data));assert(!('birthday' in result.data));
+   assert.equal((await call('/api/admin/customers',{withCookie:false})).status,403);
+   const directory=await call('/api/admin/customers?q=Postgres');
+   assert.equal(directory.status,200,JSON.stringify(directory.data));assert.equal(directory.data.total,1);
+   const row=directory.data.customers[0];assert.equal(row.birth_day,payload.birthday.day);
+   const sum=await db.get("SELECT COALESCE(SUM(amount_cents),0) AS total FROM finance_entries WHERE booking_id IS NOT NULL AND status='posted'");
+   assert.equal(row.spentCents,sum.total);assert.equal((await call('/api/admin/birthdays/today')).data.total,1);
+   const birthdays=await call('/api/admin/birthdays?month='+payload.birthday.month);
+   assert.equal(birthdays.status,200,JSON.stringify(birthdays.data));assert.equal(birthdays.data.total,1);
+   await db.run(`INSERT INTO bookings(id,token,idempotency_key,customer_name,phone,notes,service_id,service_name,duration,date,start_minute,status,created_at,updated_at,revision,operation_key)
+     SELECT ?,?,?, 'Cliente Versão Anterior QA','71999990003',notes,service_id,service_name,duration,date,1020,status,created_at,updated_at,0,?
+     FROM bookings WHERE token=?`,[crypto.randomUUID(),randomBytes(24).toString('hex'),crypto.randomUUID(),crypto.randomUUID(),result.data.token]);
+   const previousVersion=await call('/api/admin/customers?q=Anterior');
+   assert.equal(previousVersion.data.customers[0].phone,'5571999990003');
+   assert.equal(previousVersion.data.customers[0].birth_day,null);
+  });
   await t.test('logout revokes the session in Postgres',async()=>{
    assert.equal((await call('/api/auth/sign-out',{method:'POST',data:{}})).status,200);
    assert.equal((await call('/api/session')).data.admin,false);assert.equal((await call('/api/admin/settings')).status,403);

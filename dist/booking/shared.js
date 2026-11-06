@@ -21,6 +21,9 @@ export const minuteLabel=value=>`${String(Math.floor(value/60)).padStart(2,'0')}
 export const durationLabel=value=>value>=60?`${Math.floor(value/60)}h${value%60?` ${value%60}min`:''}`:`${value}min`;
 export function addDays(date,days){const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10);}
 export const statusLabel={confirmed:'Confirmado',completed:'Concluído',cancelled:'Cancelado'};
+export const birthdayMonths=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+export const chemicalOptions={progressiva:'Progressiva',mechas:'Mechas',botox:'Botox',soltura:'Soltura'};
+export const hairProblemOptions={allergy:'Alergia','chemical-breakage':'Corte químico','thermal-breakage':'Corte térmico',scalp:'Problema no couro cabeludo'};
 export const moneyLabel=cents=>cents===null?'Valor a informar':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
 export const paymentLabels={pix:'Pix',cash:'Dinheiro',credit:'Cartão de crédito',debit:'Cartão de débito',transfer:'Transferência',other:'Outro',unrecorded:'Não informado'};
 export function moneyCents(text){const value=String(text).trim();if(!/^\d+(?:[.,]\d{1,2})?$/.test(value))return NaN;const [whole,fraction='']=value.replace(',','.').split('.');const cents=Number(whole)*100+Number(fraction.padEnd(2,'0'));return Number.isSafeInteger(cents)?cents:NaN;}

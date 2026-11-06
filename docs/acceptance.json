@@ -98,5 +98,10 @@
     "id": "A20",
     "criterion": "Preço do catálogo visível no agendamento, em centavos, preenchendo conclusão sem alterar recebimentos anteriores",
     "check": "runtime"
+  },
+  {
+    "id": "A21",
+    "criterion": "Ficha condicional, clientes, total recebido e aniversários privados com data sem ano",
+    "check": "runtime"
   }
 ]
