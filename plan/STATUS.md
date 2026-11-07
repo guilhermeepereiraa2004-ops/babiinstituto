@@ -2,6 +2,10 @@
 
 Atualizado: 2026-11-07.
 
+Incluída uma seção editorial da Loja Babi na landing, após Resultados, com fotos originais do catálogo, apresentação da seleção e botão Conhecer a loja para /loja/. No agendamento, link no cabeçalho e cartão após o fluxo apresentam a loja; ambos abrem nova aba com aviso e rel seguro, preservando etapa e serviço escolhidos. Identidade Poppins/café/champagne mantida. Sem mudanças em backend, banco, preços ou disponibilidade.
+
+CUA conferiu desktop, 390 e 320 px sem overflow horizontal. Botão da landing chegou ao catálogo de 39 itens. Botão no agendamento abriu outra aba com o catálogo e manteve Corte de cabelo tradicional selecionado na etapa de calendário. Nenhum pedido/reserva foi enviado; nenhum dado real entrou em capturas. Sem erros/avisos de console. Evidências docs/qa/store-promo-{landing,booking}-{desktop,mobile}.jpg. Viewport restaurado e abas temporárias encerradas. Gate principal 22/22 e 65 testes offline aprovados; publicação pelo main no projeto Babi já conectado.
+
 Unificação completa implementada por pedido confirmado em 07/11/2026: vitrine em /loja/, Produtos/Pedidos no painel existente, sessão Better Auth única, clientes por celular normalizado e financeiro comum com filtros Tudo/Serviços/Loja/Manual. Recebimentos e estornos projetados na mesma transação do pedido, com a trava da agenda, vínculo único e auditoria; ajustes diretos desses lançamentos bloqueados. Migração aditiva 0004. Fontes da loja em loja/dist, saída dist/loja preparada no build, custos fora do Git.
 
 Validação: 65 testes offline, gate principal 22/22 e gate da loja 7/7; 16 testes no schema descartável do Neon QA. CUA conferiu pedido, recebimento, estorno/cancelamento, cliente com uma reserva e um pedido, aniversário preservado e saldo líquido de R$ 125,00; UI desktop, 390/320 px e sessão compartilhada entre abas, sem erros/avisos de console. Fotos e dados reais não foram usados como operações de QA. Capturas exclusivamente fictícias: docs/qa/unified-*.jpg.

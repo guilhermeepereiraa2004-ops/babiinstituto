@@ -39,3 +39,8 @@ A usuária solicitou substituir as chamadas de conversa/atendimento no Instagram
 ## 2026-10-29 — Correção do ícone de WhatsApp
 
 Ícone de WhatsApp: Bootstrap Icons, SVG de https://raw.githubusercontent.com/twbs/icons/main/icons/whatsapp.svg , licença MIT de https://raw.githubusercontent.com/twbs/icons/main/LICENSE preservada em dist/assets/whatsapp-license.txt. Geometria vetorial incorporada localmente; sem dependência de CDN ou pacote JavaScript. Substitui o desenho aproximado anterior.
+
+
+## 2026-11-07 — Apresentação da Loja Babi
+
+Reutilizadas as fotos originais entregues pela usuária para o catálogo, já documentadas em loja/docs/fontes.md: Kit 2K banho de ouro apios.jpeg e Reparador da Mirra Elixir Gold.jpeg. Sem geração, nova fotografia, preço ou promessa comercial. Landing e agendamento passam a apresentar a loja integrada; as chamadas no agendamento abrem outra aba para preservar a etapa/dados em andamento.
