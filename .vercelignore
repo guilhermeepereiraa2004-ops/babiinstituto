@@ -15,7 +15,7 @@ node_modules/
 loja/data/
 loja/.env*
 loja/.vercel/
-loja/docs/
+loja/docs/qa/
 loja/plan/
 loja/log/
 loja/node_modules/
