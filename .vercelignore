@@ -12,3 +12,10 @@ log/
 *.log
 *.tar.gz
 node_modules/
+loja/data/
+loja/.env*
+loja/.vercel/
+loja/docs/
+loja/plan/
+loja/log/
+loja/node_modules/

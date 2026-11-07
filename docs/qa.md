@@ -203,3 +203,15 @@ Publicação em andamento.
 - Gate 21/21; 38 testes offline. Neon exclusivo de QA: 15 verificações aprovadas em schema descartável, incluindo compatibilidade com inserts da versão anterior.
 - CUA em SQLite isolado (4180): opções ocultas antes do “Sim”, oito opções conferidas, esconder e reabrir apaga seleção anterior; reserva fictícia confirmada e comprovante sem nascimento ou respostas. Admin mostrou Clientes, total registrado, aviso de aniversário e lista mensal com Hoje. Testes de API confirmaram soma em centavos de recebimentos vinculados, proteção das rotas e recuperação de clientes antigos sem inventar valores/datas.
 - Inspeção visual desktop e 390 px, sem rolagem horizontal na lista e ficha. Segunda entrada no formulário recuperou nome, celular e dia/mês, deixando respostas vazias; Esquecer dados salvos limpou os campos. Capturas fictícias em output/qa-customers-20261106 (fora do commit).
+
+## 2026-11-06 — Catálogo oficial de agendamento
+
+Gate 21/21, 39 testes offline, 15 verificações Neon QA. CUA desktop e viewport de 390 px confirmou os 16 cartões, preço, resumo, avanço ao calendário e ausência de rolagem horizontal. Produção: catálogo integral conferido pela API, admin protegido e 14 consultas de disponibilidade comparadas ao expediente existente.
+
+## 2026-11-07 — Sistema Babi unificado
+
+Unificação completa implementada por pedido confirmado em 07/11/2026: vitrine em /loja/, Produtos/Pedidos no painel existente, sessão Better Auth única, clientes por celular normalizado e financeiro comum com filtros Tudo/Serviços/Loja/Manual. Recebimentos e estornos projetados na mesma transação do pedido, com a trava da agenda, vínculo único e auditoria; ajustes diretos desses lançamentos bloqueados. Migração aditiva 0004. Fontes da loja em loja/dist, saída dist/loja preparada no build, custos fora do Git.
+
+Validação: 65 testes offline, gate principal 22/22 e gate da loja 7/7; 16 testes no schema descartável do Neon QA. CUA conferiu pedido, recebimento, estorno/cancelamento, cliente com uma reserva e um pedido, aniversário preservado e saldo líquido de R$ 125,00; UI desktop, 390/320 px e sessão compartilhada entre abas, sem erros/avisos de console. Fotos e dados reais não foram usados como operações de QA. Capturas exclusivamente fictícias: docs/qa/unified-*.jpg.
+
+Catálogo local importado com backup privado para data/appointments.sqlite; cinco reservas e um lançamento financeiro existentes preservados, 46 produtos e nenhum pedido fictício importado. Publicação no projeto principal babi-instituto e Neon existente em preparação; recursos loja-babi independentes não serão usados nem apagados automaticamente.

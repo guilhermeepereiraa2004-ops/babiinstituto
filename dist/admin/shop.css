@@ -1,0 +1,61 @@
+/* Shared admin surface: storefront rules never affect the agenda shell. */
+.shop-module-surface{--dark:#302a25;--line:#e1d8cb;--ink:#302a25;--gold:#9a815d;--muted:#827b72;background:transparent;min-width:0}
+.shop-module-surface .admin-heading{display:flex;justify-content:space-between}
+.shop-module-surface .admin-heading .eyebrow{display:flex;align-items:center;gap:10px;color:var(--gold)}
+.shop-module-surface .admin-heading h1{line-height:1.15;font-weight:400}
+.shop-module-surface .admin-heading em{font-weight:300;color:#796347}
+.shop-module-surface .button{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:12px 18px;min-height:44px;border:1px solid var(--dark);border-radius:7px;background:var(--dark);color:#fff9ef;font:inherit;font-size:12px;text-decoration:none}
+.shop-module-surface .button:hover{background:#514537}
+.shop-module-surface .button-outline{background:transparent;color:var(--ink);border-color:var(--line)}
+.shop-module-surface .button-danger{background:#904f45;border-color:#904f45}
+.shop-module-surface .text-link{display:inline-flex;gap:7px;align-items:center;background:none;padding:0;color:inherit;border:0;text-decoration:underline;text-underline-offset:3px}
+.shop-module-surface .danger{color:#965347}
+.shop-module-surface .panel{border:1px solid var(--line);border-radius:12px}
+.shop-module-surface .toolbar{display:flex;gap:15px;border-bottom:1px solid var(--line)}
+.shop-module-surface .toolbar label{flex:1}
+.shop-module-surface .input-label,.shop-module-surface .form-stack,.shop-module-surface .form-stack label{display:flex;flex-direction:column;gap:8px}
+.shop-module-surface .admin-row{display:grid;border-top:1px solid var(--line)}
+.shop-module-surface .admin-row-title,.shop-module-surface .row-value{display:flex;flex-direction:column;align-items:start;min-width:0;overflow-wrap:anywhere}
+.shop-module-surface .pill{display:inline-flex;border-radius:30px;background:#eee8dd;color:#766044;width:max-content;max-width:100%}
+.shop-module-surface .pill-active,.shop-module-surface .pill-confirmado,.shop-module-surface .pill-recebido,.shop-module-surface .pill-concluido{background:#eaf1e8;color:#42604a}
+.shop-module-surface .pill-inactive,.shop-module-surface .pill-cancelado,.shop-module-surface .pill-estornado{background:#f6e9e3;color:#955b4e}
+.shop-module-surface .empty{text-align:center;min-height:160px}
+.shop-module-surface .editor-photo{display:flex;gap:15px;align-items:center;min-width:0}
+.shop-module-surface .editor-photo label{min-width:0;flex:1}
+.shop-module-surface input[type=file]{max-width:100%;font-size:11px;min-width:0}
+.shop-module-surface .form-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.shop-module-surface .check-label{flex-direction:row!important;align-items:center;gap:9px}
+.shop-module-surface .error{color:#965347;font-size:12px}
+.shop-module-surface .dialog-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:15px}
+.shop-module-surface .close{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:transparent;font-size:22px;flex:none}
+.shop-module-surface .shop-admin-dialog{max-height:90dvh;margin:auto;border:1px solid var(--line);border-radius:12px;padding:0;overflow:auto;color:var(--ink)}
+.shop-module-surface .shop-admin-dialog::backdrop{background:#302a2580;backdrop-filter:blur(3px)}
+.shop-module-surface .order-detail{display:grid;gap:14px;line-height:1.8;font-size:13px}
+.shop-module-surface .order-detail ul{list-style:none;padding:0;margin:0;border-block:1px solid var(--line)}
+.shop-module-surface .order-detail li{display:flex;justify-content:space-between}
+.shop-module-surface .subtotal{display:flex;justify-content:space-between;gap:15px;padding:14px 0}
+.shop-module-surface .action-group{display:flex;flex-wrap:wrap;gap:10px}
+.shop-module-surface .callout{padding:12px;background:#f3ede3;border-radius:7px;overflow-wrap:anywhere}
+.admin-menu-toggle{display:none}
+.sidebar-client>a{display:flex;gap:9px;margin-bottom:14px}
+.sidebar{overflow-y:auto}
+@media(max-width:700px){
+ .sidebar{position:sticky;top:0;inset:auto;z-index:30;width:100%;padding:13px 18px;display:grid;grid-template-columns:1fr auto;gap:12px;border-bottom:1px solid var(--line);max-height:90dvh;overflow:auto}
+ .sidebar-brand{margin:0;align-self:center}
+ .sidebar-brand .booking-brand strong{font-size:34px;letter-spacing:-2.5px}
+ .sidebar-brand .booking-brand small{font-size:4px;letter-spacing:1.4px;margin-top:5px}
+ .sidebar-label{display:none}
+ .admin-menu-toggle{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:7px;padding:10px 12px;font-size:11px;min-height:42px;align-self:center}
+ .admin-menu-toggle svg{width:17px;height:17px}
+ .sidebar-nav,.sidebar-client,.sidebar-bottom{display:none}
+ .sidebar.menu-open .sidebar-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-column:1/-1;gap:6px}
+ .sidebar.menu-open .sidebar-client{display:block;grid-column:1/-1;padding:12px 0 0;margin:0;border-top:1px solid var(--line)}
+ .sidebar.menu-open .sidebar-client p,.sidebar.menu-open .admin-profile{display:none}
+ .sidebar.menu-open .sidebar-bottom{display:block;grid-column:1/-1;margin:0;padding:0}
+ .sidebar.menu-open .signout{min-height:42px}
+ .admin-page .admin-main{margin-left:0}
+ .shop-module-surface .shop-admin-dialog{max-height:94dvh}
+ .shop-module-surface .form-columns{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .shop-module-surface .form-columns>label:last-child{grid-column:1/-1}
+ .finance-period .field{flex:1;min-width:110px}
+}

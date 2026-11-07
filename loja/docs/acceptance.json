@@ -1,0 +1,9 @@
+[
+  {"id":"L01","item":"Identidade Babi, fotos reais e catálogo inicial consistente","check":"catalog"},
+  {"id":"L02","item":"Produtos ativos aparecem apenas com foto e estoque","check":"behavior"},
+  {"id":"L03","item":"Cadastro, foto, edição, inativação, reativação e exclusão","check":"behavior"},
+  {"id":"L04","item":"Pedido persistente, sem venda duplicada da última unidade","check":"behavior"},
+  {"id":"L05","item":"Recebimentos, estorno e devolução de estoque consistentes","check":"behavior"},
+  {"id":"L06","item":"Sessão privada e nenhum custo na API pública","check":"behavior"},
+  {"id":"L07","item":"Camadas independentes e JavaScript válido","check":"source"}
+]

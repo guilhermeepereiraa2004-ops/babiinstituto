@@ -1,5 +1,7 @@
 export const whatsappUrl='https://wa.me/5573981701666';
 export const icons={
+ box:'<path d="m12 3 9 5v9l-9 5-9-5V8l9-5Z M3 8l9 5 9-5 M12 13v9"/>',
+ bag:'<path d="M5 8h14l1 13H4L5 8Z M8 9V6a4 4 0 0 1 8 0v3"/>',
  wallet:'<rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 8h18m-5 4h5v5h-5zM6 5V3h12"/>',
  arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',up:'<path d="M6 18 18 6M6 6h12v12"/>',
  calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18m-11 4h1m4 0h1m-6 3h1"/>',

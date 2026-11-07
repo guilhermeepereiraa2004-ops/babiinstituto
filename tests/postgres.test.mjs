@@ -8,6 +8,7 @@ import {migratePostgres} from '../scripts/migrate-postgres.mjs';
 import {handleCloudRequest,closeCloudConnections} from '../server/cloud.mjs';
 import {handleApi,DEFAULT_SETTINGS,clock,addDays} from '../server/core.mjs';
 import {createOwnerRecoveryLink} from '../scripts/admin-recovery.mjs';
+import {initializeSharedShop} from '../server/shop-postgres.mjs';
 
 test('Postgres binding preserves quoted SQL and binds parameters',()=>{
  assert.equal(bindSql("SELECT '?' AS literal, \"?\" FROM bookings WHERE id=? AND date=?"),"SELECT '?' AS literal, \"?\" FROM bookings WHERE id=$1 AND date=$2");
@@ -167,9 +168,38 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.equal(previousVersion.data.customers[0].phone,'5571999990003');
    assert.equal(previousVersion.data.customers[0].birth_day,null);
   });
+  await t.test('same Babi session manages shop orders, shared customers and atomic financial entries',async()=>{
+   await initializeSharedShop(pool);
+   const publicCatalog=await call('/api/shop/catalog',{withCookie:false});assert.equal(publicCatalog.status,200);
+   assert.equal(publicCatalog.data.length,39);assert.ok(publicCatalog.data.every(p=>p.photo.startsWith('/loja/assets/')&&!('costCents' in p)));
+   assert.equal((await call('/api/shop/admin/data',{withCookie:false})).status,401);
+   assert.equal((await call('/api/shop/admin/session')).data.authenticated,true);
+   assert.equal((await call('/api/shop/admin/session',{method:'POST',data:{}})).status,405);
+   const p=publicCatalog.data.find(p=>p.priceCents!==null);
+   const create=await call('/api/shop/orders',{method:'POST',withCookie:false,data:{name:'Cliente Loja Postgres QA',phone:'73999990009',consent:true,key:crypto.randomUUID(),items:[{id:p.id,quantity:1,priceCents:p.priceCents}]}});
+   assert.equal(create.status,201,JSON.stringify(create.data));assert.equal(create.data.payment,'pendente');
+   const adminData=await call('/api/shop/admin/data');assert.equal(adminData.status,200);
+   const order=adminData.data.orders[0],path='/api/shop/admin/orders/'+order.id;
+   const receive={action:'receive',revision:0,amountCents:5000,method:'pix'};
+   const race=await Promise.all([call(path,{method:'PATCH',data:receive}),call(path,{method:'PATCH',data:receive})]);
+   assert.deepEqual(race.map(r=>r.status).sort(),[200,409]);
+   const shopFinance=await call(`/api/admin/finance?from=${today}&to=${today}&source=shop`);
+   assert.equal(shopFinance.status,200,JSON.stringify(shopFinance.data));assert.equal(shopFinance.data.summary.incomeCents,5000);assert.equal(shopFinance.data.entries.length,1);
+   const entry=shopFinance.data.entries[0];assert.equal(entry.shop_order_id,order.id);
+   assert.equal((await call('/api/admin/finance/'+entry.id,{method:'PATCH',data:{action:'void',revision:0,reason:'Tentativa QA'}})).status,409);
+   const directory=await call('/api/admin/customers?q=Cliente%20Loja');assert.equal(directory.data.total,1);
+   assert.equal(directory.data.customers[0].orderCount,1);assert.equal(directory.data.customers[0].spentCents,5000);
+   assert.equal((await call(path,{method:'PATCH',data:{action:'refund',revision:1,reason:'Estorno QA integrado'}})).status,200);
+   assert.equal((await call(path,{method:'PATCH',data:{action:'cancel',revision:2}})).status,200);
+   const after=await call(`/api/admin/finance?from=${today}&to=${today}&source=shop`);
+   assert.equal(after.data.summary.balanceCents,0);assert.equal(after.data.entries.length,2);
+   const receipt=await call('/api/shop/orders/'+create.data.token,{withCookie:false});assert.equal(receipt.data.payment,'estornado');
+   assert.equal((await call('/api/shop/catalog',{withCookie:false})).data.find(x=>x.id===p.id).stock,1);
+  });
   await t.test('logout revokes the session in Postgres',async()=>{
    assert.equal((await call('/api/auth/sign-out',{method:'POST',data:{}})).status,200);
    assert.equal((await call('/api/session')).data.admin,false);assert.equal((await call('/api/admin/settings')).status,403);
+   assert.equal((await call('/api/shop/admin/data')).status,401);
   });
  }finally{
   await closeCloudConnections();if(pool)await pool.end();

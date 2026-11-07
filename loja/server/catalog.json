@@ -1,0 +1,456 @@
+[
+  {
+    "id": "ativador-de-cachos-cachos-definidos-silky-liss-1l",
+    "name": "Ativador de cachos - Cachos Definidos Silky Liss 1L",
+    "category": "Finalizadores",
+    "photo": "/assets/produtos/ativador-de-cachos-cachos-definidos-silky-liss-1l.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Ativador de cachos de 1 L."
+  },
+  {
+    "id": "creme-de-pentear-sisly-liss-1kg",
+    "name": "Creme de pentear Sisly Liss 1KG",
+    "category": "Finalizadores",
+    "photo": "/assets/produtos/creme-de-pentear-sisly-liss-1kg.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Creme de pentear de 1 kg."
+  },
+  {
+    "id": "kit-2k-banho-de-ouro-apios",
+    "name": "Kit 2K banho de ouro apios",
+    "category": "Hidratação",
+    "photo": "/assets/produtos/kit-2k-banho-de-ouro-apios.jpg",
+    "priceCents": 14900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, condicionador e máscara de 300 ml + leave-in de 120 ml."
+  },
+  {
+    "id": "kit-acqua-fio-cronograma-shampoo-de-500-mascaras-de-300-g",
+    "name": "Kit Acqua fio cronograma shampoo de 500 máscaras de 300 g",
+    "category": "Cronograma Capilar",
+    "photo": "/assets/produtos/kit-acqua-fio-cronograma-shampoo-de-500-mascaras-de-300-g.jpg",
+    "priceCents": 24900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo de 500 ml e três máscaras de 300 g para hidratação, nutrição e reconstrução."
+  },
+  {
+    "id": "kit-da-asa-hidrat-teia",
+    "name": "Kit da Asa hidrat teia",
+    "category": "Reconstrução",
+    "photo": "/assets/produtos/kit-da-asa-hidrat-teia.jpg",
+    "priceCents": 18000,
+    "stock": 1,
+    "active": true,
+    "alternatePhoto": "/assets/produtos/whatsapp-image-2026-11-06-at-14-32-20-1.jpg",
+    "description": "Shampoo, condicionador e máscara de 300 ml."
+  },
+  {
+    "id": "kit-da-bio-restore",
+    "name": "Kit da Bio Restore",
+    "category": "Reconstrução",
+    "photo": "/assets/produtos/kit-da-bio-restore.jpg",
+    "priceCents": 14900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, condicionador e máscara de 300 ml + leave-in de 120 ml."
+  },
+  {
+    "id": "kit-da-mirra-de-meio-quilo-shampoo-condicionador-e-mascara-nutricao",
+    "name": "Kit da mirra de meio quilo shampoo condicionador e máscara nutrição",
+    "category": "Kits",
+    "photo": "/assets/produtos/kit-da-mirra-de-meio-quilo-shampoo-condicionador-e-mascara-nutricao.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "kit-da-silk-lis-manteiga-capilar",
+    "name": "Kit da silk Lis manteiga capilar",
+    "category": "Nutrição",
+    "photo": "/assets/produtos/kit-da-silk-lis-manteiga-capilar.jpg",
+    "priceCents": 18000,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo e condicionador de 250 ml + máscara de 300 g."
+  },
+  {
+    "id": "kit-de-cachos-silky-liss",
+    "name": "Kit de Cachos Silky Liss",
+    "category": "Kits",
+    "photo": "/assets/produtos/kit-de-cachos-silky-liss.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "kit-miniatura-da-mira-elementes-tutano-e-caviar",
+    "name": "Kit Miniatura da Mira Elementes Tutano e Caviar",
+    "category": "Miniaturas",
+    "photo": "/assets/produtos/kit-miniatura-da-mira-elementes-tutano-e-caviar.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo e condicionador de 60 ml."
+  },
+  {
+    "id": "kit-miniatura-da-mirra-elementes-da-proteina-do-leite",
+    "name": "Kit Miniatura da Mirra Elementes da Proteína do Leite",
+    "category": "Miniaturas",
+    "photo": "/assets/produtos/kit-miniatura-da-mirra-elementes-da-proteina-do-leite.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, condicionador e leave-in de 60 ml."
+  },
+  {
+    "id": "kit-miniatura-maison-visage-protein",
+    "name": "Kit Miniatura Maison Visage Protein",
+    "category": "Miniaturas",
+    "photo": "/assets/produtos/kit-miniatura-maison-visage-protein.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo e condicionador de 60 ml + leave-in de 30 g."
+  },
+  {
+    "id": "kit-miniatura-mason-visage-omega-complex",
+    "name": "Kit Miniatura Mason Visage Omega Complex",
+    "category": "Miniaturas",
+    "photo": "/assets/produtos/kit-miniatura-mason-visage-omega-complex.jpg",
+    "priceCents": 9000,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo e condicionador de 60 ml + leave-in de 30 g."
+  },
+  {
+    "id": "kit-ph-estabiliza-acqua-fios",
+    "name": "Kit PH estabiliza Acqua fios",
+    "category": "Acidificação e pH",
+    "photo": "/assets/produtos/kit-ph-estabiliza-acqua-fios.jpg",
+    "priceCents": 24900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, máscara, bálsamo e finalizador de 300 ml."
+  },
+  {
+    "id": "kit-pos-quimica-da-acqua-fios",
+    "name": "Kit pós química da Acqua fios",
+    "category": "Reconstrução",
+    "photo": "/assets/produtos/kit-pos-quimica-da-acqua-fios.jpg",
+    "priceCents": 24900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, máscara, condicionador e finalizador de 300 ml."
+  },
+  {
+    "id": "kit-sos-intensivo-com-oleo-reparador",
+    "name": "Kit SOS intensivo com óleo reparador",
+    "category": "Reconstrução",
+    "photo": "/assets/produtos/kit-sos-intensivo-com-oleo-reparador.jpg",
+    "priceCents": 21900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, bálsamo e máscara de 300 ml + óleo Rosé de 35 ml."
+  },
+  {
+    "id": "kit-terapia-capilar-soul-acai",
+    "name": "Kit Terapia Capilar Soul Açaí",
+    "category": "Terapia Capilar",
+    "photo": "/assets/produtos/kit-terapia-capilar-soul-acai.jpg",
+    "priceCents": 24900,
+    "stock": 1,
+    "active": true,
+    "description": "Shampoo, condicionador e máscara de 300 ml."
+  },
+  {
+    "id": "kit-terapia-capilar-soul-cacau",
+    "name": "Kit Terapia Capilar Soul Cacau",
+    "category": "Kits",
+    "photo": "/assets/produtos/kit-terapia-capilar-soul-cacau.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "levin-16-em-um-da-hacssa",
+    "name": "Levin 16 em um da hacssa",
+    "category": "Finalizadores",
+    "photo": "/assets/produtos/levin-16-em-um-da-hacssa.jpg",
+    "priceCents": 6000,
+    "stock": 1,
+    "active": true,
+    "description": "Leave-in de 300 ml."
+  },
+  {
+    "id": "manteiga-capilar-para-cacheadas-silky-liss-nutricao-desmaia-cabelo",
+    "name": "Manteiga capilar para cacheadas - Silky Liss Nutrição (Desmaia cabelo)",
+    "category": "Máscaras e tratamentos",
+    "photo": "/assets/produtos/manteiga-capilar-para-cacheadas-silky-liss-nutricao-desmaia-cabelo.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "mascara-de-500-g-da-mirra-cacau-acai-mel-hidratacao-cacheada",
+    "name": "Máscara de 500 g da mirra cacau açaí mel hidratação cacheada",
+    "category": "Máscaras e tratamentos",
+    "photo": "/assets/produtos/mascara-de-500-g-da-mirra-cacau-acai-mel-hidratacao-cacheada.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "mascara-de-500-g-da-mirra-proteina-do-leite-hidratacao",
+    "name": "Máscara de 500 g da Mirra Proteína do leite hidratação",
+    "category": "Hidratação",
+    "photo": "/assets/produtos/mascara-de-500-g-da-mirra-proteina-do-leite-hidratacao.jpg",
+    "priceCents": 13000,
+    "stock": 1,
+    "active": true,
+    "description": "Máscara de proteína do leite de 500 g."
+  },
+  {
+    "id": "mascara-de-500-g-tutano-e-caviar-reposicao-hidrica-hidratacao",
+    "name": "Máscara de 500 g tutano e caviar reposição hídrica = hidratação",
+    "category": "Nutrição",
+    "photo": "/assets/produtos/mascara-de-500-g-tutano-e-caviar-reposicao-hidrica-hidratacao.jpg",
+    "priceCents": 13000,
+    "stock": 1,
+    "active": true,
+    "description": "Máscara de tutano e caviar de 500 g."
+  },
+  {
+    "id": "mascara-de-nutricao-vegetal-da-mirra-de-500-g",
+    "name": "Máscara de nutrição vegetal da mirra de 500 g",
+    "category": "Nutrição",
+    "photo": "/assets/produtos/mascara-de-nutricao-vegetal-da-mirra-de-500-g.jpg",
+    "priceCents": 13000,
+    "stock": 1,
+    "active": true,
+    "description": "Máscara de nutrição vegetal de 500 g."
+  },
+  {
+    "id": "mirra-elementos-mascara-500-g-reconstrucao",
+    "name": "Mirra Elementos Máscara 500 g reconstrução",
+    "category": "Reconstrução",
+    "photo": "/assets/produtos/mirra-elementos-mascara-500-g-reconstrucao.jpg",
+    "priceCents": 13000,
+    "stock": 1,
+    "active": true,
+    "description": "Máscara de queratina de 500 g."
+  },
+  {
+    "id": "oleo-cristal-finish-topazio",
+    "name": "Óleo Cristal Finish Topázio",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/oleo-cristal-finish-topazio.jpg",
+    "priceCents": 4900,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo de 30 ml."
+  },
+  {
+    "id": "oleo-cristal-fitness-diamante",
+    "name": "Óleo Cristal Fitness Diamante",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/oleo-cristal-fitness-diamante.jpg",
+    "priceCents": 4900,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo de 30 ml."
+  },
+  {
+    "id": "oleo-reparador-serum-gold-rei-do-reparador",
+    "name": "Óleo reparador Serum Gold Rei do reparador",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/oleo-reparador-serum-gold-rei-do-reparador.jpg",
+    "priceCents": 12000,
+    "stock": 1,
+    "active": true,
+    "description": "Sérum de 50 ml."
+  },
+  {
+    "id": "perfume-capilar-aerossol-rei-do-reparador-al-assad",
+    "name": "Perfume capilar aerossol - Rei do Reparador Al-Assad",
+    "category": "Perfumes capilares",
+    "photo": "/assets/produtos/perfume-capilar-aerossol-rei-do-reparador-al-assad.jpg",
+    "priceCents": 6500,
+    "stock": 1,
+    "active": true,
+    "description": "Perfume em aerossol de 150 ml."
+  },
+  {
+    "id": "perfume-capilar-aerossol-rei-do-reparador-real-amber",
+    "name": "Perfume Capilar Aerossol - Rei do Reparador Real Amber",
+    "category": "Perfumes capilares",
+    "photo": "/assets/produtos/perfume-capilar-aerossol-rei-do-reparador-real-amber.jpg",
+    "priceCents": 6500,
+    "stock": 1,
+    "active": true,
+    "description": "Perfume em aerossol de 150 ml."
+  },
+  {
+    "id": "perfume-capilar-body-hair-rei-do-reparador-al-sabah",
+    "name": "Perfume Capilar Body Hair Rei do reparador Al Sabah",
+    "category": "Perfumes capilares",
+    "photo": "/assets/produtos/perfume-capilar-body-hair-rei-do-reparador-al-sabah.jpg",
+    "priceCents": 6500,
+    "stock": 1,
+    "active": true,
+    "description": "Perfume capilar de 180 ml."
+  },
+  {
+    "id": "perfume-capilar-radiante-protec-hacsa",
+    "name": "Perfume Capilar radiante Protec Hacsa",
+    "category": "Perfumes capilares",
+    "photo": "/assets/produtos/perfume-capilar-radiante-protec-hacsa.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "reparador-argan-da-asa",
+    "name": "Reparador Argan da Asa",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-argan-da-asa.jpg",
+    "priceCents": 6500,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo de 35 ml."
+  },
+  {
+    "id": "reparador-da-mirra-elixir-gold",
+    "name": "Reparador da Mirra Elixir Gold",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-da-mirra-elixir-gold.jpg",
+    "priceCents": 8500,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo de argan e chia de 30 ml."
+  },
+  {
+    "id": "reparador-da-mirra-ms-curl",
+    "name": "Reparador da Mirra Ms Curl",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-da-mirra-ms-curl.jpg",
+    "priceCents": null,
+    "stock": 1,
+    "active": true
+  },
+  {
+    "id": "reparador-rei-do-reparador-serum-prime",
+    "name": "Reparador - Rei do reparador Serum Prime",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-rei-do-reparador-serum-prime.jpg",
+    "priceCents": 12000,
+    "stock": 1,
+    "active": true,
+    "description": "Sérum de 50 ml."
+  },
+  {
+    "id": "reparador-rose-da-hacssa",
+    "name": "Reparador Rose da Hacssa",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-rose-da-hacssa.jpg",
+    "priceCents": 6500,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo Rosé de 35 ml."
+  },
+  {
+    "id": "reparador-silky-liss-marrocos-blend",
+    "name": "Reparador Silky Liss Marrocos Blend",
+    "category": "Óleos e reparadores",
+    "photo": "/assets/produtos/reparador-silky-liss-marrocos-blend.jpg",
+    "priceCents": 4900,
+    "stock": 1,
+    "active": true,
+    "description": "Óleo de 35 ml."
+  },
+  {
+    "id": "whatsapp-image-2026-11-06-at-14-32-18-1",
+    "name": "Kit Terapia Capilar Apios",
+    "category": "Terapia Capilar",
+    "photo": "/assets/produtos/whatsapp-image-2026-11-06-at-14-32-18-1.jpg",
+    "priceCents": 28000,
+    "stock": 1,
+    "active": true,
+    "description": "Kit Apios Biotine Therapy com shampoo e condicionador de 500 ml, tônico de 60 ml e 60 cápsulas."
+  },
+  {
+    "id": "kit-cronograma-capilar-silk-liss",
+    "name": "Kit Cronograma Capilar Silk Liss",
+    "category": "Cronograma Capilar",
+    "description": "Shampoo de 500 ml e três máscaras de 500 g para hidratação, nutrição e reconstrução.",
+    "photo": null,
+    "priceCents": 19000,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "mascara-biocali-absolut-repair-250",
+    "name": "Máscara Biocali Absolut Repair 250 ml",
+    "category": "Nutrição",
+    "description": "",
+    "photo": null,
+    "priceCents": 6500,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "mascara-biocali-absolut-repair-500",
+    "name": "Máscara Biocali Absolut Repair 500 g",
+    "category": "Nutrição",
+    "description": "",
+    "photo": null,
+    "priceCents": 8500,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "mascara-biocali-cachos-supreme",
+    "name": "Máscara Biocali Cachos Supreme 500 g",
+    "category": "Nutrição",
+    "description": "",
+    "photo": null,
+    "priceCents": 8500,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "ampola-de-nutricao",
+    "name": "Ampola de nutrição",
+    "category": "Nutrição",
+    "description": "",
+    "photo": null,
+    "priceCents": 3500,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "welute-leave-in",
+    "name": "Welute leave-in 250 ml",
+    "category": "Finalizadores",
+    "description": "",
+    "photo": null,
+    "priceCents": 6000,
+    "active": false,
+    "stock": 1
+  },
+  {
+    "id": "miniatura-mirra-total-reparo",
+    "name": "Miniatura Mirra Total Reparo",
+    "category": "Miniaturas",
+    "description": "Shampoo, condicionador e leave-in de 60 ml.",
+    "photo": null,
+    "priceCents": 9000,
+    "active": false,
+    "stock": 1
+  }
+]

@@ -17,3 +17,4 @@ dist/.openai/
 
 .agents/
 skills-lock.json
+dist/loja/

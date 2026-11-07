@@ -1,14 +1,15 @@
-import {handleApi} from './core.mjs';
 import {createPool,createPostgresDb} from './postgres.mjs';
 import {createAdminAuth,secretMatches} from './auth.mjs';
 import {createHash} from 'node:crypto';
+import {createSystemHandler} from './system.mjs';
+import {createSharedPostgres} from './shop-postgres.mjs';
 
-let pool,db;const authByOrigin=new Map();
-export async function closeCloudConnections(){if(pool)await pool.end();pool=undefined;db=undefined;authByOrigin.clear();}
+let pool,db,system;const authByOrigin=new Map();
+export async function closeCloudConnections(){if(pool)await pool.end();pool=undefined;db=undefined;system=undefined;authByOrigin.clear();}
 const json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function allowedOrigins(){return new Set([process.env.BABI_APP_ORIGIN,...[process.env.VERCEL_URL,process.env.VERCEL_BRANCH_URL].filter(Boolean).map(h=>'https://'+h)].filter(Boolean));}
 function authFor(origin){
- if(!pool){pool=createPool(process.env.DATABASE_URL);db=createPostgresDb(pool);}
+ if(!pool){pool=createPool(process.env.DATABASE_URL);db=createPostgresDb(pool);system=createSystemHandler(db,createSharedPostgres(pool));}
  if(!authByOrigin.has(origin))authByOrigin.set(origin,createAdminAuth(pool,{origin,secret:process.env.AUTH_SECRET,setupKey:process.env.BABI_SETUP_KEY,adminEmail:process.env.ADMIN_EMAIL}));
  return authByOrigin.get(origin);
 }
@@ -60,7 +61,7 @@ export async function handleCloudRequest(request){
   const session=await auth.api.getSession({headers:request.headers});
   const admin=session?.user?.email?.toLowerCase()===process.env.ADMIN_EMAIL.trim().toLowerCase();
   const clientKey=createHash('sha256').update(request.headers.get('x-vercel-forwarded-for')||'unknown').digest('hex');
-  return await handleApi(request,db,{admin,authenticated:!!session?.user,local:false,clientKey});
+  return await system(request,{admin,authenticated:!!session?.user,local:false,clientKey});
  }catch(error){
   if(error.status&&Number.isInteger(error.status))return json({error:error.message},error.status);
   console.error('Cloud request failed:',error?.name||'Error');return json({error:'Não foi possível concluir agora. Tente novamente.'},500);

@@ -2,7 +2,7 @@
 
 Gerado por `node scripts/gate.mjs`. Fonte: `docs/acceptance.json`.
 
-Total: 21 | Concluídos: 21 | Progresso dos critérios do gate: 100%
+Total: 22 | Concluídos: 22 | Progresso dos critérios do gate: 100%
 
 | ID | Critério | Status | Evidência |
 | --- | --- | --- | --- |
@@ -27,5 +27,6 @@ Total: 21 | Concluídos: 21 | Progresso dos critérios do gate: 100%
 | A19 | Vercel publica apenas dist e executa backend na região do banco | OK | check hosting |
 | A20 | Preço do catálogo visível no agendamento, em centavos, preenchendo conclusão sem alterar recebimentos anteriores | OK | check runtime |
 | A21 | Ficha condicional, clientes, total recebido e aniversários privados com data sem ano | OK | check runtime |
+| A22 | Loja, agenda, login, clientes e financeiro integrados com transações e projeção sem duplicação | OK | check unified |
 
 A inspeção visual e os testes interativos são registrados em `docs/qa.md`. O percentual mede os critérios deste gate, sem representar autenticação para produção ou publicação.

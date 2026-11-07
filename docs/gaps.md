@@ -1,5 +1,7 @@
 # Lacunas
 
+Cadastro e aniversários entregues em 2026-11-06: datas ausentes no histórico continuam desconhecidas até a cliente informar. Atendimentos antigos sem pagamento registrado continuam sem valor atribuído. O total por cliente conta somente recebimentos vinculados, sem atribuir lançamentos avulsos.
+
 | Lacuna | Estado | Evidência |
 | --- | --- | --- |
 | Sem telefone ou endereço confirmados | Resolvida por escopo | Usuária escolheu Instagram como contato |
@@ -123,3 +125,25 @@ Por solicitação da usuária, o preço cadastrado passa a aparecer para a clien
 Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados em schema descartável. CUA em SQLite separado data/qa-public-prices-20261029.sqlite/4177 confirmou formato monetário, zero, null/ausente, preço no resumo, atualização ao trocar serviço e continuidade ao avançar para calendário. Layout inspecionado a 1440 e 390 px, sem rolagem horizontal e sem erros de console. Capturas exclusivamente fictícias: docs/qa/public-prices-desktop.jpg e public-prices-mobile.jpg. Viewport restaurado e aba QA encerrada.
 
 Publicação em andamento.
+
+
+## 2026-11-06 — Execução local
+
+Projeto iniciado por npm start em http://localhost:4176/, com banco existente data/appointments.sqlite. Porta 4173 ocupada por ZM Exclusiva e preservada. Landing, /admin/, /agendar/, /api/session e /api/config responderam 200; sessão confirmou local=true. Processo mantido ativo. Sem alterações de UI, configurações ou dados reais e sem deploy.
+
+## 2026-11-06 — Catálogo oficial de agendamento
+
+Catálogo oficial publicado e validado. Combinar o valor continua sendo um contato manual da profissional; não há mensagem automática nem cobrança no agendamento.
+
+
+## 2026-11-06 — Loja Babi independente
+
+Loja Babi criada como aplicação independente em loja/, servida em http://localhost:4180/ com SQLite próprio. Identidade da Babi, 40 fotos em 39 produtos públicos (32 com preço confirmado, sete a combinar), uma unidade inicial e sete cadastros inativos aguardando foto. Produtos, sacola, pedidos, estoque transacional e caixa. Gate da loja 7/7 e oito testes; CUA desktop e 390 px com pedido e recebimento fictícios em base separada. Sem deploy, subdomínio ou alterações na agenda. Próximo passo: confirmar destino de nuvem exclusivo para a loja.
+
+## 2026-11-07 — Sistema Babi unificado
+
+Unificação completa implementada por pedido confirmado em 07/11/2026: vitrine em /loja/, Produtos/Pedidos no painel existente, sessão Better Auth única, clientes por celular normalizado e financeiro comum com filtros Tudo/Serviços/Loja/Manual. Recebimentos e estornos projetados na mesma transação do pedido, com a trava da agenda, vínculo único e auditoria; ajustes diretos desses lançamentos bloqueados. Migração aditiva 0004. Fontes da loja em loja/dist, saída dist/loja preparada no build, custos fora do Git.
+
+Validação: 65 testes offline, gate principal 22/22 e gate da loja 7/7; 16 testes no schema descartável do Neon QA. CUA conferiu pedido, recebimento, estorno/cancelamento, cliente com uma reserva e um pedido, aniversário preservado e saldo líquido de R$ 125,00; UI desktop, 390/320 px e sessão compartilhada entre abas, sem erros/avisos de console. Fotos e dados reais não foram usados como operações de QA. Capturas exclusivamente fictícias: docs/qa/unified-*.jpg.
+
+Catálogo local importado com backup privado para data/appointments.sqlite; cinco reservas e um lançamento financeiro existentes preservados, 46 produtos e nenhum pedido fictício importado. Publicação no projeto principal babi-instituto e Neon existente em preparação; recursos loja-babi independentes não serão usados nem apagados automaticamente.

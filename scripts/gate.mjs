@@ -3,6 +3,8 @@ import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {checkLayers} from './check-layers.mjs';
+import {syncShop} from './sync-shop.mjs';
+syncShop();
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const html=readFileSync(resolve(root,'dist/index.html'),'utf8');
 const css=readFileSync(resolve(root,'dist/styles.css'),'utf8');
@@ -22,7 +24,7 @@ const checks={
   assets:assets.every(asset=>existsSync(resolve(root,'dist',asset.replace(/^\//,''))))&&[...html.matchAll(/<img\b[^>]*>/g)].every(match=>/\balt="/.test(match[0])),
   anchors:urls.filter(url=>url.startsWith('#')).every(url=>ids.includes(url.slice(1)))&&ids.length===new Set(ids).size,
   contact:html.includes('https://wa.me/5573981701666')&&html.includes('class="whatsapp-float"')&&!/Convers(?:ar|e)[^<.]*Instagram/i.test(html)&&[...html.matchAll(/<a\b[^>]*target="_blank"[^>]*>/g)].every(match=>match[0].includes('noopener noreferrer'))&&!html.includes('api.whatsapp.com'),
-  syntax:['dist/app.js','dist/booking/shared.js','dist/admin/admin.js','dist/agendar/booking.js','server/core.mjs','server/local.mjs','server/postgres.mjs','server/auth.mjs','server/cloud.mjs','api/index.mjs'].every(path=>spawnSync(process.execPath,['--check',resolve(root,path)],{encoding:'utf8'}).status===0)&&checkLayers(),
+  syntax:['dist/app.js','dist/booking/shared.js','dist/admin/admin.js','dist/agendar/booking.js','server/core.mjs','server/local.mjs','server/postgres.mjs','server/auth.mjs','server/cloud.mjs','server/system.mjs','server/shop-projection.mjs','server/shop-store.mjs','server/shop-postgres.mjs','api/index.mjs'].every(path=>spawnSync(process.execPath,['--check',resolve(root,path)],{encoding:'utf8'}).status===0)&&checkLayers(),
   portfolio:html.includes('aria-labelledby="lightbox-title"')&&html.includes('aria-live="polite"')&&[...html.matchAll(/data-filter="/g)].length===4&&js.includes('dialog.showModal()')&&js.includes('card.hidden = !visible'),
   sections:['servicos','sobre','portfolio','contato'].every(id=>ids.includes(id))&&html.includes('class="faq-list reveal"')&&html.includes('class="ritual-grid"'),
   admin:admin.includes('renderSettings()')&&admin.includes('renderAgenda()')&&admin.includes('mutateBooking(')&&core.includes('assert(context.admin,403'),
@@ -38,6 +40,8 @@ const checks={
   runtime:spawnSync(process.execPath,['--test',...readdirSync(resolve(root,'tests')).filter(f=>f.endsWith('.test.mjs')).map(f=>resolve(root,'tests',f))],{stdio:'inherit'}).status===0
 };
 if(catalog.length<19||new Set(catalog.map(item=>item.id)).size!==catalog.length||Array.from({length:19},(_,i)=>'A'+String(i+1).padStart(2,'0')).some(id=>!catalog.some(item=>item.id===id)))throw Error('O catálogo mínimo de dezenove critérios não pode ser reduzido.');
+checks.unified=checks.runtime&&existsSync(resolve(root,'migrations/0004-shop.sql'))&&existsSync(resolve(root,'migrations/postgres/0004-shop.sql'))&&
+  admin.includes('mountShopAdmin')&&spawnSync(process.execPath,[resolve(root,'loja/scripts/gate.mjs')],{stdio:'inherit'}).status===0;
 const results=catalog.map(item=>({...item,passed:checks[item.check]===true}));
 const passed=results.filter(item=>item.passed).length;
 const report=['# Checklist de aceitação','', 'Gerado por `node scripts/gate.mjs`. Fonte: `docs/acceptance.json`.', '', `Total: ${results.length} | Concluídos: ${passed} | Progresso dos critérios do gate: ${(passed/results.length*100).toFixed(0)}%`, '', '| ID | Critério | Status | Evidência |','| --- | --- | --- | --- |',...results.map(item=>`| ${item.id} | ${item.criterion} | ${item.passed?'OK':'FALHOU'} | check ${item.check} |`),'','A inspeção visual e os testes interativos são registrados em `docs/qa.md`. O percentual mede os critérios deste gate, sem representar autenticação para produção ou publicação.',''].join('\n');

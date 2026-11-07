@@ -205,3 +205,33 @@ Por solicitação da usuária, o preço cadastrado passa a aparecer para a clien
 Gate 20/20, 36 testes offline e 14 casos/subtestes Neon QA aprovados em schema descartável. CUA em SQLite separado data/qa-public-prices-20261029.sqlite/4177 confirmou formato monetário, zero, null/ausente, preço no resumo, atualização ao trocar serviço e continuidade ao avançar para calendário. Layout inspecionado a 1440 e 390 px, sem rolagem horizontal e sem erros de console. Capturas exclusivamente fictícias: docs/qa/public-prices-desktop.jpg e public-prices-mobile.jpg. Viewport restaurado e aba QA encerrada.
 
 Publicação em andamento.
+
+
+## 2026-11-06 — Execução local
+
+Projeto iniciado por npm start em http://localhost:4176/, com banco existente data/appointments.sqlite. Porta 4173 ocupada por ZM Exclusiva e preservada. Landing, /admin/, /agendar/, /api/session e /api/config responderam 200; sessão confirmou local=true. Processo mantido ativo. Sem alterações de UI, configurações ou dados reais e sem deploy.
+
+## 2026-11-06 — Anamnese, cadastro e aniversários
+
+Ficha condicional e data opcional sem ano; cadastro por celular, total recebido, aniversários por mês e aviso diário em America/Bahia. A opção de lembrar é local, removível, e guarda somente nome, celular e dia/mês após reserva confirmada. Fichas antigas seguem legíveis e respostas nunca saem pelo comprovante.
+
+Gate 21/21, 38 testes locais, 15 verificações Neon QA e CUA desktop/390 px com dados fictícios. Neon de produção confirmado pelo vínculo Vercel e separado do QA. Migração 0003 aplicada; todas as reservas existentes têm cadastro, sem alterar recebimentos. Commit funcional 4e0806e, deploy babi-instituto-76xo7fj75-guilherme-pereiras-projects-5a38e3ba.vercel.app READY; domínio oficial com quatro assets iguais e três rotas novas privadas (403), agenda ativa com quatro serviços. Local 4176 atualizado; raia liberada.
+
+## 2026-11-06 — Catálogo oficial de agendamento
+
+Os 16 serviços informados passam a ser o catálogo inicial e o catálogo ativo da agenda: 13 de 90 minutos e três de 120 minutos (Mechas loiras, Mechas iluminadas e Morena iluminada). Todos usam priceCents nulo e mostram “Valor a combinar”. A seleção e o resumo orientam que a profissional entrará em contato antes do atendimento para combinar o valor. A confirmação do horário continua automática.
+
+Commit 9ff95cb publicado no projeto Vercel autorizado. Alteração explícita apenas do catálogo no Neon de produção e no SQLite local, com backup privado das configurações anteriores. Três serviços anteriores arquivados; reagendamento mantém nome e duração salvos. Expediente, bloqueios, reservas e financeiro preservados. Sem migração de esquema. Gate 21/21, 39 testes offline, 15 verificações Neon QA. CUA desktop e viewport de 390 px confirmou os 16 cartões, preço, resumo, avanço ao calendário e ausência de rolagem horizontal. Produção: catálogo integral conferido pela API, admin protegido e 14 consultas de disponibilidade comparadas ao expediente existente.
+
+
+## 2026-11-06 — Loja Babi independente
+
+Loja Babi criada como aplicação independente em loja/, servida em http://localhost:4180/ com SQLite próprio. Identidade da Babi, 40 fotos em 39 produtos públicos (32 com preço confirmado, sete a combinar), uma unidade inicial e sete cadastros inativos aguardando foto. Produtos, sacola, pedidos, estoque transacional e caixa. Gate da loja 7/7 e oito testes; CUA desktop e 390 px com pedido e recebimento fictícios em base separada. Sem deploy, subdomínio ou alterações na agenda. Próximo passo: confirmar destino de nuvem exclusivo para a loja.
+
+## 2026-11-07 — Sistema Babi unificado
+
+Unificação completa implementada por pedido confirmado em 07/11/2026: vitrine em /loja/, Produtos/Pedidos no painel existente, sessão Better Auth única, clientes por celular normalizado e financeiro comum com filtros Tudo/Serviços/Loja/Manual. Recebimentos e estornos projetados na mesma transação do pedido, com a trava da agenda, vínculo único e auditoria; ajustes diretos desses lançamentos bloqueados. Migração aditiva 0004. Fontes da loja em loja/dist, saída dist/loja preparada no build, custos fora do Git.
+
+Validação: 65 testes offline, gate principal 22/22 e gate da loja 7/7; 16 testes no schema descartável do Neon QA. CUA conferiu pedido, recebimento, estorno/cancelamento, cliente com uma reserva e um pedido, aniversário preservado e saldo líquido de R$ 125,00; UI desktop, 390/320 px e sessão compartilhada entre abas, sem erros/avisos de console. Fotos e dados reais não foram usados como operações de QA. Capturas exclusivamente fictícias: docs/qa/unified-*.jpg.
+
+Catálogo local importado com backup privado para data/appointments.sqlite; cinco reservas e um lançamento financeiro existentes preservados, 46 produtos e nenhum pedido fictício importado. Publicação no projeto principal babi-instituto e Neon existente em preparação; recursos loja-babi independentes não serão usados nem apagados automaticamente.

@@ -2,6 +2,8 @@
 
 Landing page de Fabrícia Leão e agendamento com anamnese/financeiro. HTML, CSS e JavaScript nativos; Node 24.x, SQLite local e Neon Postgres na Vercel. Fonte Poppins, fotografias reais e contato pelo WhatsApp.
 
+Em 07/11/2026 a usuária confirmou a unificação completa da loja: mesmo Neon, login, painel, clientes e financeiro do Instituto, com vitrine em /loja/. Essa decisão substitui a separação de bancos e acessos da primeira versão de loja/. Não publicar a loja no projeto loja-babi; usar babi-instituto. As fontes da vitrine ficam em loja/dist e são preparadas em dist/loja por scripts/sync-shop.mjs. Ver docs/unificacao.md. Todas as escritas de loja usam a trava transacional da agenda; pedido, cadastro e projeção financeira são atômicos.
+
 ## Comece aqui
 Leia `plan/STATUS.md`, `plan/execution-plan.md`, `ROADMAP.md` e a última entrada em `log/devlog.md`. Registre a frente em `plan/LANES.md` antes de editar. Uma única frente por arquivo. A memória acompanha o código para permitir futuras edições do Site em outro checkout.
 

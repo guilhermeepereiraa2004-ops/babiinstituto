@@ -2,6 +2,11 @@
  
 | Responsável | Frente | Arquivos exclusivos | Data | Status |
 | --- | --- | --- | --- | --- |
+| Codex | Unificar agenda e loja | server/, migrations/0004*, migrations/postgres/0004*, loja/, dist/admin/, dist/booking/, scripts/, tests/, package.json e memória do projeto | 2026-11-07 | Ativa; mesmo banco, login, clientes e financeiro; QA antes da publicação |
+| Codex | Criar Loja Babi independente | loja/, plan/LANES.md, plan/STATUS.md, plan/execution-plan.md, ROADMAP.md, docs/gaps.md e log/devlog.md | 2026-11-06 | Concluída e liberada; loja 4180, gate 7/7, oito testes e CUA desktop/mobile; nuvem pendente |
+| Codex | Catálogo oficial de 16 serviços e valores a combinar | server/core.mjs, dist/agendar/booking.js, dist/admin/admin.js, dist/booking/booking.css, scripts/, tests/ e memória do projeto | 2026-11-06 | Concluída e liberada; 9ff95cb publicado, 16 serviços ativos, histórico preservado |
+| Codex | Anamnese condicional, cadastro e aniversários | server/core.mjs, migrations/, dist/agendar/, dist/admin/, dist/booking/, tests/ e memória do projeto | 2026-11-06 | Concluída e liberada; 4e0806e publicado READY, Neon e CUA verificados |
+| Codex | Iniciar projeto local em 06/11 | Processo npm start; plan/STATUS.md, plan/LANES.md, plan/execution-plan.md, ROADMAP.md, docs/gaps.md, log/devlog.md | 2026-11-06 | Concluída e liberada; npm start em 4176, cinco endpoints 200, banco local preservado |
 | Codex | Exibir preços cadastrados no agendamento da cliente | server/core.mjs, dist/agendar/booking.js, dist/admin/admin.js, dist/booking/booking.css, tests/, scripts/gate.mjs, docs/, plan/, ROADMAP.md, log/devlog.md | 2026-10-29 | Em andamento; catálogo público e resumo, preservar financeiro e reservas |
 | Codex | Ativar almoço seg–sex 12h–13h em produção | settings no Neon de produção; plan/STATUS.md, plan/LANES.md, plan/execution-plan.md, ROADMAP.md, docs/gaps.md, docs/qa.md, log/devlog.md | 2026-10-29 | Concluída e liberada; seg–sex 12h–13h salvo, 20 consultas públicas verificadas, reservas e demais configurações preservadas |
 | Codex | Almoço recorrente por dia da semana | server/core.mjs, dist/admin/admin.js, dist/booking/booking.css, tests/, docs/ e memória plan/ROADMAP/log | 2026-10-29 | Concluída e liberada; 36 testes offline, 14 Neon QA e CUA desktop/mobile; 9b1fceb publicado READY; almoço real permanece desativado |

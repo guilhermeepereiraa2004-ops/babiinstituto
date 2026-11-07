@@ -114,7 +114,10 @@ async function listCustomers(db,url,now,birthdays=false){
   )
   SELECT p.phone,p.name,p.birth_day,p.birth_month,
     COUNT(b.id) AS "bookingCount",MAX(CASE WHEN b.status='completed' THEN b.date END) AS "lastVisit",
-    COALESCE(SUM(CASE WHEN f.status='posted' AND f.kind='income' THEN f.amount_cents ELSE 0 END),0) AS "spentCents",
+    COALESCE(SUM(CASE WHEN f.status='posted' AND f.kind='income' THEN f.amount_cents ELSE 0 END),0) +
+      COALESCE((SELECT SUM(CASE WHEN sf.kind='income' THEN sf.amount_cents ELSE -sf.amount_cents END)
+        FROM finance_entries sf JOIN shop_finance_links sl ON sl.entry_id=sf.id WHERE sl.customer_phone=p.phone AND sf.status='posted'),0) AS "spentCents",
+    (SELECT COUNT(*) FROM shop_orders so WHERE so.customer_phone=p.phone) AS "orderCount",
     COUNT(CASE WHEN b.status='completed' AND (f.id IS NULL OR f.amount_cents IS NULL) THEN 1 END) AS "unrecordedCount"
   FROM page p LEFT JOIN bookings b ON ${bookingPhoneSql}=p.phone LEFT JOIN finance_entries f ON f.booking_id=b.id
   GROUP BY p.phone,p.name,p.birth_day,p.birth_month ORDER BY ${order('p')}`,[...args,limit,offset]);
@@ -127,7 +130,9 @@ async function birthdaysToday(db,now){
 const PAYMENT_METHODS=new Set(['pix','cash','credit','debit','transfer','other']);
 function validateMoney(value,allowZero=false){assert(Number.isSafeInteger(value)&&value>=(allowZero?0:1)&&value<=100000000,400,allowZero?'Informe um valor válido em centavos (zero para cortesia).':'Informe um valor maior que zero, com até duas casas decimais.');return value;}
 function validatePayment(value){assert(PAYMENT_METHODS.has(value),400,'Escolha a forma de pagamento.');return value;}
-const FINANCE_COLUMNS='id,booking_id,kind,category,description,amount_cents,date,payment_method,status,void_reason,revision,created_at,updated_at';
+const FINANCE_COLUMNS=`id,booking_id,kind,category,description,amount_cents,date,payment_method,status,void_reason,revision,created_at,updated_at,
+ (SELECT sl.shop_entry_id FROM shop_finance_links sl WHERE sl.entry_id=finance_entries.id) AS shop_entry_id,
+ (SELECT sl.order_id FROM shop_finance_links sl WHERE sl.entry_id=finance_entries.id) AS shop_order_id`;
 function validateFinance(input,now,linked=false){
   assert(input&&['income','expense'].includes(input.kind),400,'Escolha entrada ou saída.');
   assert(validDate(input.date)&&input.date<=clock(now).date,400,'Informe uma data válida, até hoje, para o lançamento.');
@@ -139,8 +144,11 @@ async function listFinance(db,url,now){
   const from=url.searchParams.get('from')||clock(now).date.slice(0,7)+'-01',to=url.searchParams.get('to')||clock(now).date;
   assert(validDate(from)&&validDate(to)&&from<=to&&to<=addDays(from,366),400,'Selecione um período de até 366 dias.');
   const offset=Number(url.searchParams.get('offset')||0),limit=50;assert(Number.isSafeInteger(offset)&&offset>=0&&offset<=1000000,400,'Página inválida.');
-  const summary=await db.get(`SELECT COALESCE(SUM(CASE WHEN status='posted' AND kind='income' THEN amount_cents ELSE 0 END),0) AS "incomeCents",COALESCE(SUM(CASE WHEN status='posted' AND kind='expense' THEN amount_cents ELSE 0 END),0) AS "expenseCents",SUM(CASE WHEN status='posted' AND amount_cents IS NULL THEN 1 ELSE 0 END) AS unpriced,COUNT(*) AS total FROM finance_entries WHERE date BETWEEN ? AND ?`,[from,to]);
-  return {from,to,offset,limit,summary:{...summary,unpriced:summary.unpriced||0,balanceCents:summary.incomeCents-summary.expenseCents},entries:await db.all(`SELECT ${FINANCE_COLUMNS} FROM finance_entries WHERE date BETWEEN ? AND ? ORDER BY date DESC,created_at DESC,id LIMIT ? OFFSET ?`,[from,to,limit,offset])};
+  const source=url.searchParams.get('source')||'all';assert(['all','services','shop','manual'].includes(source),400,'Origem financeira inválida.');
+  const shop="EXISTS(SELECT 1 FROM shop_finance_links sl WHERE sl.entry_id=finance_entries.id)";
+  const where='date BETWEEN ? AND ?'+(source==='shop'?' AND '+shop:source==='services'?' AND booking_id IS NOT NULL':source==='manual'?' AND booking_id IS NULL AND NOT '+shop:'');
+  const summary=await db.get(`SELECT COALESCE(SUM(CASE WHEN status='posted' AND kind='income' THEN amount_cents ELSE 0 END),0) AS "incomeCents",COALESCE(SUM(CASE WHEN status='posted' AND kind='expense' THEN amount_cents ELSE 0 END),0) AS "expenseCents",SUM(CASE WHEN status='posted' AND amount_cents IS NULL THEN 1 ELSE 0 END) AS unpriced,COUNT(*) AS total FROM finance_entries WHERE ${where}`,[from,to]);
+  return {from,to,source,offset,limit,summary:{...summary,unpriced:summary.unpriced||0,balanceCents:summary.incomeCents-summary.expenseCents},entries:await db.all(`SELECT ${FINANCE_COLUMNS} FROM finance_entries WHERE ${where} ORDER BY date DESC,created_at DESC,id LIMIT ? OFFSET ?`,[from,to,limit,offset])};
 }
 async function createFinanceEntry(db,input,now){
   const value=validateFinance(input,now);assert(typeof input.idempotencyKey==='string'&&/^[a-zA-Z0-9-]{20,60}$/.test(input.idempotencyKey),400,'Reabra o formulário e tente novamente.');
@@ -155,6 +163,7 @@ async function createFinanceEntry(db,input,now){
 }
 async function updateFinanceEntry(db,id,input,now){
   const row=await db.get('SELECT * FROM finance_entries WHERE id=?',[id]);assert(row,404,'Lançamento não encontrado.');assert(input.revision===row.revision,409,'Este lançamento mudou. Atualize o financeiro.');assert(row.status==='posted',409,'Um lançamento anulado não pode ser alterado.');
+  assert(!await db.get('SELECT entry_id FROM shop_finance_links WHERE entry_id=?',[id]),409,'Este lançamento pertence à loja. Ajuste o pedido em Pedidos para manter o financeiro consistente.');
   const operation=uid(),stamp=now.toISOString(),voiding=input.action==='void';let value;
   if(voiding){assert(!row.booking_id,409,'Uma entrada de serviço concluído não pode ser anulada aqui. Registre uma saída para devoluções.');const reason=clean(input.reason,180);assert(reason.length>=3,400,'Informe o motivo da anulação.');value={...row,status:'void',void_reason:reason};}
   else{assert(input.action==='edit',400,'Ação financeira inválida.');value={...row,...validateFinance(input,now,!!row.booking_id)};if(row.booking_id)assert(value.kind==='income'&&value.description===row.description&&value.category===row.category,400,'Mantenha a origem e a descrição do serviço concluído.');}

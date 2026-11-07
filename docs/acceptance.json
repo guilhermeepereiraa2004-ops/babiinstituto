@@ -103,5 +103,10 @@
     "id": "A21",
     "criterion": "Ficha condicional, clientes, total recebido e aniversários privados com data sem ano",
     "check": "runtime"
+  },
+  {
+    "id": "A22",
+    "criterion": "Loja, agenda, login, clientes e financeiro integrados com transações e projeção sem duplicação",
+    "check": "unified"
   }
 ]

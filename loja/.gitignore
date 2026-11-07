@@ -1,0 +1,9 @@
+data/
+.env*
+!.env.example
+.vercel/
+node_modules/
+*.log
+
+.vercel
+.env*

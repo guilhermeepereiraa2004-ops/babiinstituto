@@ -10,7 +10,7 @@ export function checkLayers() {
   if (validateLayer("import fs from 'node:fs';")) throw Error('Violação de camada não detectada.');
   if (!validateLayer(readFileSync(new URL('../dist/app.js', import.meta.url),'utf8'))) throw Error('A UI depende de módulos ou código de servidor.');
   if (!validateLayer("import {api} from '/booking/shared.js';",['/booking/shared.js'])) throw Error('Import permitido da UI foi rejeitado.');
-  for(const path of ['dist/admin/admin.js','dist/agendar/booking.js'])if(!validateLayer(readFileSync(new URL('../'+path,import.meta.url),'utf8'),['/booking/shared.js']))throw Error('Dependência proibida na UI: '+path);
+  for(const path of ['dist/admin/admin.js','dist/agendar/booking.js'])if(!validateLayer(readFileSync(new URL('../'+path,import.meta.url),'utf8'),['/booking/shared.js','/loja/admin/admin.js']))throw Error('Dependência proibida na UI: '+path);
   for(const path of ['dist/booking/shared.js','server/core.mjs'])if(!validateLayer(readFileSync(new URL('../'+path,import.meta.url),'utf8')))throw Error('Dependência proibida no núcleo: '+path);
   return true;
 }

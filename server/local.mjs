@@ -4,12 +4,15 @@ import {readFileSync,existsSync,mkdirSync,statSync,readdirSync} from 'node:fs';
 import {resolve,extname,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {randomBytes,timingSafeEqual} from 'node:crypto';
-import {handleApi} from './core.mjs';
+import {createSharedSqlite} from './shop-store.mjs';
+import {createSystemHandler} from './system.mjs';
+import {syncShop} from '../scripts/sync-shop.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+syncShop();
 if(process.env.VERCEL||process.env.NODE_ENV==='production')throw Error('Local development login cannot run in production. Use the cloud adapter.');
 const dataPath=process.env.BABI_DB_PATH||resolve(root,'data/appointments.sqlite');
 mkdirSync(dirname(dataPath),{recursive:true});
-const sqlite=new DatabaseSync(dataPath);sqlite.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;');
+const sqlite=new DatabaseSync(dataPath);sqlite.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;');
 // Migrations are additive and idempotent; an interrupted startup rolls back all changes.
 sqlite.exec('BEGIN IMMEDIATE');
 try {
@@ -22,6 +25,8 @@ export const localDb={
  run:async(sql,args=[])=>sqlite.prepare(sql).run(...args),
  batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const rows=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return rows;}catch(error){sqlite.exec('ROLLBACK');throw error;}}
 };
+const shopStore=createSharedSqlite(dataPath,{initialize:true});
+const handleSystem=createSystemHandler(localDb,shopStore);
 const localSession=randomBytes(32).toString('hex');
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png'};
 const port=Number(process.env.PORT||4173);
@@ -31,7 +36,7 @@ const server=createServer(async(req,res)=>{
  try{
   const host=req.headers.host||'';if(!/^(localhost|127\.0\.0\.1):\d+$/.test(host)){res.writeHead(403);return res.end('Host inválido');}
   const url=new URL(req.url,`http://${host}`);const headers=new Headers();for(const [key,value]of Object.entries(req.headers))if(typeof value==='string'&&!key.startsWith('oai-'))headers.set(key,value);
-  let payload; if(req.method!=='GET'&&req.method!=='HEAD'){const chunks=[];let size=0;for await(const chunk of req){size+=chunk.length;if(size>12288){res.writeHead(413);return res.end('Solicitação muito grande');}chunks.push(chunk);}payload=Buffer.concat(chunks);}
+  let payload; if(req.method!=='GET'&&req.method!=='HEAD'){const chunks=[];let size=0;const limit=url.pathname.startsWith('/api/shop/')?2850000:12288;for await(const chunk of req){size+=chunk.length;if(size>limit){res.writeHead(413);return res.end('Solicitação muito grande');}chunks.push(chunk);}payload=Buffer.concat(chunks);}
   if(url.pathname==='/api/local-login'&&req.method==='POST'){
    if(headers.get('origin')!==url.origin){res.writeHead(403);return res.end();}
    res.writeHead(200,{'Content-Type':'application/json','Set-Cookie':`${cookieName}=${localSession}; Path=/; HttpOnly; SameSite=Strict`,'Cache-Control':'no-store'});return res.end('{"ok":true}');
@@ -42,11 +47,11 @@ const server=createServer(async(req,res)=>{
   }
   if(url.pathname.startsWith('/api/')){
    const request=new Request(url,{method:req.method,headers,...(payload?.length?{body:payload}: {})});
-   const response=await handleApi(request,localDb,{admin:validSession(req.headers.cookie),authenticated:validSession(req.headers.cookie),local:true,clientKey:req.socket.remoteAddress});
+   const response=await handleSystem(request,{admin:validSession(req.headers.cookie),authenticated:validSession(req.headers.cookie),local:true,clientKey:req.socket.remoteAddress});
    res.writeHead(response.status,Object.fromEntries(response.headers));return res.end(Buffer.from(await response.arrayBuffer()));
   }
   if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405);return res.end();}
-  let pathname=decodeURIComponent(url.pathname);if(pathname==='/admin'||pathname==='/agendar'){res.writeHead(302,{Location:pathname+'/'});return res.end();}
+  let pathname=decodeURIComponent(url.pathname);if(pathname==='/loja/admin/'||pathname==='/loja/admin'){res.writeHead(302,{Location:'/admin/#products'});return res.end();}if(pathname==='/admin'||pathname==='/agendar'||pathname==='/loja'){res.writeHead(302,{Location:pathname+'/'});return res.end();}
   if(pathname.endsWith('/'))pathname+='index.html';const path=resolve(root,'dist','.'+pathname);
   const publicRoot=resolve(root,'dist');if(!path.startsWith(publicRoot+'\\')&&!path.startsWith(publicRoot+'/')){res.writeHead(403);return res.end();}
   if(path.includes('/server/')||path.includes('\\server\\')||/[\\/]\./.test(pathname)){res.writeHead(404);return res.end();}
