@@ -1,10 +1,16 @@
 # Babi Instituto de Beleza
 
-Landing page e MVP de agendamentos, em Poppins e tons café/champagne.
+Site institucional, agenda e loja integrados, em Poppins e tons café/champagne.
 
 Publicado em https://babi-instituto.vercel.app/ . Painel em https://babi-instituto.vercel.app/admin/ . Neon e Vercel na conta de Guilherme Pereira, conforme pedido de 2026-10-22. Produção começou sem reservas, com agenda pausada; acesso inicial definido pela usuária. Detalhes em docs/deploy.md.
 
 Repositório de destino: https://github.com/guilhermeepereiraa2004-ops/babiinstituto . A raiz do projeto Git é esta pasta. A primeira publicação foi feita por CLI. Em 2026-10-29, o repositório próprio foi conectado ao mesmo projeto Vercel, com main como branch de produção; novos pushes iniciam deploy automático.
+
+## Loja integrada
+
+Vitrine: https://babi-instituto.vercel.app/loja/. Produtos, Pedidos, Clientes e Financeiro usam o mesmo painel e acesso de https://babi-instituto.vercel.app/admin/ e o mesmo Neon. Custos e respostas da anamnese continuam privados. O financeiro distingue serviços, loja e lançamentos manuais. A loja registra pedidos e pagamentos recebidos fora do site; não processa cobranças bancárias.
+
+Detalhes: docs/unificacao.md. Fontes em loja/dist; scripts/sync-shop.mjs prepara dist/loja durante build/start. SQLite local compartilhado em data/appointments.sqlite. Nesta máquina a execução atual usa PORT=4180 porque a porta padrão pertence a outro projeto; abra /loja/ para a vitrine.
 
 ## Rodar
 
@@ -18,6 +24,7 @@ npm start
 - Site: http://localhost:4173/
 - Administração: http://localhost:4173/admin/
 - Cliente: http://localhost:4173/agendar/
+- Loja: http://localhost:4173/loja/
 
 No admin, clique em **Acessar painel local**. Abra **Serviços e horários**, revise durações e dias de atendimento, marque **Ativar agendamento online** e salve. As reservas serão confirmadas automaticamente e aparecerão na agenda. A versão inicial começa pausada porque os horários reais do salão ainda não foram fornecidos.
 

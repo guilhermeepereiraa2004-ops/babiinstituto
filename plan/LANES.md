@@ -2,7 +2,7 @@
  
 | Responsável | Frente | Arquivos exclusivos | Data | Status |
 | --- | --- | --- | --- | --- |
-| Codex | Unificar agenda e loja | server/, migrations/0004*, migrations/postgres/0004*, loja/, dist/admin/, dist/booking/, scripts/, tests/, package.json e memória do projeto | 2026-11-07 | Ativa; mesmo banco, login, clientes e financeiro; QA antes da publicação |
+| Codex | Unificar agenda e loja | server/, migrations/0004*, migrations/postgres/0004*, loja/, dist/admin/, dist/booking/, scripts/, tests/, package.json e memória do projeto | 2026-11-07 | Concluída e liberada; 65 testes offline, 16 Neon QA, CUA e produção READY 453a5cc, mesma base e acesso |
 | Codex | Criar Loja Babi independente | loja/, plan/LANES.md, plan/STATUS.md, plan/execution-plan.md, ROADMAP.md, docs/gaps.md e log/devlog.md | 2026-11-06 | Concluída e liberada; loja 4180, gate 7/7, oito testes e CUA desktop/mobile; nuvem pendente |
 | Codex | Catálogo oficial de 16 serviços e valores a combinar | server/core.mjs, dist/agendar/booking.js, dist/admin/admin.js, dist/booking/booking.css, scripts/, tests/ e memória do projeto | 2026-11-06 | Concluída e liberada; 9ff95cb publicado, 16 serviços ativos, histórico preservado |
 | Codex | Anamnese condicional, cadastro e aniversários | server/core.mjs, migrations/, dist/agendar/, dist/admin/, dist/booking/, tests/ e memória do projeto | 2026-11-06 | Concluída e liberada; 4e0806e publicado READY, Neon e CUA verificados |

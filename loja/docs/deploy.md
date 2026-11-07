@@ -1,12 +1,11 @@
-# Publicação futura
+# Publicação atual — sistema Babi integrado
 
-O site local usa SQLite e roda na porta 4180. A primeira publicação foi autorizada para um projeto Vercel **separado**, com endereço padrão `.vercel.app`. Não use o projeto Vercel nem a URL de banco da agenda. A equipe atual da Babi está no Hobby; para publicar a loja comercial, é preciso que o responsável ative o Pro ou autorize uma equipe que já o use.
+Desde 07/11/2026, publicar pela raiz do repositório, no projeto babi-instituto de Guilherme, com seu Neon já existente. A loja é /loja/ e seu admin é o mesmo /admin/ da agenda. Não publicar esta pasta no projeto separado loja-babi nem configurar outro acesso/SHOP_DATABASE_URL para a operação atual.
 
-1. Confirmar a equipe Pro, o destino do código, o banco exclusivo da loja e o e-mail autorizado. Reservar o nome do projeto `loja-babi` se disponível.
-2. Configurar o projeto Vercel com raiz `loja/`, Node 24 e as variáveis privadas `SHOP_ORIGIN` (origem HTTPS canônica sem barra final), `SHOP_DATABASE_URL`, `SHOP_ADMIN_EMAIL` e `SHOP_ADMIN_HASH`. A senha é definida pela responsável; o hash tem formato `sal hexadecimal de 16 bytes:hash scrypt hexadecimal de 64 bytes`. Nunca gravar senha ou URL com credenciais em arquivo versionado, logs ou conversas.
-3. Inicializar somente a base da loja com `npm run db:setup -- --confirm-shop-database`. O script não substitui um catálogo existente. Se for autorizado importar os custos, usar o arquivo privado local na inicialização a partir do computador; custos não integram o repositório nem o pacote publicado.
-4. Validar credenciais, painel, upload, proteção de rotas, concorrência e fluxo de pedido em preview com banco de QA independente. O adaptador Postgres da loja não foi testado em recurso remoto nesta etapa.
-5. Publicar no destino aprovado e testar HTTPS, vitrine e painel no endereço `.vercel.app`.
-6. Quando houver domínio próprio, adicionar o subdomínio em **Settings → Domains** nesse mesmo projeto. Criar o CNAME informado pela Vercel, aguardar validação e atualizar `SHOP_ORIGIN` para o endereço canônico antes de testar pedidos e login no novo endereço.
+O build principal prepara os assets e verifica as duas suítes. Push em main inicia a publicação automática. Migrações do banco são explícitas; a migração aditiva 0004 foi aplicada antes da publicação inicial integrada. scripts/setup-shared-shop.mjs inicializa somente catálogo ausente; scripts/publish-shared-database.mjs é manutenção protegida para a primeira implantação vazia, não um comando de rotina após receber pedidos. Custos privados, bancos, ambientes e backups nunca entram no Git ou no bundle público.
 
-Pagamento, retirada e entrega são combinados com o Instituto. Se houver interesse em pagamento online ou frete calculado, definir provedor e operação antes de habilitar.
+A validação remota usa o Neon QA gentle-dawn-48537104 e schemas descartáveis; a produção preservou integralmente reservas, cadastro e financeiro anteriores. O preview é protegido e pode ser verificado com vercel curl autenticado, sem desligar a proteção.
+
+Um futuro subdomínio pode apontar para o mesmo projeto, com roteamento da vitrine e origens configurados quando o domínio for definido. Não precisa de outro banco. Recursos loja-babi separados criados anteriormente não estão em uso nem foram apagados.
+
+Referências: ../../docs/unificacao.md e ../../docs/deploy.md.

@@ -1,20 +1,11 @@
-# Loja Babi
+# Loja Babi integrada
 
-Catálogo de produtos com sacola, pedidos e painel independente da agenda do Instituto. Use Node.js 24:
+A loja faz parte do sistema Babi: mesmo banco, login, painel, clientes e financeiro da agenda. Publicada em https://babi-instituto.vercel.app/loja/. Administração em https://babi-instituto.vercel.app/admin/.
 
-```powershell
-cd loja
-npm start
-```
+Use Node.js 24. Nesta pasta, `npm start` inicia o backend principal em 4180: vitrine em http://localhost:4180/loja/ e painel em http://localhost:4180/admin/. O banco local é ../data/appointments.sqlite. Não use o antigo data/shop.sqlite para novas operações reais; ele foi preservado como origem da importação e backup.
 
-- Vitrine: http://localhost:4180/
-- Painel: http://localhost:4180/admin/ → **Acessar painel local**.
-- Verificação: `npm run check`.
+Produtos permite cadastrar/editar nome, foto, preço público, custo privado, categoria, descrição e estoque; inativar, voltar ao site ou apagar quando não há pedido em aberto. Estoque zero retira o item da vitrine. Pedidos permite revisar, combinar total, registrar recebimento, concluir, estornar e cancelar. Recebimentos/estornos aparecem no financeiro comum na mesma transação do pedido; estornos bancários e mensagens não são executados pelo sistema.
 
-No painel, **Produtos** permite mudar foto, preço de venda, custo, estoque, nome, categoria e descrição; cadastrar, inativar, reativar ou apagar. Use **Inativos → Voltar ao site** depois de inserir uma foto. Com estoque zero, o produto só volta a aparecer após reposição.
+As fontes públicas continuam em dist/ e são preparadas na saída ../dist/loja/ pelo build principal. Os adaptadores independentes em server/local.mjs e api/ são históricos/QA; o servidor independente exige SHOP_DB_PATH explícito. `npm run check` verifica o módulo; `npm run check` na raiz verifica o sistema inteiro.
 
-A cliente envia o pedido pela sacola. A unidade é reservada na hora; cancelar um pedido em aberto devolve a reserva ao estoque. Para itens sem preço, use **Editar total** após combinar o valor. Registre o pagamento já recebido em **Pedidos** e acompanhe a entrada em **Financeiro**. A loja não envia mensagens automaticamente, não cobra cartão e não executa estornos bancários.
-
-O SQLite em `data/shop.sqlite` é a base de trabalho local. Não apague a base para atualizar o código. Para testes use outra porta e `SHOP_DB_PATH` apontando para outro SQLite. O catálogo inicial é importado só quando a base está vazia. A lista privada de custos não entra no Git.
-
-Publicação pendente: veja [docs/deploy.md](docs/deploy.md).
+Leia AGENTS.md e ../docs/unificacao.md para arquitetura, evidências e operação.

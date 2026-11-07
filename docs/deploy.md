@@ -43,3 +43,14 @@ Preview verificado: dpl_8vAdUcz58mX6UEbFSof73tecJe9T. O primeiro build falhou po
 ## GitHub principal — 2026-10-29
 
 A Vercel exige que a conta conectada seja proprietária de um repositório pessoal; ser colaborador não basta. Por isso a usuária escolheu um repositório próprio, em vez de alterar o acesso ao anterior. Fonte: https://vercel.com/docs/git/vercel-for-github#personal-account-repositories . A credencial GCM de Guilherme já existia e foi selecionada por credential.https://github.com.username no Git local deste checkout, sem salvar senha/token no repositório.
+
+## Publicação verificada — 07/11/2026
+
+Sistema unificado disponível em https://babi-instituto.vercel.app/loja/ e /admin/. Mesmo Neon e credencial Better Auth existentes; nenhuma nova senha definida. Migração 0004 e catálogo de 46 produtos aplicados explicitamente após QA/preview. Backup privado e comparação sob a trava da agenda confirmaram todos os dados de negócio existentes idênticos antes/depois. Nenhuma reserva, pedido ou lançamento fictício em produção.
+
+Domínio oficial: nove arquivos públicos iguais ao código validado, 40 fotos JPEG 200, 39 produtos disponíveis (32 com preço, sete a combinar), custos ausentes da projeção pública. API da loja usa sessão unificada; admin comercial retorna 401 sem sessão, financeiro 403 e login local 404. Agenda preservada ativa com 16 serviços. CUA público confirmou catálogo carregado, links para o mesmo Instituto/admin e console sem erros/avisos; captura pública docs/qa/unified-production-store.jpg. GitHub main contém a implementação e a correção do pacote. O primeiro preview falhou porque loja/docs/acceptance.json havia sido excluído; regra de empacotamento corrigida antes da migração de produção.
+
+Local: servidor integrado mantido em http://localhost:4180/, /loja/ e /admin/, usando data/appointments.sqlite. Cinco reservas, um lançamento anterior, catálogo e custos locais preservados; backup em data/backups/. Servidor antigo independente e QA 4177 encerrados. Viewports restaurados, abas de QA fechadas e loja publicada deixada como entrega no navegador. Bancos e projeto exclusivos loja-babi criados antes da mudança de escopo permanecem sem uso; nenhuma exclusão de recurso foi feita.
+
+
+A loja usa as variáveis DATABASE_URL/AUTH_SECRET/ADMIN_EMAIL já existentes; não exige novas credenciais. O arquivo de ambiente temporário usado nesta manutenção foi mantido privado e removido ao finalizar. O catálogo inicial de custos veio exclusivamente do arquivo privado informado pela usuária.
