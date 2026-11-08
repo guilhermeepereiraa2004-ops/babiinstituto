@@ -1,5 +1,7 @@
 # Status — Babi Instituto de Beleza
 
+Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
+
 Atualizado: 2026-11-07.
 
 Incluída uma seção editorial da Loja Babi na landing, após Resultados, com fotos originais do catálogo, apresentação da seleção e botão Conhecer a loja para /loja/. No agendamento, link no cabeçalho e cartão após o fluxo apresentam a loja; ambos abrem nova aba com aviso e rel seguro, preservando etapa e serviço escolhidos. Identidade Poppins/café/champagne mantida. Sem mudanças em backend, banco, preços ou disponibilidade.

@@ -1,5 +1,7 @@
 # Roadmap
 
+Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
+
 Cadastro, aniversários e ficha condicional publicados em 2026-11-06. Nascimento opcional por dia/mês, lembrete do dia no painel e total efetivamente recebido por cliente. Dados básicos opcionais ficam no navegador; anamnese permanece privada. Evidência em docs/qa.md, commit 4e0806e.
 
 Atualizado: 2026-10-22. Estágio: landing, agendamento, anamnese e financeiro locais concluídos.

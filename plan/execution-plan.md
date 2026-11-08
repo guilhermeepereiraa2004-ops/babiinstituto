@@ -1,5 +1,7 @@
 # Plano de execução
 
+Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
+
 ## Cadastro e aniversários — 2026-11-06
 
 - [x] Ficha com escolhas condicionais, nascimento opcional sem ano e autorização na confirmação.
