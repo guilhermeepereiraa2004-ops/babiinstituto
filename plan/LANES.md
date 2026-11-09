@@ -2,6 +2,7 @@
  
 | Responsável | Frente | Arquivos exclusivos | Data | Status |
 | --- | --- | --- | --- | --- |
+| Codex | Avisos para até dez aparelhos | dist/admin/, server/push.mjs, server/system.mjs, server/local.mjs, migração 0006, scripts, testes e memória do projeto | 2026-11-08 | Concluída e liberada. Limite de dez, convites, Neon QA e CUA. |
 | Codex | Notificações móveis de pedidos e agendamentos | dist/admin/, server/, migrations/, vercel.json, pacote npm, tests/, scripts/ e memória docs/plan/ROADMAP/log | 2026-11-08 | Concluída e liberada; Web Push, gate 22/22, Neon QA e CUA mobile |
 | Codex | Iniciar prévia local mobile | Processo 4180 e memória plan/ROADMAP/log | 2026-11-07 | Concluída e liberada; npm run dev em 4180, admin autenticado local e menu aberto em 390 px |
 | Codex | Reorganizar admin mobile integrado | dist/admin/admin.js, dist/admin/shop.css, dist/booking/shared.js e memória docs/plan/ROADMAP/log | 2026-11-07 | Concluída e liberada; navegação fixa, módulos agrupados e cartões; CUA 320/390/1280 px e gate 22/22 |

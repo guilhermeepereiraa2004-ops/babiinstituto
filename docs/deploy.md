@@ -57,8 +57,8 @@ A loja usa as variáveis DATABASE_URL/AUTH_SECRET/ADMIN_EMAIL já existentes; n�
 
 ## Notificações do painel
 
-A migração 0005 cria uma inscrição ativa e uma fila transacional. A Vercel envia os avisos no fim da requisição que confirma o pedido ou agendamento. Um cron diário autenticado em /api/internal/push-retry retenta avisos pendentes. Os gatilhos incluem só novas inserções, sem reprocessar o histórico. A mensagem não inclui nome, celular, serviço, valores ou identificadores de cliente.
+As migrações 0005 e 0006 criam a fila transacional e o cadastro de até dez aparelhos ativos. A atualização preserva os aparelhos e avisos já enfileirados. A Vercel envia os avisos no fim da requisição que confirma o pedido ou agendamento. Um cron diário autenticado em /api/internal/push-retry retenta avisos pendentes. Os gatilhos incluem só novas inserções, sem reprocessar o histórico. A mensagem não inclui nome, celular, serviço, valores ou identificadores de cliente.
 
 Configure BABI_PUSH_PUBLIC_KEY, BABI_PUSH_PRIVATE_KEY e CRON_SECRET apenas no ambiente pretendido. A chave privada e o segredo do cron são segredos do servidor. Gere um par VAPID exclusivo por ambiente e preserve-o entre deploys. Trocar o par exige nova ativação no aparelho. A porta local de QA usa chaves descartáveis e banco separado.
 
-No celular da proprietária, acesse o admin, abra Módulos → Notificações, ative neste aparelho e envie uma notificação de teste. No iPhone com iOS 16.4 ou superior, adicione o painel à Tela de Início pelo Safari e entre pelo ícone. Ao trocar de celular, a ativação substitui a inscrição anterior.
+Em Módulos → Notificações, o painel permite ativar o aparelho atual, remover inscrições e gerar convites de uso único com validade de 24 horas. O convidado abre o link, aceita os avisos e pode testar ou desativar o próprio aparelho. No iPhone com iOS 16.4 ou superior, adicione a página aberta à Tela de Início pelo Safari e entre pelo ícone. Se o convite não aparecer ao abrir o ícone, cole o código. Ativar outro aparelho mantém os cadastros existentes e usa uma das dez vagas.

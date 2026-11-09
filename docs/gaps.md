@@ -1,6 +1,6 @@
 # Lacunas
 
-Avisos de novos pedidos e agendamentos por Web Push. A proprietária ativa um celular no menu Módulos → Notificações e pode enviar um teste. iPhone: abrir o Painel Babi pelo ícone adicionado à Tela de Início. Migração 0005 e testes isolados documentados em docs/qa.md.
+Avisos de pedidos e agendamentos para até dez aparelhos ativos no total. Em Módulos → Notificações, a proprietária cadastra ou remove aparelhos e gera convites de uso único, válidos por 24 horas. Cada convidado confirma no próprio navegador sem usar o login administrativo. Migração 0006 e evidência em docs/qa.md.
 
 Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
 

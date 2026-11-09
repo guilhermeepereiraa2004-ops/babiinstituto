@@ -71,6 +71,22 @@
 .push-actions button{min-height:44px}
 .push-panel-body .push-message{margin-top:12px;color:#466150}
 .push-panel-body .push-error{color:#8f4238}
+.push-guest{max-width:690px;margin:auto;padding:24px 20px 42px}
+.push-guest>.booking-brand{display:inline-block;margin-bottom:32px}
+.push-management{margin-top:20px}
+.push-management h3{font-size:14px;margin:20px 0 6px;color:var(--ink)}
+.push-form{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-top:16px}
+.push-form .field{flex:1 1 180px;min-width:0;margin:0}
+.push-panel input{width:100%;min-width:0;font-size:16px}
+.push-field{margin-top:16px}
+.push-list{list-style:none;padding:0;margin:0}
+.push-list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.push-list strong{display:block;color:var(--ink);overflow-wrap:anywhere}
+.push-list small{display:block;margin-top:2px}
+.push-list button{flex-shrink:0}
+.push-invite-result{background:#f3ede3;border-radius:10px;padding:14px;margin-top:14px}
+.push-invite-result label+label{margin-top:10px}
+.push-panel button{min-height:44px}
 @media(max-width:700px){
  .admin-page .sidebar{position:sticky;top:0;inset:auto;z-index:30;width:100%;padding:12px 18px;display:flex;flex-direction:row;align-items:center;gap:14px;border-bottom:1px solid var(--line);background:#fcfaf6;overflow:visible}
  .sidebar-brand{margin:0;flex:none}

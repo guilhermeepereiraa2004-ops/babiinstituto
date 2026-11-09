@@ -267,3 +267,9 @@ Gate 22/22 com 68 testes offline. Neon dedicado de QA: 17 testes/subtestes, incl
 CUA em 390 px, usando SQLite separado em 4174. Menu Módulos → Notificações abriu a tela com botão de ativação, sem rolagem horizontal ou erros de console. Captura docs/qa/admin-notificacoes-mobile.jpg. A confirmação de entrega no celular real depende da permissão e do botão de teste da proprietária.
 
 A migração 0005 foi aplicada no Neon vinculado ao projeto principal. Verificados os dois gatilhos, fila e inscrição inicialmente vazias, e contagens de pedidos, reservas, clientes e financeiro iguais durante a janela protegida pela trava. O migrador aceita checksums históricos com CRLF além de LF sem reescrever hashes registrados. O worker também foi validado com eventos simulados de exibição e abertura da Agenda, Pedidos e Notificações.
+
+## 2026-11-08 — Avisos em até dez aparelhos
+
+A migração 0006 mantém as inscrições existentes e a fila. Cada novo evento agenda uma entrega por aparelho ativo. O painel lista, cadastra e remove aparelhos e emite convites de uso único com 24 horas de validade. Convidados confirmam os avisos em /admin/avisos/ e podem testar ou cancelar a própria inscrição. A página e a API de convite não dão acesso aos dados administrativos. Em produção, a consulta de contagem retornou um usuário em babi_user. O fluxo de convites independe do número de contas.
+
+Gate 22/22, 70 testes offline e 17 verificações no Neon de QA. Confirmados envio simulado dos dois eventos a dez aparelhos, disputa pela última vaga, consumo concorrente do convite, preservação de fila/inscrição na migração local e revogação individual. CUA em 390 px verificou gestão, geração, abertura e cancelamento do convite em SQLite isolado, sem capturar códigos. A entrega em aparelhos físicos deve ser confirmada pelo botão de teste de cada pessoa. Evidência em docs/qa/admin-notificacoes-equipe.jpg.

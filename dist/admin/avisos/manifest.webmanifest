@@ -1,0 +1,15 @@
+{
+  "id": "/admin/avisos/",
+  "name": "Avisos da Babi",
+  "short_name": "Avisos Babi",
+  "lang": "pt-BR",
+  "start_url": "/admin/avisos/",
+  "scope": "/admin/avisos/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#f6f4ef",
+  "icons": [
+    {"src": "/admin/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/admin/icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

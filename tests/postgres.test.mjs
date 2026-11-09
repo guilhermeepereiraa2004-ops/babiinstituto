@@ -212,10 +212,17 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
   await t.test('Neon enqueues committed new orders and bookings once and claims each delivery once',async()=>{
    const notices=[];
    const push=createPushService(db,{vapid:{...generateVAPIDKeys(),subject:origin},send:async(_,payload)=>{notices.push(payload.kind);return 201;}});
-   const action=data=>push.handle(new Request(origin+'/api/admin/notifications',{method:'POST',
-    headers:{origin,'content-type':'application/json'},body:JSON.stringify(data)}),{admin:true});
-   const endpoint='https://fcm.googleapis.com/fcm/send/fake-neon-qa';
-   assert.equal((await action({action:'enable',subscription:{endpoint,keys:{p256dh:generateVAPIDKeys().publicKey,auth:randomBytes(16).toString('base64url')}}})).status,200);
+   const action=(data,guest=false)=>{
+    const path=guest?'/api/notifications/invite':'/api/admin/notifications';
+    const request=new Request(origin+path,{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify(data)});
+    return guest?push.handleInvite(request):push.handle(request,{admin:true});
+   };
+   const subscription=id=>({endpoint:'https://fcm.googleapis.com/fcm/send/'+id,
+    keys:{p256dh:generateVAPIDKeys().publicKey,auth:randomBytes(16).toString('base64url')}});
+   assert.equal((await action({action:'enable',subscription:subscription('fake-neon-qa')})).status,200);
+   const {code}=await (await action({action:'invite',name:'Recepção QA'})).json();
+   const activation=await Promise.all(['guest1','guest2'].map(id=>action({action:'enable',code,subscription:subscription(id)},true)));
+   assert.deepEqual(activation.map(r=>r.status).sort(),[200,410]);
    const request={...booking('09:00'),date:addDays(today,3)};
    const reserve=()=>call('/api/bookings',{method:'POST',data:request,withCookie:false,headers:{'x-vercel-forwarded-for':'192.0.2.91'}});
    assert.equal((await reserve()).status,201);
@@ -227,9 +234,9 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    const place=()=>call('/api/shop/orders',{method:'POST',data:order,withCookie:false,headers:{'x-vercel-forwarded-for':'192.0.2.91'}});
    assert.equal((await place()).status,201);
    assert.equal((await place()).status,201);
-   assert.equal((await db.get('SELECT count(*) AS total FROM push_outbox')).total,2);
+   assert.equal((await db.get('SELECT count(*) AS total FROM push_outbox')).total,4);
    await Promise.all([push.flush(),push.flush()]);
-   assert.deepEqual(notices.sort(),['booking','order']);
+   assert.deepEqual(notices.sort(),['booking','booking','order','order']);
    assert.equal((await db.get('SELECT count(*) AS total FROM push_outbox')).total,0);
    assert.equal((await call('/api/admin/notifications',{withCookie:false})).status,403);
    assert.equal((await call('/api/internal/push-retry',{withCookie:false})).status,403);

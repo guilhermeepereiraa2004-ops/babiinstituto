@@ -10,6 +10,7 @@ import {DEFAULT_SETTINGS,clock,addDays} from '../server/core.mjs';
 import {createPushService,sendPush} from '../server/push.mjs';
 import {generateVAPIDKeys} from 'web-push';
 import {randomBytes} from 'node:crypto';
+import {applySqliteMigrations} from '../scripts/migrate-sqlite.mjs';
 
 function fixture(t,pushOptions){
   const dir=mkdtempSync(join(tmpdir(),'babi-unified-')),path=join(dir,'qa.sqlite');
@@ -136,7 +137,7 @@ test('pedidos e agendamentos confirmados disparam um aviso privado por evento me
   assert.equal((await f.call(path,{method:'POST',body:enable})).status,403);
   assert.equal((await f.call(path,{method:'POST',admin:true,body:enable,headers:{origin:'https://other.test'}})).status,403);
   assert.equal((await register({...enable,subscription:{...subscription,endpoint:'https://127.0.0.1/fcm/send/test'}})).status,400);
-  assert.deepEqual((await register(enable)).data,{active:true,here:true});
+  assert.deepEqual((await register(enable)).data,{here:true});
   assert.equal((await f.call('/api/shop/orders',{method:'POST',body:{...order,consent:false}})).status,400);
   assert.equal((await f.call('/api/bookings',{method:'POST',body:booking})).status,201);
   assert.equal((await f.call('/api/bookings',{method:'POST',body:booking})).status,201);
@@ -150,12 +151,101 @@ test('pedidos e agendamentos confirmados disparam um aviso privado por evento me
   assert.equal((await register({action:'test',endpoint:subscription.endpoint})).status,429);
   const replacement=testSubscription('replacement');
   await register({action:'enable',subscription:replacement});
-  assert.deepEqual((await register({action:'status',endpoint:subscription.endpoint})).data,{active:true,here:false});
-  await register({action:'disable'});
+  const current=(await register({action:'status',endpoint:subscription.endpoint})).data;
+  assert.equal(current.here,true);
+  assert.equal(current.devices.length,2);
+  await register({action:'disable',endpoint:replacement.endpoint});
   const next={...booking,time:'15:00',idempotencyKey:crypto.randomUUID()};
   assert.equal((await f.call('/api/bookings',{method:'POST',body:next})).status,201);
   await f.settle();
-  assert.equal(delivered.length,3);
+  assert.equal(delivered.length,4);
+});
+
+test('convites de uso único permitem distribuir os dois avisos a 10 aparelhos sem ampliar acesso ao painel',async t=>{
+  const deliveries=[];
+  const f=fixture(t,{vapid:vapid(),send:async(sub,payload)=>{deliveries.push({endpoint:sub.endpoint,...payload});return 201;}});
+  const manage=body=>f.call('/api/admin/notifications',{method:'POST',body,admin:true});
+  const guest=(body,headers)=>f.call('/api/notifications/invite',{method:'POST',body,headers});
+  const owner=testSubscription('owner-qa');
+  assert.equal((await manage({action:'enable',name:'Celular QA',subscription:owner})).status,200);
+  const create=async name=>{
+    const result=await manage({action:'invite',name});
+    assert.equal(result.status,201);
+    return result.data.code;
+  };
+  const firstCode=await create('Pessoa QA');
+  const first=testSubscription('first-qa');
+  const firstRequest={action:'enable',code:firstCode,subscription:first};
+  assert.equal((await guest(firstRequest,{origin:'https://wrong.test'})).status,403);
+  assert.equal((await guest(firstRequest)).status,200);
+  assert.equal((await guest(firstRequest)).status,200);
+  assert.equal((await guest({...firstRequest,subscription:testSubscription('used-qa')})).status,410);
+  assert.equal((await guest({action:'test',subscription:{...first,keys:{...first.keys,auth:randomBytes(16).toString('base64url')}}})).status,409);
+  assert.equal((await guest({action:'test',subscription:first})).status,200);
+  assert.equal(deliveries.pop().guest,true);
+  assert.equal((await guest({action:'revoke',id:'any'})).status,400);
+  assert.deepEqual((await guest({action:'status',subscription:owner})).data,{here:false});
+
+  const canceled=await create('Convite cancelado QA');
+  const status=(await manage({action:'status'})).data;
+  assert.ok(!JSON.stringify(status).includes(canceled));
+  assert.ok(!JSON.stringify(status).includes('fcm.googleapis.com'));
+  assert.equal((await manage({action:'cancel-invite',id:status.invites[0].id})).status,200);
+  assert.equal((await guest({action:'enable',code:canceled,subscription:testSubscription('canceled')})).status,410);
+  const expired=await create('Convite expirado QA');
+  await f.db.run("UPDATE push_invite SET expires_at='2000-01-01T00:00:00.000Z'");
+  assert.equal((await guest({action:'enable',code:expired,subscription:testSubscription('expired')})).status,410);
+
+  for(let i=2;i<=8;i++){
+    const code=await create('Aparelho QA '+i);
+    assert.equal((await guest({action:'enable',code,subscription:testSubscription('qa-'+i)})).status,200);
+  }
+  const competitors=await Promise.all([9,10].map(async i=>({action:'enable',code:await create('Aparelho QA '+i),subscription:testSubscription('qa-'+i)})));
+  const results=await Promise.all(competitors.map(body=>guest(body)));
+  assert.deepEqual(results.map(r=>r.status).sort(),[200,409]);
+  assert.equal((await manage({action:'status'})).data.devices.length,10);
+  assert.equal((await manage({action:'enable',subscription:owner})).status,200);
+
+  const settings=structuredClone(DEFAULT_SETTINGS);
+  settings.enabled=true;settings.leadMinutes=0;settings.weekly.forEach(day=>day.enabled=true);
+  await f.call('/api/admin/settings',{method:'PUT',body:settings,admin:true});
+  const booking={name:'Cliente fictícia QA',phone:'73999990000',consent:true,
+    anamnesis:{chemicalHistory:'no',hairProblems:'no',consent:true},serviceId:settings.services[0].id,
+    date:addDays(clock().date,1),time:'09:00',idempotencyKey:crypto.randomUUID()};
+  assert.equal((await f.call('/api/bookings',{method:'POST',body:booking})).status,201);
+  assert.equal((await f.call('/api/shop/orders',{method:'POST',body:f.order()})).status,201);
+  await f.settle();
+  assert.equal(deliveries.length,20);
+  for(const kind of ['booking','order']){
+    const recipients=deliveries.filter(delivery=>delivery.kind===kind);
+    assert.equal(new Set(recipients.map(delivery=>delivery.endpoint)).size,10);
+    assert.equal(recipients.filter(delivery=>delivery.guest).length,9);
+  }
+  assert.equal((await guest({action:'disable',subscription:first})).status,200);
+  assert.equal((await manage({action:'status',endpoint:owner.endpoint})).data.here,true);
+  assert.equal((await guest(competitors[results.findIndex(result=>result.status===409)])).status,200);
+});
+
+test('migração SQLite preserva aparelho anterior e avisos já enfileirados ao reabrir',()=>{
+  const db=new DatabaseSync(':memory:');
+  try{
+    db.exec('PRAGMA foreign_keys=ON');
+    const migrations=new URL('../migrations/',import.meta.url);
+    for(const file of readdirSync(migrations).filter(file=>/^000[1-5]-.*\.sql$/.test(file)).sort()){
+      db.exec(readFileSync(new URL(file,migrations),'utf8'));
+    }
+    const legacy=testSubscription('legacy-qa');
+    db.prepare('INSERT INTO push_device(id,endpoint,p256dh,auth) VALUES(?,?,?,?)').run('legacy',legacy.endpoint,legacy.keys.p256dh,legacy.keys.auth);
+    db.exec("INSERT INTO push_outbox(kind,event_id,device_id,created_at,ready_at) VALUES('order','event','legacy','created','ready')");
+    for(let i=0;i<2;i++){
+      db.exec('BEGIN');
+      applySqliteMigrations(db);
+      db.exec('COMMIT');
+    }
+    assert.equal(db.prepare('SELECT endpoint FROM push_device WHERE id=?').get('legacy').endpoint,legacy.endpoint);
+    assert.equal(db.prepare('SELECT device_id FROM push_outbox').get().device_id,'legacy');
+    assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
+  }finally{db.close();}
 });
 
 test('falha transitória mantém o aviso na fila e inscrição expirada é removida',async t=>{

@@ -1,7 +1,8 @@
 import {DatabaseSync,backup} from 'node:sqlite';
-import {mkdirSync,readFileSync,readdirSync} from 'node:fs';
+import {mkdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {projectShopChanges} from '../server/shop-projection.mjs';
+import {applySqliteMigrations} from './migrate-sqlite.mjs';
 
 if(process.argv[2]!=='--confirm-unify')throw Error('Use --confirm-unify para importar o catálogo local ao banco local da Babi.');
 const source=new DatabaseSync(new URL('../loja/data/shop.sqlite',import.meta.url),{readOnly:true});
@@ -11,8 +12,7 @@ const backupPath=fileURLToPath(new URL('before-unify-'+Date.now()+'.sqlite',dir)
 await backup(target,backupPath);
 try{
   target.exec('PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; BEGIN IMMEDIATE;');
-  const migrationDir=new URL('../migrations/',import.meta.url);
-  for(const file of readdirSync(migrationDir).filter(f=>/^\d+.*\.sql$/.test(f)).sort())target.exec(readFileSync(new URL(file,migrationDir),'utf8'));
+  applySqliteMigrations(target);
   const existing=target.prepare('SELECT payload FROM shop_state WHERE id=1').get();
   if(existing){const s=JSON.parse(existing.payload);if(s.orders.length||s.ledger.length||s.products.some(p=>p.revision!==0))throw Error('O catálogo integrado já foi utilizado; não foi sobrescrito.');}
   const state=JSON.parse(source.prepare('SELECT payload FROM shop_state WHERE id=1').get().payload);
