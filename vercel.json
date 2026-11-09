@@ -6,6 +6,9 @@
   "regions": [
     "gru1"
   ],
+  "crons": [
+    {"path": "/api/internal/push-retry", "schedule": "20 10 * * *"}
+  ],
   "functions": {
     "api/index.mjs": {
       "maxDuration": 30

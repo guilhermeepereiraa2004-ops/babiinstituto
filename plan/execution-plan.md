@@ -1,5 +1,9 @@
 # Plano de execução
 
+Avisos de novos pedidos e agendamentos por Web Push. A proprietária ativa um celular no menu Módulos → Notificações e pode enviar um teste. iPhone: abrir o Painel Babi pelo ícone adicionado à Tela de Início. Migração 0005 e testes isolados documentados em docs/qa.md.
+
+Prévia local ativa em http://localhost:4180/admin/ (npm run dev), apresentada em 390 × 844 para revisão no celular em 07/11/2026. Banco local existente preservado.
+
 Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
 
 ## Cadastro e aniversários — 2026-11-06

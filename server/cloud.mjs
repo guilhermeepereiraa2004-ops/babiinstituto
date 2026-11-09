@@ -3,13 +3,20 @@ import {createAdminAuth,secretMatches} from './auth.mjs';
 import {createHash} from 'node:crypto';
 import {createSystemHandler} from './system.mjs';
 import {createSharedPostgres} from './shop-postgres.mjs';
+import {createPushService} from './push.mjs';
+import {waitUntil} from '@vercel/functions';
 
-let pool,db,system;const authByOrigin=new Map();
-export async function closeCloudConnections(){if(pool)await pool.end();pool=undefined;db=undefined;system=undefined;authByOrigin.clear();}
+let pool,db,system,push;const authByOrigin=new Map();
+export async function closeCloudConnections(){if(pool)await pool.end();pool=undefined;db=undefined;system=undefined;push=undefined;authByOrigin.clear();}
 const json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function allowedOrigins(){return new Set([process.env.BABI_APP_ORIGIN,...[process.env.VERCEL_URL,process.env.VERCEL_BRANCH_URL].filter(Boolean).map(h=>'https://'+h)].filter(Boolean));}
 function authFor(origin){
- if(!pool){pool=createPool(process.env.DATABASE_URL);db=createPostgresDb(pool);system=createSystemHandler(db,createSharedPostgres(pool));}
+ if(!pool){
+  pool=createPool(process.env.DATABASE_URL);
+  db=createPostgresDb(pool);
+  push=createPushService(db);
+  system=createSystemHandler(db,createSharedPostgres(pool),{push,defer:process.env.VERCEL?waitUntil:undefined});
+ }
  if(!authByOrigin.has(origin))authByOrigin.set(origin,createAdminAuth(pool,{origin,secret:process.env.AUTH_SECRET,setupKey:process.env.BABI_SETUP_KEY,adminEmail:process.env.ADMIN_EMAIL}));
  return authByOrigin.get(origin);
 }
@@ -25,6 +32,14 @@ export async function handleCloudRequest(request){
   if(!allowedOrigins().has(url.origin))return json({error:'Origem da aplicação não autorizada.'},403);
   if(method!=='GET'&&method!=='HEAD'&&request.headers.get('origin')!==url.origin)return json({error:'Origem da solicitação não autorizada.'},403);
   if(path.startsWith('/api/local-'))return json({error:'Caminho não encontrado.'},404);
+  if(path==='/api/internal/push-retry'){
+   const authorization=request.headers.get('authorization')||'';
+   if(method!=='GET'||!authorization.startsWith('Bearer ')||!secretMatches(authorization.slice(7),process.env.CRON_SECRET))
+    return json({error:'Acesso restrito.'},403);
+   authFor(url.origin);
+   await push.flush();
+   return json({ok:true});
+  }
   const auth=authFor(url.origin);
   if(path==='/api/setup'&&method==='POST'){
    if(!secretMatches(request.headers.get('x-babi-setup-key'),process.env.BABI_SETUP_KEY))return json({error:'Acesso de configuração inválido.'},403);

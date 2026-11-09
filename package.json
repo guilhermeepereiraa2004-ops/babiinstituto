@@ -17,6 +17,7 @@
   "dependencies": {
     "@vercel/functions": "^3.10.2",
     "better-auth": "^1.7.12",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "web-push": "4.0.0"
   }
 }

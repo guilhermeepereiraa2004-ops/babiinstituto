@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes,timingSafeEqual} from 'node:crypto';
 import {createSharedSqlite} from './shop-store.mjs';
 import {createSystemHandler} from './system.mjs';
+import {createPushService} from './push.mjs';
 import {syncShop} from '../scripts/sync-shop.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 syncShop();
@@ -26,9 +27,9 @@ export const localDb={
  batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const rows=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return rows;}catch(error){sqlite.exec('ROLLBACK');throw error;}}
 };
 const shopStore=createSharedSqlite(dataPath,{initialize:true});
-const handleSystem=createSystemHandler(localDb,shopStore);
+const handleSystem=createSystemHandler(localDb,shopStore,{push:createPushService(localDb)});
 const localSession=randomBytes(32).toString('hex');
-const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png'};
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.webmanifest':'application/manifest+json'};
 const port=Number(process.env.PORT||4173);
 const cookieName='babi_local_'+port;
 function validSession(cookie=''){const value=cookie.split(';').map(p=>p.trim()).find(p=>p.startsWith(cookieName+'='))?.slice(cookieName.length+1)||'';return value.length===localSession.length&&timingSafeEqual(Buffer.from(value),Buffer.from(localSession));}

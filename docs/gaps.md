@@ -1,5 +1,7 @@
 # Lacunas
 
+Avisos de novos pedidos e agendamentos por Web Push. A proprietária ativa um celular no menu Módulos → Notificações e pode enviar um teste. iPhone: abrir o Painel Babi pelo ícone adicionado à Tela de Início. Migração 0005 e testes isolados documentados em docs/qa.md.
+
 Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
 
 Cadastro e aniversários entregues em 2026-11-06: datas ausentes no histórico continuam desconhecidas até a cliente informar. Atendimentos antigos sem pagamento registrado continuam sem valor atribuído. O total por cliente conta somente recebimentos vinculados, sem atribuir lançamentos avulsos.

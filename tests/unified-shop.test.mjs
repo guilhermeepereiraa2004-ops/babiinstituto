@@ -7,14 +7,20 @@ import {join} from 'node:path';
 import {createSharedSqlite} from '../server/shop-store.mjs';
 import {createSystemHandler} from '../server/system.mjs';
 import {DEFAULT_SETTINGS,clock,addDays} from '../server/core.mjs';
+import {createPushService,sendPush} from '../server/push.mjs';
+import {generateVAPIDKeys} from 'web-push';
+import {randomBytes} from 'node:crypto';
 
-function fixture(t){
+function fixture(t,pushOptions){
   const dir=mkdtempSync(join(tmpdir(),'babi-unified-')),path=join(dir,'qa.sqlite');
   const sqlite=new DatabaseSync(path);sqlite.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL;');
   for(const file of readdirSync(new URL('../migrations/',import.meta.url)).filter(f=>/^\d+.*\.sql$/.test(f)).sort())sqlite.exec(readFileSync(new URL('../migrations/'+file,import.meta.url),'utf8'));
   const db={get:async(s,a=[])=>sqlite.prepare(s).get(...a),all:async(s,a=[])=>sqlite.prepare(s).all(...a),run:async(s,a=[])=>sqlite.prepare(s).run(...a),
     batch:async statements=>{sqlite.exec('BEGIN IMMEDIATE');try{const result=statements.map(s=>sqlite.prepare(s.sql).run(...(s.args||[])));sqlite.exec('COMMIT');return result;}catch(error){sqlite.exec('ROLLBACK');throw error;}}};
-  const store=createSharedSqlite(path,{initialize:true}),handle=createSystemHandler(db,store),origin='https://babi.test';
+  const store=createSharedSqlite(path,{initialize:true});
+  const tasks=[],push=pushOptions&&createPushService(db,pushOptions);
+  const handle=createSystemHandler(db,store,{push,defer:task=>tasks.push(task)}),origin='https://babi.test';
+  const settle=async()=>Promise.all(tasks.splice(0));
   t.after(()=>{store.close();sqlite.close();rmSync(dir,{recursive:true,force:true});});
   const call=async(path,{method='GET',body,admin=false,headers={}}={})=>{
     const response=await handle(new Request(origin+path,{method,headers:{origin,...(body?{'content-type':'application/json'}:{}),...headers},...(body?{body:JSON.stringify(body)}:{})}),{admin,authenticated:admin,local:false,clientKey:'qa'});
@@ -23,7 +29,7 @@ function fixture(t){
   const p=store.load().products.find(p=>p.active&&p.priceCents!==null);
   const order=(extra={})=>({name:'Cliente fictícia unificada',phone:'73999999999',consent:true,key:crypto.randomUUID(),items:[{id:p.id,quantity:1,priceCents:p.priceCents}],...extra});
   const finance='/api/admin/finance?from='+clock().date.slice(0,7)+'-01&to='+clock().date;
-  return {sqlite,db,store,call,handle,p,order,finance};
+  return {sqlite,db,store,call,handle,p,order,finance,settle,push};
 }
 
 test('loja usa somente a sessão da Babi e mantém catálogo e mídia públicos sem custos',async t=>{
@@ -103,4 +109,81 @@ test('upload do painel integrado volta como mídia da mesma API e respeita a ses
   const media=await f.handle(new Request('https://babi.test'+r.data.photo));assert.equal(media.status,200);assert.equal(media.headers.get('content-type'),'image/jpeg');
   assert.ok((await media.arrayBuffer()).byteLength>100);
   const product=(await f.call('/api/shop/catalog')).data.find(p=>p.id===r.data.id);assert.equal(product.photo,r.data.photo);assert.ok(!('costCents' in product));
+});
+
+const vapid=()=>({...generateVAPIDKeys(),subject:'https://babi.test'});
+const testSubscription=(id='device')=>({
+  endpoint:'https://fcm.googleapis.com/fcm/send/'+id,
+  keys:{p256dh:generateVAPIDKeys().publicKey,auth:randomBytes(16).toString('base64url')}
+});
+
+test('pedidos e agendamentos confirmados disparam um aviso privado por evento mesmo em reenvios',async t=>{
+  const delivered=[],subscription=testSubscription();
+  const f=fixture(t,{vapid:vapid(),send:async(_,payload)=>{delivered.push(payload);return 201;}});
+  const path='/api/admin/notifications';
+  const settings=structuredClone(DEFAULT_SETTINGS);
+  settings.enabled=true;
+  settings.leadMinutes=0;
+  settings.weekly.forEach(day=>day.enabled=true);
+  await f.call('/api/admin/settings',{method:'PUT',body:settings,admin:true});
+  const booking={name:'Cliente fictícia QA',phone:'73999990000',consent:true,
+    anamnesis:{chemicalHistory:'no',hairProblems:'no',consent:true},serviceId:settings.services[0].id,
+    date:addDays(clock().date,1),time:'09:00',idempotencyKey:crypto.randomUUID()};
+  const order=f.order();
+  const register=body=>f.call(path,{method:'POST',body,admin:true});
+  const enable={action:'enable',subscription};
+  assert.equal((await f.call(path)).status,403);
+  assert.equal((await f.call(path,{method:'POST',body:enable})).status,403);
+  assert.equal((await f.call(path,{method:'POST',admin:true,body:enable,headers:{origin:'https://other.test'}})).status,403);
+  assert.equal((await register({...enable,subscription:{...subscription,endpoint:'https://127.0.0.1/fcm/send/test'}})).status,400);
+  assert.deepEqual((await register(enable)).data,{active:true,here:true});
+  assert.equal((await f.call('/api/shop/orders',{method:'POST',body:{...order,consent:false}})).status,400);
+  assert.equal((await f.call('/api/bookings',{method:'POST',body:booking})).status,201);
+  assert.equal((await f.call('/api/bookings',{method:'POST',body:booking})).status,201);
+  const orders=await Promise.all([f.call('/api/shop/orders',{method:'POST',body:order}),f.call('/api/shop/orders',{method:'POST',body:order})]);
+  assert.deepEqual(orders.map(result=>result.status),[201,201]);
+  await f.settle();
+  assert.deepEqual(delivered.map(item=>item.kind).sort(),['booking','order']);
+  assert.doesNotMatch(JSON.stringify(delivered),/Cliente fictícia|739999|Corte|[a-f0-9]{8}-[a-f0-9]{4}-/);
+  assert.equal((await f.db.get('SELECT count(*) AS total FROM push_outbox')).total,0);
+  assert.equal((await register({action:'test',endpoint:subscription.endpoint})).status,200);
+  assert.equal((await register({action:'test',endpoint:subscription.endpoint})).status,429);
+  const replacement=testSubscription('replacement');
+  await register({action:'enable',subscription:replacement});
+  assert.deepEqual((await register({action:'status',endpoint:subscription.endpoint})).data,{active:true,here:false});
+  await register({action:'disable'});
+  const next={...booking,time:'15:00',idempotencyKey:crypto.randomUUID()};
+  assert.equal((await f.call('/api/bookings',{method:'POST',body:next})).status,201);
+  await f.settle();
+  assert.equal(delivered.length,3);
+});
+
+test('falha transitória mantém o aviso na fila e inscrição expirada é removida',async t=>{
+  let result=429;
+  const f=fixture(t,{vapid:vapid(),send:async()=>result});
+  const subscription=testSubscription();
+  await f.call('/api/admin/notifications',{method:'POST',admin:true,body:{action:'enable',subscription}});
+  assert.equal((await f.call('/api/shop/orders',{method:'POST',body:f.order()})).status,201);
+  await f.settle();
+  assert.equal((await f.db.get('SELECT attempts FROM push_outbox')).attempts,1);
+  result=410;
+  await f.db.run('UPDATE push_outbox SET ready_at=created_at');
+  await f.push.flush();
+  assert.equal((await f.db.get('SELECT count(*) AS total FROM push_device')).total,0);
+  assert.equal((await f.db.get('SELECT count(*) AS total FROM push_outbox')).total,0);
+});
+
+test('envio Web Push usa criptografia, VAPID, prazo curto e recusa redirecionamento',async t=>{
+  const subscription=testSubscription();
+  const fetch=t.mock.method(globalThis,'fetch',async(url,options)=>{
+    assert.equal(url,subscription.endpoint);
+    assert.equal(options.redirect,'error');
+    assert.equal(options.headers['Content-Encoding'],'aes128gcm');
+    assert.match(options.headers.Authorization,/^vapid /);
+    assert.equal(options.headers.TTL,3600);
+    assert.doesNotMatch(options.body.toString('utf8'),/Novo pedido/);
+    return new Response(null,{status:201});
+  });
+  assert.equal(await sendPush(subscription,{title:'Novo pedido',tag:'test'},vapid()),201);
+  assert.equal(fetch.mock.callCount(),1);
 });

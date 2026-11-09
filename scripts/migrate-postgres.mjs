@@ -10,9 +10,15 @@ export async function migratePostgres(pool){
   await client.query('CREATE TABLE IF NOT EXISTS babi_schema_migrations (name TEXT PRIMARY KEY,checksum TEXT NOT NULL,applied_at TIMESTAMPTZ NOT NULL DEFAULT now())');
   const dir=new URL('../migrations/postgres/',import.meta.url);
   for(const name of readdirSync(dir).filter(n=>/^\d+.*\.sql$/.test(n)).sort()){
-   const sql=readFileSync(new URL(name,dir),'utf8'),checksum=createHash('sha256').update(sql).digest('hex');
+   const sql=readFileSync(new URL(name,dir),'utf8').replaceAll('\r\n','\n');
+   const checksum=createHash('sha256').update(sql).digest('hex');
    const previous=(await client.query('SELECT checksum FROM babi_schema_migrations WHERE name=$1',[name])).rows[0];
-   if(previous){if(previous.checksum!==checksum)throw Error('Migration checksum mismatch: '+name);continue;}
+   if(previous){
+    // Older releases hashed the checkout bytes, which could contain Windows line endings.
+    const windowsChecksum=createHash('sha256').update(sql.replaceAll('\n','\r\n')).digest('hex');
+    if(previous.checksum!==checksum&&previous.checksum!==windowsChecksum)throw Error('Migration checksum mismatch: '+name);
+    continue;
+   }
    await client.query(sql);await client.query('INSERT INTO babi_schema_migrations(name,checksum) VALUES($1,$2)',[name,checksum]);
   }
   await client.query('COMMIT');

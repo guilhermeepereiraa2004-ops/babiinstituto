@@ -235,3 +235,9 @@ CUA conferiu desktop, 390 e 320 px sem overflow horizontal. Botão da landing ch
 Navegação móvel com cabeçalho compacto, módulo atual e barra inferior fixa (Início, Agenda, Loja, Financeiro e Módulos). O menu modal agrupa os oito módulos em Gestão, Atendimento, Loja e Clientes, com descrições curtas, fechamento por Escape/botão e links para site/loja. Produtos e Pedidos ganham alternância própria. Agenda e financeiro usam cartões no celular; serviços, expediente, clientes, campos e botões têm espaçamento e leitura maiores. Sidebar desktop preservada. Nenhuma alteração de banco, valores, estoque ou regras de recebimento.
 
 Validação: gate 22/22, 65 testes offline; CUA em 320/390 px sem overflow horizontal e desktop 1280 px. Conferidos atalhos, seleção de módulos, Produtos/Pedidos, configurações, clientes/aniversários, agenda com reserva fictícia, financeiro com lançamento fictício, Escape e saída de sessão. Console sem erros/avisos. Banco exclusivo data/qa-admin-mobile-20261107.sqlite em 4174, sem operações no banco real. Evidências docs/qa/admin-mobile-modules.jpg e docs/qa/admin-mobile-agenda.jpg. Viewport restaurado e aba temporária fechada.
+
+## 2026-11-08 — Notificações móveis
+
+Gate 22/22 com 68 testes offline. Neon dedicado de QA: 17 testes/subtestes, incluindo gatilhos de pedido e reserva, reenvio e disputa entre dois despachantes. Testes verificaram fila após falha transitória, remoção de inscrição expirada, autenticação, origem, limitação do aviso de teste e construção do envio criptografado. Transporte simulado em QA.
+
+CUA em 390 px, usando SQLite separado em 4174. Menu Módulos → Notificações abriu a tela com botão de ativação, sem rolagem horizontal ou erros de console. Captura docs/qa/admin-notificacoes-mobile.jpg. A confirmação de entrega no celular real depende da permissão e do botão de teste da proprietária.

@@ -4,7 +4,7 @@ import {readdirSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 import {syncShop} from './sync-shop.mjs';
 syncShop();
-const files=['dist/app.js','dist/admin/admin.js','dist/agendar/booking.js','dist/booking/shared.js','server/core.mjs','server/postgres.mjs','server/auth.mjs','server/cloud.mjs','server/system.mjs','server/shop-projection.mjs','server/shop-store.mjs','server/shop-postgres.mjs','api/index.mjs'];
+const files=['dist/app.js','dist/admin/admin.js','dist/admin/notifications.js','dist/admin/push-worker.js','dist/agendar/booking.js','dist/booking/shared.js','server/core.mjs','server/postgres.mjs','server/auth.mjs','server/cloud.mjs','server/push.mjs','server/system.mjs','server/shop-projection.mjs','server/shop-store.mjs','server/shop-postgres.mjs','api/index.mjs'];
 for(const path of files)if(spawnSync(process.execPath,['--check',path],{stdio:'inherit'}).status!==0)process.exit(1);
 const tests=readdirSync('tests').filter(f=>f.endsWith('.test.mjs')).map(f=>'tests/'+f);
 const rootTests=spawnSync(process.execPath,['--test',...tests],{stdio:'inherit'}).status;

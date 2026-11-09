@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {randomBytes} from 'node:crypto';
+import {createHash,randomBytes} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 import {getMigrations} from 'better-auth/db/migration';
 import {createPool,createPostgresDb,bindSql} from '../server/postgres.mjs';
 import {createAdminAuth,secretMatches} from '../server/auth.mjs';
@@ -9,6 +10,8 @@ import {handleCloudRequest,closeCloudConnections} from '../server/cloud.mjs';
 import {handleApi,DEFAULT_SETTINGS,clock,addDays} from '../server/core.mjs';
 import {createOwnerRecoveryLink} from '../scripts/admin-recovery.mjs';
 import {initializeSharedShop} from '../server/shop-postgres.mjs';
+import {createPushService} from '../server/push.mjs';
+import {generateVAPIDKeys} from 'web-push';
 
 test('Postgres binding preserves quoted SQL and binds parameters',()=>{
  assert.equal(bindSql("SELECT '?' AS literal, \"?\" FROM bookings WHERE id=? AND date=?"),"SELECT '?' AS literal, \"?\" FROM bookings WHERE id=$1 AND date=$2");
@@ -26,7 +29,12 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
  let pool,created=false;
  try{
   await admin.query(`CREATE SCHEMA ${schema}`);created=true;pool=createPool(connection.href);
-  await migratePostgres(pool);await migratePostgres(pool);
+  await migratePostgres(pool);
+  const previousName='0004-shop.sql';
+  const previousSql=readFileSync(new URL('../migrations/postgres/'+previousName,import.meta.url),'utf8');
+  const historicalChecksum=createHash('sha256').update(previousSql.replace(/\r?\n/g,'\r\n')).digest('hex');
+  await pool.query('UPDATE babi_schema_migrations SET checksum=$1 WHERE name=$2',[historicalChecksum,previousName]);
+  await migratePostgres(pool);
   const db=createPostgresDb(pool),origin='https://babi.test',email='owner-qa@example.invalid',password=randomBytes(24).toString('base64url'),setupKey=randomBytes(32).toString('base64url'),secret=randomBytes(48).toString('base64url');
   Object.assign(process.env,{DATABASE_URL:connection.href,BABI_APP_ORIGIN:origin,ADMIN_EMAIL:email,BABI_SETUP_KEY:setupKey,AUTH_SECRET:secret});
   const auth=createAdminAuth(pool,{origin,adminEmail:email,setupKey,secret});
@@ -200,6 +208,31 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.equal((await call('/api/auth/sign-out',{method:'POST',data:{}})).status,200);
    assert.equal((await call('/api/session')).data.admin,false);assert.equal((await call('/api/admin/settings')).status,403);
    assert.equal((await call('/api/shop/admin/data')).status,401);
+  });
+  await t.test('Neon enqueues committed new orders and bookings once and claims each delivery once',async()=>{
+   const notices=[];
+   const push=createPushService(db,{vapid:{...generateVAPIDKeys(),subject:origin},send:async(_,payload)=>{notices.push(payload.kind);return 201;}});
+   const action=data=>push.handle(new Request(origin+'/api/admin/notifications',{method:'POST',
+    headers:{origin,'content-type':'application/json'},body:JSON.stringify(data)}),{admin:true});
+   const endpoint='https://fcm.googleapis.com/fcm/send/fake-neon-qa';
+   assert.equal((await action({action:'enable',subscription:{endpoint,keys:{p256dh:generateVAPIDKeys().publicKey,auth:randomBytes(16).toString('base64url')}}})).status,200);
+   const request={...booking('09:00'),date:addDays(today,3)};
+   const reserve=()=>call('/api/bookings',{method:'POST',data:request,withCookie:false,headers:{'x-vercel-forwarded-for':'192.0.2.91'}});
+   assert.equal((await reserve()).status,201);
+   assert.equal((await reserve()).status,201);
+   const {data:catalog}=await call('/api/shop/catalog',{withCookie:false});
+   const product=catalog.find(item=>item.priceCents!==null);
+   const order={name:'Cliente de aviso QA',phone:'73999990010',consent:true,key:crypto.randomUUID(),
+    items:[{id:product.id,quantity:1,priceCents:product.priceCents}]};
+   const place=()=>call('/api/shop/orders',{method:'POST',data:order,withCookie:false,headers:{'x-vercel-forwarded-for':'192.0.2.91'}});
+   assert.equal((await place()).status,201);
+   assert.equal((await place()).status,201);
+   assert.equal((await db.get('SELECT count(*) AS total FROM push_outbox')).total,2);
+   await Promise.all([push.flush(),push.flush()]);
+   assert.deepEqual(notices.sort(),['booking','order']);
+   assert.equal((await db.get('SELECT count(*) AS total FROM push_outbox')).total,0);
+   assert.equal((await call('/api/admin/notifications',{withCookie:false})).status,403);
+   assert.equal((await call('/api/internal/push-retry',{withCookie:false})).status,403);
   });
  }finally{
   await closeCloudConnections();if(pool)await pool.end();
