@@ -13,7 +13,6 @@ export function checkLayers() {
   const allowedImports={
     'dist/admin/admin.js':['/booking/shared.js','/loja/admin/admin.js','/admin/notifications.js'],
     'dist/admin/notifications.js':['/booking/shared.js'],
-    'dist/admin/avisos/start.js':['/admin/notifications.js'],
     'dist/admin/push-worker.js':[],
     'dist/agendar/booking.js':['/booking/shared.js']
   };

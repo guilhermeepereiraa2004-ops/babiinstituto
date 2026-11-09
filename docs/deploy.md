@@ -61,4 +61,6 @@ As migrações 0005 e 0006 criam a fila transacional e o cadastro de até dez ap
 
 Configure BABI_PUSH_PUBLIC_KEY, BABI_PUSH_PRIVATE_KEY e CRON_SECRET apenas no ambiente pretendido. A chave privada e o segredo do cron são segredos do servidor. Gere um par VAPID exclusivo por ambiente e preserve-o entre deploys. Trocar o par exige nova ativação no aparelho. A porta local de QA usa chaves descartáveis e banco separado.
 
-Em Módulos → Notificações, o painel permite ativar o aparelho atual, remover inscrições e gerar convites de uso único com validade de 24 horas. O convidado abre o link, aceita os avisos e pode testar ou desativar o próprio aparelho. No iPhone com iOS 16.4 ou superior, adicione a página aberta à Tela de Início pelo Safari e entre pelo ícone. Se o convite não aparecer ao abrir o ícone, cole o código. Ativar outro aparelho mantém os cadastros existentes e usa uma das dez vagas.
+Com uma sessão administrativa, abra Módulos → Notificações para ativar, testar ou remover aparelhos. No iPhone com iOS 16.4 ou superior, adicione o painel à Tela de Início pelo Safari e entre pelo ícone. Cada ativação usa uma das dez vagas.
+
+A migração 0007 encerra o fluxo anterior de convites e revoga as inscrições criadas por esse fluxo. Ela mantém as inscrições e entregas do admin e bloqueia novas inscrições por convite, inclusive por versões anteriores.

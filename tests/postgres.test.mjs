@@ -205,6 +205,7 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
    assert.equal((await call('/api/shop/catalog',{withCookie:false})).data.find(x=>x.id===p.id).stock,1);
   });
   await t.test('logout revokes the session in Postgres',async()=>{
+   assert.equal((await call('/api/admin/notifications')).status,200);
    assert.equal((await call('/api/auth/sign-out',{method:'POST',data:{}})).status,200);
    assert.equal((await call('/api/session')).data.admin,false);assert.equal((await call('/api/admin/settings')).status,403);
    assert.equal((await call('/api/shop/admin/data')).status,401);
@@ -212,17 +213,14 @@ test('real Neon Postgres: authentication, booking and finance', {skip:process.en
   await t.test('Neon enqueues committed new orders and bookings once and claims each delivery once',async()=>{
    const notices=[];
    const push=createPushService(db,{vapid:{...generateVAPIDKeys(),subject:origin},send:async(_,payload)=>{notices.push(payload.kind);return 201;}});
-   const action=(data,guest=false)=>{
-    const path=guest?'/api/notifications/invite':'/api/admin/notifications';
-    const request=new Request(origin+path,{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify(data)});
-    return guest?push.handleInvite(request):push.handle(request,{admin:true});
-   };
+   const action=data=>push.handle(new Request(origin+'/api/admin/notifications',{method:'POST',
+    headers:{origin,'content-type':'application/json'},body:JSON.stringify(data)}),{admin:true});
    const subscription=id=>({endpoint:'https://fcm.googleapis.com/fcm/send/'+id,
     keys:{p256dh:generateVAPIDKeys().publicKey,auth:randomBytes(16).toString('base64url')}});
    assert.equal((await action({action:'enable',subscription:subscription('fake-neon-qa')})).status,200);
-   const {code}=await (await action({action:'invite',name:'Recepção QA'})).json();
-   const activation=await Promise.all(['guest1','guest2'].map(id=>action({action:'enable',code,subscription:subscription(id)},true)));
-   assert.deepEqual(activation.map(r=>r.status).sort(),[200,410]);
+   assert.equal((await action({action:'enable',subscription:subscription('second-neon-qa')})).status,200);
+   assert.equal((await call('/api/notifications/invite',{withCookie:false})).status,404);
+   await assert.rejects(()=>pool.query("INSERT INTO push_invite VALUES('qa','hash','QA','2099')"),/push_invite_closed/);
    const request={...booking('09:00'),date:addDays(today,3)};
    const reserve=()=>call('/api/bookings',{method:'POST',data:request,withCookie:false,headers:{'x-vercel-forwarded-for':'192.0.2.91'}});
    assert.equal((await reserve()).status,201);

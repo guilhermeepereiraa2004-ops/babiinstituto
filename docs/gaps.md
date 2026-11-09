@@ -1,6 +1,6 @@
 # Lacunas
 
-Avisos de pedidos e agendamentos para até dez aparelhos ativos no total. Em Módulos → Notificações, a proprietária cadastra ou remove aparelhos e gera convites de uso único, válidos por 24 horas. Cada convidado confirma no próprio navegador sem usar o login administrativo. Migração 0006 e evidência em docs/qa.md.
+Avisos de pedidos e agendamentos para até dez aparelhos ativos. Para ativar, testar ou remover um aparelho, entre no admin e abra Módulos → Notificações. O acesso por convite foi desativado na migração 0007. Evidência em docs/qa.md.
 
 Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.
 

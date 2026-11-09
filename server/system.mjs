@@ -8,7 +8,6 @@ export function createSystemHandler(db,store,{push,defer}={}){
     const url=new URL(request.url);
     const path=url.pathname;
     if(path==='/api/admin/notifications' && push)return push.handle(request,context);
-    if(path==='/api/notifications/invite' && push)return push.handleInvite(request);
     let response;
     if(url.pathname.startsWith('/api/shop/')){
       url.pathname='/api/'+url.pathname.slice('/api/shop/'.length);

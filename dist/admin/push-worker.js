@@ -10,19 +10,18 @@ self.addEventListener('push', event => {
   body:data?.body||'Abra o painel para conferir.',
   icon:'/admin/icon-192.png',
   tag:data?.tag||'babi-panel',
-  data:{kind,guest:data?.guest===true}
+  data:{kind}
  }));
 });
 
 self.addEventListener('notificationclick', event => {
  event.notification.close();
  const kind=event.notification.data?.kind;
- const pagePath=event.notification.data?.guest?'/admin/avisos/':'/admin/';
- const target=new URL(pagePath==='/admin/'&&Object.hasOwn(targets,kind)?targets[kind]:pagePath,self.location.origin);
+ const target=new URL(Object.hasOwn(targets,kind)?targets[kind]:'/admin/',self.location.origin);
  event.waitUntil((async () => {
   const windows=await self.clients.matchAll({type:'window',includeUncontrolled:true});
   for(const client of windows) {
-   if(new URL(client.url).pathname!==pagePath)continue;
+   if(new URL(client.url).pathname!=='/admin/')continue;
    try {
     const page=await client.navigate(target.href);
     if(page)return await page.focus();

@@ -273,3 +273,9 @@ A migração 0005 foi aplicada no Neon vinculado ao projeto principal. Verificad
 A migração 0006 mantém as inscrições existentes e a fila. Cada novo evento agenda uma entrega por aparelho ativo. O painel lista, cadastra e remove aparelhos e emite convites de uso único com 24 horas de validade. Convidados confirmam os avisos em /admin/avisos/ e podem testar ou cancelar a própria inscrição. A página e a API de convite não dão acesso aos dados administrativos. Em produção, a consulta de contagem retornou um usuário em babi_user. O fluxo de convites independe do número de contas.
 
 Gate 22/22, 70 testes offline e 17 verificações no Neon de QA. Confirmados envio simulado dos dois eventos a dez aparelhos, disputa pela última vaga, consumo concorrente do convite, preservação de fila/inscrição na migração local e revogação individual. CUA em 390 px verificou gestão, geração, abertura e cancelamento do convite em SQLite isolado, sem capturar códigos. A entrega em aparelhos físicos deve ser confirmada pelo botão de teste de cada pessoa. Evidência em docs/qa/admin-notificacoes-equipe.jpg.
+
+## 2026-11-08 — Ativação de avisos pelo admin
+
+A área Notificações exige sessão administrativa para ativar, testar ou remover aparelhos. A migração 0007 fecha o fluxo de convites, revoga inscrições criadas por convite e preserva os aparelhos ativados pelo painel e sua fila. Os avisos de novos pedidos e agendamentos continuam com limite de dez aparelhos ativos.
+
+Gate 22/22, 71 testes offline e 17 verificações no Neon de QA. Verificados sessão obrigatória, remoção da rota anterior, bloqueio de convites no banco, preservação da fila, disputa pela última vaga e entrega simulada de ambos os avisos aos dez aparelhos. CUA em 390 px confirmou a tela sem convites e sem rolagem horizontal. Evidência em docs/qa/admin-notificacoes-acesso.jpg.
