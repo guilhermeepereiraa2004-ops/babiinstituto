@@ -18,7 +18,7 @@ Leia `plan/STATUS.md`, `plan/execution-plan.md`, `ROADMAP.md` e a última entrad
 - Execute `node scripts/gate.mjs` antes de commits. Mudanças de UI exigem inspeção visual.
 
 ## Arquitetura e ações
-Mapa em docs/arquitetura.md e operação em docs/deploy.md. UI em dist/; regras em server/core.mjs; HTTP/sessão local/SQLite em server/local.mjs. Nuvem em api/index.mjs, server/cloud.mjs, auth.mjs e postgres.mjs. data/ é privado e ignorado. Acesso local não funciona em produção; Better Auth protege a nuvem. Manter cadastro fechado ao e-mail autorizado e sessão/limite de tentativas persistidos no banco.
+Mapa em docs/arquitetura.md e operação em docs/deploy.md. UI em dist/; regras em server/core.mjs; HTTP/sessão local/SQLite em server/local.mjs. Nuvem em api/index.mjs, server/cloud.mjs, auth.mjs e postgres.mjs. data/ é privado e ignorado. Acesso local não funciona em produção; Better Auth protege a nuvem. Manter cadastro público fechado e sessão/limite de tentativas persistidos no banco. A conta principal usa o e-mail autorizado. A ativação dos acessos fabricia e brisa exige sessão da conta principal.
 
 ## Rodar e verificar
 Rode `npm start`, em `http://localhost:4173`. Um servidor puramente estático não suporta agendamentos. `npm run check` verifica sintaxe, referências, camadas e testes de comportamento; gera `docs/checklist-paridade.md`. Browser QA usa CUA; mobile pode usar iframe temporário de 390 px, removido ao terminar. QA manual usa banco separado na porta 4174, sem configurar o banco real.

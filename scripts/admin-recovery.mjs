@@ -8,8 +8,8 @@ import {createPool} from '../server/postgres.mjs';
 export async function createOwnerRecoveryLink(pool,options){
  const owner=options.adminEmail?.trim().toLowerCase(),origin=new URL(options.origin);
  if(!owner||origin.origin!==options.origin||!(origin.protocol==='https:'||['localhost','127.0.0.1'].includes(origin.hostname)))throw Error('Invalid recovery target');
- const users=await pool.query('SELECT email FROM babi_user');
- if(users.rows.length!==1||users.rows[0].email.toLowerCase()!==owner)throw Error('Configured owner not found');
+ const users=await pool.query('SELECT email FROM babi_user WHERE email=$1',[owner]);
+ if(users.rows.length!==1)throw Error('Configured owner not found');
  let recoveryUrl='';
  const auth=createAdminAuth(pool,{...options,sendResetPassword:async({user,token})=>{
   if(user.email.toLowerCase()!==owner)throw Error('Recovery owner mismatch');

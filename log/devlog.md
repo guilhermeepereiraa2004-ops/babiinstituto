@@ -279,3 +279,9 @@ Gate 22/22, 70 testes offline e 17 verificações no Neon de QA. Confirmados env
 A área Notificações exige sessão administrativa para ativar, testar ou remover aparelhos. A migração 0007 fecha o fluxo de convites, revoga inscrições criadas por convite e preserva os aparelhos ativados pelo painel e sua fila. Os avisos de novos pedidos e agendamentos continuam com limite de dez aparelhos ativos.
 
 Gate 22/22, 71 testes offline e 17 verificações no Neon de QA. Verificados sessão obrigatória, remoção da rota anterior, bloqueio de convites no banco, preservação da fila, disputa pela última vaga e entrega simulada de ambos os avisos aos dez aparelhos. CUA em 390 px confirmou a tela sem convites e sem rolagem horizontal. Evidência em docs/qa/admin-notificacoes-acesso.jpg.
+
+## 2026-11-09 — Acessos individuais de Fabrícia e Brisa
+
+Gate 22/22 e 71 testes offline. Neon de QA com 18 verificações confirmou criação concorrente sem duplicar usuário, login pelo nome com ou sem acento, senhas separadas, permissão da equipe para usar o painel e notificações, bloqueio de gestão de senhas para a equipe, revogação de sessão ao redefinir e recuperação da conta principal com os novos usuários presentes. Nenhuma senha de produção foi definida pelo agente.
+
+CUA com schema isolado em 4175 conferiu o login da conta principal fictícia, os dois cartões de acesso e o formulário de senha em 390 px, sem rolagem horizontal ou erros no console. Evidência em docs/qa/admin-acessos-equipe.jpg.

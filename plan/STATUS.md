@@ -1,5 +1,7 @@
 # Status — Babi Instituto de Beleza
 
+A conta principal pode definir senhas separadas para os acessos fabricia e brisa em Módulos → Acessos. Cada acesso é ativado ao salvar sua primeira senha, entra pelo nome e usa as áreas do painel, incluindo notificações. A gestão de senhas fica na conta principal. Ver docs/qa.md.
+
 Avisos de pedidos e agendamentos para até dez aparelhos ativos. Para ativar, testar ou remover um aparelho, entre no admin e abra Módulos → Notificações. O acesso por convite foi desativado na migração 0007. Evidência em docs/qa.md.
 
 Prévia local ativa em http://localhost:4180/admin/ (npm run dev), apresentada em 390 × 844 para revisão no celular em 07/11/2026. Banco local existente preservado.

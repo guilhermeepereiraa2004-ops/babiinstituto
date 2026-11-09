@@ -81,6 +81,20 @@
 .push-list small{display:block;margin-top:2px}
 .push-list button{flex-shrink:0}
 .push-panel button{min-height:44px}
+.team-panel{max-width:720px}
+.team-list{display:grid;gap:14px;padding:18px}
+.team-member{padding:16px;border:1px solid var(--line);border-radius:10px}
+.team-member-header{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.team-member h3{font-size:17px;font-weight:500;margin:0 0 5px}
+.team-member p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
+.team-member .form-error{color:#8f4238;margin:6px 0}
+.team-status{flex-shrink:0;background:#f2ebe1;color:#614a31;padding:5px 9px;border-radius:20px;font-size:11px}
+.team-active{background:#e6eee7;color:#31593d}
+.team-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.team-member button{min-height:44px}
+.team-member [hidden]{display:none}
+.team-member form:not([hidden]){display:grid;gap:8px}
+.team-avatar{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#ede4d8;color:#604c38;font-size:12px}
 @media(max-width:700px){
  .admin-page .sidebar{position:sticky;top:0;inset:auto;z-index:30;width:100%;padding:12px 18px;display:flex;flex-direction:row;align-items:center;gap:14px;border-bottom:1px solid var(--line);background:#fcfaf6;overflow:visible}
  .sidebar-brand{margin:0;flex:none}

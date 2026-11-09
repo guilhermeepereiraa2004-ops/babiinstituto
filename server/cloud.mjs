@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import {createSystemHandler} from './system.mjs';
 import {createSharedPostgres} from './shop-postgres.mjs';
 import {createPushService} from './push.mjs';
+import {adminIdentity,emailForAdminLogin,setTeamPassword,teamAccessList} from './team.mjs';
 import {waitUntil} from '@vercel/functions';
 
 let pool,db,system,push;const authByOrigin=new Map();
@@ -55,10 +56,14 @@ export async function handleCloudRequest(request){
    if(allowed[path]!==method)return json({error:'Caminho não encontrado.'},404);
    if(method==='POST'){
     const input=await readBody(request);
-    // Login only accepts the configured owner. No public sign-up, email changes,
-    // reset issuance or account-linking endpoints are exposed. A reset needs an
-    // expiring, single-use token issued by authenticated maintenance.
-    if(path.endsWith('/sign-in/email')&&String(input.email).trim().toLowerCase()!==process.env.ADMIN_EMAIL.trim().toLowerCase())return json({error:'E-mail ou senha inválidos.'},401);
+    if(path.endsWith('/sign-in/email')){
+     const email=emailForAdminLogin(input.login??input.email,process.env.ADMIN_EMAIL);
+     if(!email)return json({error:'Acesso ou senha inválidos.'},401);
+     request=new Request(request.url,{method,headers:request.headers,body:JSON.stringify({email,password:input.password})});
+     const response=await auth.handler(request);
+     response.headers.set('Cache-Control','no-store');
+     return response;
+    }
     if(path==='/api/auth/reset-password'){
      if(typeof input.token!=='string'||input.token.length<20||input.token.length>200)return json({error:'Este link de recuperação é inválido ou expirou. Solicite um novo link.'},400);
      if(typeof input.newPassword!=='string'||input.newPassword.length<12||input.newPassword.length>128)return json({error:'Escolha uma senha entre 12 e 128 caracteres.'},400);
@@ -74,7 +79,18 @@ export async function handleCloudRequest(request){
    return response;
   }
   const session=await auth.api.getSession({headers:request.headers});
-  const admin=session?.user?.email?.toLowerCase()===process.env.ADMIN_EMAIL.trim().toLowerCase();
+  const identity=adminIdentity(session?.user,process.env.ADMIN_EMAIL);
+  const admin=!!identity;
+  if(path==='/api/session'&&method==='GET'){
+   return json({admin,local:false,authenticated:!!session?.user,owner:!!identity?.owner,displayName:identity?.name});
+  }
+  if(path==='/api/admin/team'){
+   if(!identity?.owner)return json({error:'Somente a conta principal pode gerenciar os acessos.'},403);
+   if(method==='GET')return json({members:await teamAccessList(db)});
+   if(method!=='POST')return json({error:'Método não permitido.'},405);
+   const {status,error}=await setTeamPassword(db,await readBody(request),process.env.ADMIN_EMAIL);
+   return json(error?{error}:{ok:true},status);
+  }
   const clientKey=createHash('sha256').update(request.headers.get('x-vercel-forwarded-for')||'unknown').digest('hex');
   return await system(request,{admin,authenticated:!!session?.user,local:false,clientKey});
  }catch(error){

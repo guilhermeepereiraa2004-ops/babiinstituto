@@ -2,6 +2,7 @@
  
 | Responsável | Frente | Arquivos exclusivos | Data | Status |
 | --- | --- | --- | --- | --- |
+| Codex | Acessos individuais de Fabrícia e Brisa | server/team.mjs, server/cloud.mjs, dist/admin/, recuperação do proprietário, testes e memória do projeto | 2026-11-09 | Concluída e liberada. Logins por nome, gestão pela conta principal e QA. |
 | Codex | Avisos exclusivos do admin | dist/admin/, server/push.mjs, server/system.mjs, migração 0007, testes, scripts e memória do projeto | 2026-11-08 | Concluída e liberada. Ativação só no admin, limite de dez validado. |
 | Codex | Avisos para até dez aparelhos | dist/admin/, server/push.mjs, server/system.mjs, server/local.mjs, migração 0006, scripts, testes e memória do projeto | 2026-11-08 | Concluída e liberada. Limite de dez, convites, Neon QA e CUA. |
 | Codex | Notificações móveis de pedidos e agendamentos | dist/admin/, server/, migrations/, vercel.json, pacote npm, tests/, scripts/ e memória docs/plan/ROADMAP/log | 2026-11-08 | Concluída e liberada; Web Push, gate 22/22, Neon QA e CUA mobile |

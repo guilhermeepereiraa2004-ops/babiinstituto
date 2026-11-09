@@ -11,8 +11,9 @@ export function checkLayers() {
   if (!validateLayer(readFileSync(new URL('../dist/app.js', import.meta.url),'utf8'))) throw Error('A UI depende de módulos ou código de servidor.');
   if (!validateLayer("import {api} from '/booking/shared.js';",['/booking/shared.js'])) throw Error('Import permitido da UI foi rejeitado.');
   const allowedImports={
-    'dist/admin/admin.js':['/booking/shared.js','/loja/admin/admin.js','/admin/notifications.js'],
+    'dist/admin/admin.js':['/booking/shared.js','/loja/admin/admin.js','/admin/notifications.js','/admin/team.js'],
     'dist/admin/notifications.js':['/booking/shared.js'],
+    'dist/admin/team.js':['/booking/shared.js'],
     'dist/admin/push-worker.js':[],
     'dist/agendar/booking.js':['/booking/shared.js']
   };

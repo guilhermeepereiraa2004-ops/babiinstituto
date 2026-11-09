@@ -1,5 +1,7 @@
 # Lacunas
 
+A conta principal pode definir senhas separadas para os acessos fabricia e brisa em Módulos → Acessos. Cada acesso é ativado ao salvar sua primeira senha, entra pelo nome e usa as áreas do painel, incluindo notificações. A gestão de senhas fica na conta principal. Ver docs/qa.md.
+
 Avisos de pedidos e agendamentos para até dez aparelhos ativos. Para ativar, testar ou remover um aparelho, entre no admin e abra Módulos → Notificações. O acesso por convite foi desativado na migração 0007. Evidência em docs/qa.md.
 
 Admin mobile reorganizado em 07/11/2026: barra fixa inferior, módulos agrupados, alternância Produtos/Pedidos e cartões de agenda/financeiro. CUA 320/390/1280 px e gate 22/22 (65 testes) aprovados; publicação no projeto principal Babi. Evidência em docs/qa.md.

@@ -64,7 +64,7 @@ Migrações em migrations/postgres/ são aplicadas explicitamente por scripts/mi
 
 O login de produção é Better Auth no próprio backend, sem provedor de e-mail. O hook de criação exige o e-mail autorizado, chave privada e ausência de usuários. A API pública de autenticação só expõe sign-in/email, sign-out e get-session. A configuração inicial exige origem, JSON limitado e chave privada, e deixa de funcionar após criar o proprietário. A usuária definiu a senha diretamente na UI; o agente não a recebeu.
 
-Cookies são HttpOnly/Secure em HTTPS; sessões e limites vivem no Postgres, com restrição de origem a domínio canônico e URLs da própria implantação informadas pela Vercel. Cabeçalhos de identidade externos não concedem acesso. /api/local-* retorna 404 na nuvem. Cada rota privada compara o usuário da sessão com ADMIN_EMAIL. O IP para limites usa o cabeçalho que a Vercel sobrescreve. Não há confiança em host arbitrário, cadastro público ou fallback SQLite na nuvem.
+Cookies são HttpOnly/Secure em HTTPS; sessões e limites vivem no Postgres, com restrição de origem a domínio canônico e URLs da própria implantação informadas pela Vercel. Cabeçalhos de identidade externos não concedem acesso. /api/local-* retorna 404 na nuvem. As rotas privadas aceitam a conta principal ADMIN_EMAIL e os acessos autorizados da equipe. A gestão de acessos exige a conta principal. O IP para limites usa o cabeçalho que a Vercel sobrescreve. Não há confiança em host arbitrário, cadastro público ou fallback SQLite na nuvem.
 
 
 ## 2026-10-29 — Valor padrão dos serviços e conclusão financeira
